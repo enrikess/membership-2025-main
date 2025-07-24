@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/header :: header (title='Pagina no encontrada | La Fabril')">
+    <title></title>
+</head>
+
+<body class="home fondo">
+<div class="container">
+    <div class="row">
+        <div class="col-md-offset-4 col-md-4 col-sm-12 text-center">
+            <div class="newsletter style2">
+                <img th:src="${@resources.web('img/logos/logo-uno.png')}" src="" alt="" style="max-height: 120px">
+                <br>
+                <h1>404</h1>
+                <h3>Pagina no encontrada</h3>
+                <br>
+
+                <div class="error-desc">
+                    La pagina que intentas acceder no existe.
+                </div>
+
+                <br><br>
+
+                <a class="button style-11" th:href="@{/}" href="" style="margin-top: 10px;">Ir al inicio</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+<th:block th:replace="~{fragments/resources :: scripts}"/>
+
+</html>

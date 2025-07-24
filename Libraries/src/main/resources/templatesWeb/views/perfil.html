@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}"
+      th:with="title='La Fabril | Perfil', menu=''">
+
+<head>
+    <title>Title</title>
+</head>
+<body>
+
+<th:block layout:fragment="content" th:object="${session.participante}">
+
+    <!--/*@thymesVar id="zonasPerfil" type="java.util.List<com.promotick.nissan.model.web.Zona>"*/-->
+    <!--/*@thymesVar id="tipoViviendasPerfil" type="java.util.List<com.promotick.nissan.model.web.TipoVivienda>"*/-->
+    <!--/*@thymesVar id="provinciasPerfil" type="java.util.List<com.promotick.nissan.model.web.Ubigeo>"*/-->
+    <!--/*@thymesVar id="ciudadesPerfil" type="java.util.List<com.promotick.nissan.model.web.Ubigeo>"*/-->
+    <!--/*@thymesVar id="subtiposParticipante" type="java.util.List<com.promotick.nissan.model.web.SubtipoParticipante>"*/-->
+
+    <!-- Banner -->
+    <div class="banner_estatico">
+        <div class="banner_internas" th:style="|background-image:url(${@resources.web('img/bg/bg-mi-perfil.png')});|">
+            <div class="internas-banner-content content-push">
+                <div class="cell-view">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" id="keyMaps" th:value="${session.configuracionWeb.mapsKey}"/>
+    <input type="hidden" id="urlValidator" th:value="${session.configuracionWeb.mapsUrlValidator}"/>
+    <input type="hidden" id="urlImage" clas th:value="${session.configuracionWeb.mapsUrlImage}"/>
+    <input type="hidden" id="mapsDefault" clas th:value="${session.configuracionWeb.mapsDefault}"/>
+    <div class="container margin-bottom-50">
+        <div class="section-title style6 text-center margin-top-40">
+            <h3>Mi perfil</h3>
+            <span class="sub-title"></span>
+        </div>
+        <div class="tab-product">
+            <!-- Nav tabs -->
+            <ul class="box-tabs nav-tab tab-owl-fade-effect" role="tablist">
+                <li role="presentation" th:class="${tabSelected == '1' ? 'active' : ''}"><a id="linkTabDatos" href="#datos" aria-controls="furniter" role="tab" data-toggle="tab">DATOS PERSONALES</a></li>
+                <li role="presentation" th:class="${tabSelected != '1' ? 'active' : ''}"><a href="#direccion" aria-controls="decor" role="tab" data-toggle="tab">Direcciones</a></li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div class="alert alert-success" role="alert" th:if="${param.subirfoto != null && param.subirfoto.toString() == 'true'}">
+                    Se cargó la foto correctamente
+                </div>
+
+                <div class="alert alert-danger" role="alert" th:if="${param.subirfoto != null && param.subirfoto.toString() == 'false'}">
+                    Ocurrio un error al cargar la foto de perfil
+                </div>
+
+                <div role="tabpanel" th:class="${tabSelected == '1' ? 'tab-pane active container' : 'tab-pane container'}" id="datos">
+                    <h4 style="border-bottom: 1px solid #e5e5e5;line-height: 45px;font-weight: 600"><span class="icon pe-7s-user" style="font-size: 25px"></span> Mis datos:</h4>
+                    <br>
+                    <form id="frmDatosPersonales" class="form-container" onsubmit="return false;">
+                        <div class="row">
+<!--                            <div class="col-md-4">-->
+<!--                                <p>-->
+<!--                                    <label for="infoNroDocumento">Tipo de documento</label><br>-->
+<!--                                    <input  type="text" style="width: 100%" readonly th:value="*{tipoDocumento.nombreTipoDocumento}" id="tipoNroDocumento">-->
+<!--                                </p>-->
+<!--                            </div>-->
+                            <div class="col-md-4">
+                                <p>
+                                    <label for="infoNroDocumento">Nº de documento</label><br>
+                                    <input  type="text" style="width: 100%" readonly th:value="*{nroDocumento}" id="infoNroDocumento">
+                                </p>
+                            </div>
+                            <div class="col-md-4">
+                                <p>
+                                    <label for="infoNombres">Nombres</label><br>
+                                    <input readonly type="text" style="width: 100%" placeholder="" th:value="*{nombresParticipante}" id="infoNombres" name="infoNombres">
+                                </p>
+                            </div>
+<!--                            <div class="col-md-4">-->
+<!--                                <p>-->
+<!--                                    <label class="obl" for="infoFechaNacimiento">Fecha de nacimiento</label><br>-->
+<!--                                    <input type="date" name="infoFechaNacimiento" id="infoFechaNacimiento" th:value="*{#dates.format(fechaNacimiento, 'yyyy-MM-dd')}">-->
+<!--                                </p>-->
+<!--                            </div>-->
+                            <div class="col-md-4">
+                                <p>
+                                    <label for="infoApPaterno">Apellidos</label><br>
+                                    <input readonly type="text" style="width: 100%" placeholder="" th:value="*{appaternoParticipante} + ' ' + *{apmaternoParticipante}" id="infoApPaterno" name="infoApPaterno">
+                                </p>
+                            </div>
+<!--                            <div class="col-md-4">-->
+<!--                                <p>-->
+<!--                                    <label for="infoApMaterno">Apellido materno</label><br>-->
+<!--                                    <input readonly type="text" placeholder="" th:value="*{apmaternoParticipante}" id="infoApMaterno" name="infoApMaterno">-->
+<!--                                </p>-->
+<!--                            </div>-->
+                            <div class="col-md-4">
+                                <p>
+                                    <label for="infoTelefono" class="obl">Telefono</label>
+                                    <input type="text" style="width: 100%" placeholder="" th:value="*{telefonoParticipante}" id="infoTelefono" name="infoTelefono">
+                                </p>
+                            </div>
+                            <div class="col-md-4">
+                                <p>
+                                    <label for="infoCelular" class="obl">Celular</label>
+                                    <input  type="text" style="width: 100%" placeholder="" th:value="*{movilParticipante}" id="infoCelular" name="infoCelular">
+                                </p>
+                            </div>
+                            <div class="col-md-4">
+                                <p>
+                                    <label for="infoEmail">Correo electrónico</label>
+                                    <input readonly type="text" style="width: 100%" placeholder="" th:value="*{emailParticipante}" id="infoEmail" name="infoEmail">
+                                </p>
+                            </div>
+
+                            <div class="col-md-4">
+                                <p>
+                                    <label for="">Ciudad</label>
+                                    <input readonly type="text" style="width: 100%" placeholder="" th:value="*{ciudad}">
+                                </p>
+                            </div>
+
+<!--                            <div class="col-md-4">-->
+<!--                                <p>-->
+<!--                                    <label for="">Broker</label>-->
+<!--                                    <input readonly type="text" style="width: 100%" placeholder="" th:value="*{broker.nombreBroker}">-->
+<!--                                </p>-->
+<!--                            </div>-->
+
+                            <div class="col-md-8" style="display:none">
+                                <p>
+                                    <label for="infoRazonSocial">Empresa</label>
+                                    <input readonly type="text" placeholder="" th:value="*{tipoRazonSocial.nombreRazonsocial}" id="infoRazonSocial" name="infoRazonSocial">
+                                </p>
+                            </div>
+                        </div>
+
+                        <!--NO USADO-->
+                        <div class="row" style="display: none">
+                            <div class="col-xs-12 col-sm-4 sinpad-resp">
+                                <label for="infoCedula" class="obl">Cedula</label>
+                                <input class="form-control"type="text" placeholder="" th:value="*{cedula}" id="infoCedula" name="infoCedula">
+                            </div>
+
+                            <div class="col-xs-12 col-sm-8 col-sm-offset-2 sinpad-resp">
+                                <label class="" for="dirConcesionario">Direccion concesionario</label>
+                                <input type="text" disabled="disabled" class="form-control" name="dirConcesionario" id="dirConcesionario" th:value="${session.participante.concesionario != null && session.participante.concesionario.direccion != null ? session.participante.concesionario.direccion.direccionCalle : ''}">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-sm-4 col-xs-12 sinpad-resp">
+                                <button class="button style-10" style="margin-top: 15px;margin-bottom: 15px" id="btnGuardarPerfil">Guardar cambios</button>
+                            </div>
+                        </div>
+
+                    </form>
+                    <th:block th:if="${session.participante.catalogo.idCatalogo == 3}">
+                        <h4 style="border-bottom: 1px solid #e5e5e5;line-height: 45px;font-weight: 600"><span class="icon pe-7s-user" style="font-size: 25px"></span> Cargar imagen de usuario:</h4>
+                        <br>
+                        <div class="row">
+                            <form th:action="@{/perfil/subirFoto}" enctype="multipart/form-data" method="POST">
+                                <div class="col-md-6">
+                                    <label for="">Toma una foto de tu imagen y cargala aquí:</label><br>
+                                    <input type="file" name="file" class="form-control " width="100%">
+                                    <br>
+                                    <input type="submit" class="button button-add-cart quick-view" value="Cargar">
+                                    <br><br>
+                                </div>
+                                <div class="col-md-6" th:if="${session.participante.foto != null}">
+                                    <img th:src="${@resources.web('img/fotos/' + session.participante.foto)}" style="max-height: 100px"></img>
+                                </div>
+                            </form>
+                        </div>
+                    </th:block>
+
+                    <h4 style="border-bottom: 1px solid #e5e5e5;line-height: 45px;font-weight: 600"><span class="icon pe-7s-lock" style="font-size: 25px"></span> Mi contraseña:</h4>
+                    <br>
+                    <form id="frmCambioClave" class="form-container" onsubmit="return false;">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <p>
+                                    <label for="passActual" class="obl">Contraseña actual</label><br>
+                                    <input type="password" value="" id="passActual" name="passActual">
+                                </p>
+                            </div>
+                            <div class="col-md-4">
+                                <p>
+                                    <label for="passNueva" class="obl">Nueva contraseña</label><br>
+                                    <input type="password" placeholder="" id="passNueva" name="passNueva">
+                                </p>
+                            </div>
+                            <div class="col-md-4">
+                                <p>
+                                    <label for="passNuevaRepite" class="obl">Confirmar nueva contraseña</label><br>
+                                    <input type="password" placeholder=""  id="passNuevaRepite" name="passNuevaRepite">
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-xs-12 col-sm-4 sinpad-resp" style="padding-bottom: 13px;">
+                                <button class="button style-10" style="margin-top: 15px" id="btnGuardarClave">Guardar cambios</button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+
+                <div role="tabpanel" th:class="${tabSelected != '1' ? 'tab-pane active' : 'tab-pane'}" id="direccion">
+                    <form id="frmDatosDireccion" onsubmit="return false;">
+                        <div id="dvDirections">
+<!--                            <div class="row"  th:unless="${address.isEmpty()}">-->
+                            <div class="row" >
+                                <div class="col-md-12">
+                                    <a class="button btn-direccion" direccion-id="0">Nueva dirección</a>
+                                </div>
+                            </div>
+                            <br><br>
+                            <div class="row">
+                                <th:block th:each="objDireccion : ${address}" th:object="${objDireccion}">
+                                    <div class="col-md-3 text-center" style="margin-bottom: 20px;">
+                                        <img class="img-from-maps" th:attr="data-direccion=${objDireccion.direccion.direccionCalle},data-distrito=${objDireccion.direccion.ubigeo.nombreUbigeo}" alt="">
+                                        <h6 style="font-weight: 600" th:text="${objDireccion.tagDireccion}"></h6>
+                                        <p style="min-height: 50px;"><span class="pe-7s-map-marker"></span><span style="font-size: 12px;" th:text="|${objDireccion.direccion.direccionCalle}, ${objDireccion.direccion.ubigeo.provincia}, ${objDireccion.direccion.ubigeo.distrito}|"></span></p>
+                                        <a class="btn-direccion"  th:attr="direccion-id=${objDireccion.idParticipanteDireccion}" style="cursor: pointer">Editar |</a>
+                                        <a class="btn-delete-direccion" th:attr="direccion-id=${objDireccion.idParticipanteDireccion}" style="cursor: pointer">Eliminar</a>
+                                    </div>
+                                </th:block>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <th:block th:replace="~{fragments/resources :: scripts}"/>
+
+    <script th:src="${@resources.web('js/views/perfil.js', true)}"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            var perfil = new Perfil('[[@{/}]]', '[[${session.participante.idTipoParticipante}]]', '[[${@resources.web()}]]');
+            perfil.init();
+        });
+    </script>
+
+</th:block>
+
+</body>
+</html>

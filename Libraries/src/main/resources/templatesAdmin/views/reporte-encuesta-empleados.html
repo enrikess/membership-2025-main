@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}"
+      th:with="title='Administracion | Reporte encuesta empleados', menu='Reportes', hijo='Reporte encuesta empleados'">
+
+<head>
+    <title>Layout</title>
+</head>
+
+<body>
+
+<div layout:fragment="content">
+
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>Reportes</h2>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="" th:href="@{/}">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item active">
+                    <strong>Reporte encuesta empleados</strong>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="wrapper wrapper-content animated fadeInUp">
+
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h5>Reporte encuesta empleados</h5>
+                        <div class="ibox-tools ibox-tools-button">
+                            <button type="button" id="btnDescargar" th:attr="data-descarga=@{/reportes/encuesta-empleados/descargar-excel}" class="btn btn-danger btn-sm"><i class="fa fa-download"></i> Descargar reporte</button>
+                        </div>
+                    </div>
+
+                    <div class="ibox-content">
+
+                        <div class="row m-b-sm m-t-sm">
+                            <div class="col-xs-12 col-md-6">
+                                <div class="form-group">
+
+                                    <label class="font-normal">Busqueda :</label>
+
+                                    <div class="input-daterange input-group">
+
+                                        <input type="text" class="form-control-sm form-control" name="buscar" id="buscar" placeholder="Buscar">
+
+                                        <button type="button" class="btn btn-primary btn-sm" id="btnBuscar" style="margin-left: 10px;"><i class="fa fa-search"></i> Buscar</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-xs-12 col-md-6">
+                                <div class="form-group">
+
+                                    <label class="font-normal">Selecciona un rango de fecha :</label>
+
+                                    <div class="input-daterange input-group" id="rangoDatePicker">
+
+                                        <input type="text" class="form-control-sm form-control" name="start" value="" id="fechaInicio" th:with="fecha=${#dates.createNow()}" th:value="${#dates.format(@utils.addMonth(fecha, -1), 'dd/MM/yyyy')}"/>
+
+                                        <span class="input-group-addon form-control-span">a</span>
+
+                                        <input type="text" class="form-control-sm form-control" name="end" value="" id="fechaFin" th:value="${#dates.format(#dates.createNow(), 'dd/MM/yyyy')}"/>
+
+                                        <button type="button" class="btn btn-primary btn-sm" id="btnFiltrar" style="margin-left: 10px;"><i class="fa fa-filter"></i> Filtrar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover" id="grid" style="width: 100%;">
+                                <thead>
+                                <tr>
+                                    <th>ID PARTICIPANTE</th>
+                                    <th>NRO DOCUMENTO</th>
+                                    <th>NOMBRES</th>
+                                    <th>APELLIDO PATERNO</th>
+                                    <th>APELLIDO MATERNO</th>
+                                    <th>EMAIL</th>
+                                    <th>ENCUESTA</th>
+                                    <th>CAMPAÑA</th>
+                                    <th>PREGUNTA</th>
+                                    <th>RESPUESTA</th>
+                                    <th>FECHA RESPUESTA</th>
+                                </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <th:block th:replace="~{fragments/resources :: scripts}"/>
+
+    <script th:src="${@resources.admin('js/views/reporte-encuesta-empleados.js', true)}"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            var reporteEncuestaEmpleados = new ReporteEncuestaEmpleados('[[@{/}]]');
+            reporteEncuestaEmpleados.init();
+        });
+    </script>
+</div>
+
+</body>
+</html>

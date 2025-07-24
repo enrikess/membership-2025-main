@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}"
+      th:with="title='La Fabril | Favoritos', menu=''">
+
+<head>
+    <title>Title</title>
+</head>
+<body>
+
+<th:block layout:fragment="content">
+    <!-- Banner -->
+    <div class="banner_estatico">
+        <div class="banner_internas" th:style="|background-image:url(${@resources.web('img/bg/bg-wishlist.png')});|">
+            <div class="internas-banner-content content-push">
+                <div class="cell-view">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+<!--    <div class="content-push box-checkout carrito">-->
+    <div class="container margin-top-40">
+        <div class="main-content">
+            <div class="page-title">
+                <h3><i class="fa fa-heart"></i> Mis favoritos</h3>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-12 col-md-12" id="contentWishlist">
+
+                </div>
+            </div>
+
+<!--            <div class="mozaic-banners-wrapper type-2">-->
+<!--                <div class="banner-column col-sm-12">-->
+<!--                    <div class="information-blocks">-->
+<!--                        <div class="information-blocks">-->
+<!--                            <div class="table-responsive" id="contentWishlist">-->
+
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+        </div>
+    </div>
+    <th:block th:replace="~{fragments/resources :: scripts}"/>
+
+    <script th:src="${@resources.web('js/views/wishlist.js', true)}"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            var wishlist = new Wishlist('[[@{/}]]');
+            wishlist.init();
+        });
+    </script>
+
+</th:block>
+
+</body>
+</html>

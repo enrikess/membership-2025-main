@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+    <th:block th:fragment="cotizacionTemplate(pasajeros)">
+    <div th:if="${pasajeros != null && pasajeros.size() > 0}" th:remove="tag">
+        <h4 style="border-bottom: 1px solid #e5e5e5;line-height: 45px;font-weight: 600"><span class="icon pe-7s-user" style="font-size: 25px"></span> ¿Quiénes viajan?</h4>
+
+        <div class="row margin-top-40">
+            <div class="col-md-12" th:each="pasajero : ${pasajeros}">
+                <div class="box-persona">
+                    <p><label style="text-decoration: underline;margin-left: 15px" th:text="|Pasajero ${pasajero.idPasajero}|"></label></p>
+                    <div class="col-md-4">
+                        <p>
+                            <label th:for="'nom-psj-' + ${pasajero.idPasajero}" class="obl">Nombres</label><br>
+                            <input th:name="'nom-psj-' + ${pasajero.idPasajero}" th:id="'nom-psj-' + ${pasajero.idPasajero}" type="text" style="width: 100%" data-rule-required="true" data-msg-required="Ingrese Nombres">
+
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <p>
+                            <label th:for="'ape-psj-' + ${pasajero.idPasajero}" class="obl">Apellidos</label><br>
+                            <input th:name="'ape-psj-' + ${pasajero.idPasajero}" th:id="'ape-psj-' + ${pasajero.idPasajero}" type="text" style="width: 100%" data-rule-required="true" data-msg-required="Ingrese Apellidos">
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <p>
+                            <label th:for="'tdoc-psj-' + ${pasajero.idPasajero}" class="obl">Tipo de documento</label><br>
+                            <select th:id="'tdoc-psj-' + ${pasajero.idPasajero}" th:name="'tdoc-psj-' + ${pasajero.idPasajero}" class="normal" style="width: calc(100% - 30px);height: 40px">>
+<!--                                <option value="">Seleccionar</option>-->
+                                <th:block th:each="tDoc : ${tipodocumentos}">
+                                    <option th:value="${tDoc.idTipoDocumento}" th:text="${tDoc.nombreTipoDocumento}"></option>
+                                </th:block>
+                            </select>
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <p>
+                            <label th:for="'ndoc-psj-' + ${pasajero.idPasajero}" class="obl">Nº de documento</label><br>
+                            <input th:name="'ndoc-psj-' + ${pasajero.idPasajero}" th:id="'ndoc-psj-' + ${pasajero.idPasajero}" type="text" style="width: 100%" data-rule-required="true" data-msg-required="Ingrese N° Documento">
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <p>
+                            <label th:for="'fec-psj-' + ${pasajero.idPasajero}" class="obl">Fecha de nacimiento</label><br>
+                            <input th:name="'fec-psj-' + ${pasajero.idPasajero}" th:id="'fec-psj-' + ${pasajero.idPasajero}" type="date" style="width: 100%" data-rule-required="true" data-msg-required="Ingrese Fecha de Nacimiento" class="input-fecha-nacimiento">
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <p>
+                            <label class="obl">Persona con discapacidad o tercera edad</label><br>
+                            <input value="" type="checkbox" th:name="'discapacidad-' + ${pasajero.idPasajero}" th:id="'discapacidad-' + ${pasajero.idPasajero}"> Persona con discapacidad <br>
+                            <input value="" type="checkbox" th:name="'mayor65-' + ${pasajero.idPasajero}" th:id="'mayor65-' + ${pasajero.idPasajero}"> Persona mayor a 65 años <br>
+
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+<!--            <div class="col-md-3 col-md-offset-9 text-right">-->
+<!--                <p>-->
+<!--                    <label for=""></label><br>-->
+<!--                    <a id="btnCotizar" class="button add_to_cart_button" style="width: 100%">Cotizar</a>-->
+<!--                </p>-->
+<!--            </div>-->
+        </div>
+
+    </div>
+
+</th:block>
+</body>
+</html>

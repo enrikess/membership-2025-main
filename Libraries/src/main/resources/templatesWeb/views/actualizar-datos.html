@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/header :: header (title='Actualización de datos | La Fabril')">
+    <title></title>
+</head>
+
+<style>
+    .error{
+        color : red;
+    }
+</style>
+
+<body class="home fondo">
+<div class="container">
+    <div class="row">
+        <div class="col-md-offset-4 col-md-4 col-sm-12 text-center">
+            <img th:src="${@resources.web('img/logos/logo.png')}" src="" alt="" width="250">
+            <div class="newsletter style2">
+                <div class="section-title text-center">
+                    <h4>ACTUALIZACIÓN DE DATOS</h4>
+                </div>
+
+                <form style="text-align:left" id="form-actualiza-datos" onsubmit="return false;">
+
+                    <br>
+
+                    <div class="form-group">
+                        <label for="nroDocumento">Nro Documento</label>
+                        <br>
+                        <input type="text" style="width:100%"  disabled id="nroDocumento" th:value="${session.participante.nroDocumento}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nombres">Nombres</label>
+                        <br>
+                        <input type="text" style="width:100%" disabled id="nombres" th:value="${session.participante.nombresParticipante}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="appaterno">Apellidos</label>
+                        <br>
+                        <input type="text" style="width:100%" id="appaterno" disabled th:value="|${session.participante.appaternoParticipante} ${session.participante.apmaternoParticipante}|">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="obl" for="broker">Broker</label>
+                        <br>
+                        <input type="text" style="width:100%" id="broker" disabled th:value="${session.participante.broker.nombreBroker}">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="obl" for="regional">Regional</label>
+                        <br>
+                        <input type="text" style="width:100%" id="regional" disabled th:value="${session.participante.regional.nombreRegional}">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="obl" for="telefonoFijo">Teléfono fijo</label>
+                        <br>
+                        <input type="tel" style="width:100%" name="telefonoFijo" id="telefonoFijo" th:value="${session.participante.telefonoParticipante}">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="obl" for="celular">Celular</label>
+                        <br>
+                        <input type="tel" style="width:100%" name="celular" id="celular" th:value="${session.participante.movilParticipante}">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="obl" for="correo">Correo electrónico</label>
+                        <br>
+                        <input type="text" style="width:100%" name="correo" id="correo" th:value="${session.participante.emailParticipante}">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="obl" for="slcRegion">Región</label>
+                        <select class="form-control" id="slcRegion" name="slcRegion" data-is-select2="true">
+                            <option value="" class="normal">Seleccionar</option>
+                            <option th:each="region : ${regiones}" th:value="${region.idRegion}" th:text="${region.nombreRegion}" th:selected="${session.participante.region.idRegion == region.idRegion}"></option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="obl" for="provincia">Provincia</label>
+                        <br>
+                        <select name="provincia" class="normal" id="provincia" style="width: 100%;height: 40px">
+                            <option value="" class="normal">Seleccionar</option>
+                            <th:block th:each="objProvincia : ${provincias}" th:object="${objProvincia}">
+                                <option th:value="*{codprov}" th:text="*{nombreUbigeo}" th:selected="${direccion != null ? direccion.direccion.ubigeo.codprov == objProvincia.codprov : false}"></option>
+                            </th:block>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="obl" for="ciudad">Ciudad</label>
+                        <br>
+                        <input type="text" style="width:100%" name="ciudad" id="ciudad" th:value="${session.participante.ciudad}">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="obl" for="fechaNacimiento">Fecha de nacimiento</label>
+                        <br>
+                        <input style="width:100%"  type="date" name="fechaNacimiento" id="fechaNacimiento" th:value="${#dates.format(session.participante.fechaNacimiento, 'yyyy-MM-dd')}">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="obl" for="genero">Género</label>
+                        <br>
+                        <select class="normal" name="genero" id="genero" style="width:100%;height: 40px" >
+                            <option value="">--Seleccionar--</option>
+                            <option value="1" th:selected="${session.participante.genero == 'M'}">Masculino</option>
+                            <option value="2" th:selected="${session.participante.genero == 'F'}">Femenino</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="obl" for="fechaAniversario">Fecha Aniversario Local</label>
+                        <br>
+                        <input style="width:100%"  type="date" name="fechaAniversario" id="fechaAniversario" th:value="${#dates.format(session.participante.fechaAniversarioLocal, 'yyyy-MM-dd')}">
+                    </div>
+
+<!--                    <div class="form-group">-->
+<!--                        <label class="obl" for="estadoCivil">Estado Civil</label>-->
+<!--                        <select class="normal" id="estadoCivil" name="estadoCivil" style="width: 100%;height: 40px">-->
+<!--                            <option value="" class="normal">Seleccionar</option>-->
+<!--                            <option value="1" th:selected="${session.participante.estadoCivil == 'SOLTERO/A'}">Soltero/a</option>-->
+<!--                            <option value="2" th:selected="${session.participante.estadoCivil == 'CASADO/A'}">Casado/a</option>-->
+<!--                            <option value="3" th:selected="${session.participante.estadoCivil == 'DIVORCIADO/A'}">Divorciado/a</option>-->
+<!--                            <option value="4" th:selected="${session.participante.estadoCivil == 'VIUDO/A'}">Viudo/a</option>-->
+<!--                            <option value="5" th:selected="${session.participante.estadoCivil == 'OTRO'}">Otro</option>-->
+<!--                        </select>-->
+<!--                    </div>-->
+
+                    <div class="form-group">
+                        <label class="obl">Hijos</label><br>
+                        <input name="hijos" id="chkSi" value="si" type="radio">SI
+                        <input name="hijos" id="no" value="no" type="radio" style="margin-left: 50px">NO<br><br>
+<!--                        <select class="form-control" name="nroHijos" id="nroHijos" data-is-select2="true">-->
+<!--                            <option value="99" th:selected="${session.participante.nroHijos == 0}">0</option>-->
+<!--                            <th:block th:each="num : ${#numbers.sequence(1, 6)}">-->
+<!--                                <option value="" th:value="${num}" th:selected="${session.participante.nroHijos == num}" th:text="${num}"></option>-->
+<!--                            </th:block>-->
+<!--                        </select>-->
+                    </div>
+
+                    <div class="form-group">
+                        <input type="checkbox" style="font-size: 14px;" name="chkTyc" id="chkTyc">
+                        <label for="chkTyc" class="accept">Acepto los <a href="#" data-toggle="modal" data-target="#tyc" style="text-decoration: underline;">términos y condiciones</a></label>
+                    </div>
+
+                    <div class="form-group" style="margin-left: 20px;font-weight: bold;">
+                        <input type="checkbox" style="font-size: 14px;margin-left:-20px" name="chkDatos" id="chkDatos">
+                        Autorizo de manera libre, expresa e informada a Sociedad Prestige a utilizar, tratar,
+                        transferir y almacenar mi informaci&oacute;n personal proporcionada conforme a la ley, con el
+                        objetivo de contactarme, por medio de llamada telef&oacute;nica, mensaje de texto v&iacute;a
+                        telef&oacute;nica, correo electr&oacute;nico, correo directo u otro medio a fin de: formalizar
+                        e instrumentar la relaci&oacute;n comercial y beneficios; as&iacute; como, con fines publicitarios,
+                        comerciales de nuevos productos de la aseguradora. Esta autorizaci&oacute;n de tratamiento y
+                        conservaci&oacute;n de datos personales se mantendr&aacute; vigente hasta el fin de la relacional
+                        contractual entre las partes y, posterior a ello por cinco (5) a&ntilde;os m&aacute;s.
+                    </div>
+
+<!--                    <div class="form-group" style="margin-left: 20px;font-weight: bold;">-->
+<!--                        <input type="checkbox" style="font-size: 14px;margin-left:-20px" name="chkComunicacion" id="chkComunicacion">-->
+<!--                        Acepto recibir información sobre el programa por cualquier medio de comunicación-->
+<!--                    </div>-->
+
+                </form>
+
+                <br><br>
+                <button class="button style-10" id="btnActualizar">Actualizar datos</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="tyc" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-lg" role="document" style="z-index: 1041;margin-top: 100px;">
+        <div class="modal-content">
+            <div class="modal-header" style="border-bottom: 0;">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">x</button>
+            </div>
+            <div class="modal-body " style="margin-bottom: 20px;">
+                <th:block th:utext="${tyc}"/>
+                <div class="row text-center">
+                    <div class="col-md-12">
+                        <a href="#" class="button style-10" data-dismiss="modal">Volver</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+
+<th:block th:replace="~{fragments/resources :: scripts}"/>
+
+<script th:src="${@resources.web('js/views/actualizar-datos.js', true)}"></script>
+
+<script type="text/javascript">
+    $(function() {
+        var actualizarDatos = new ActualizarDatos('[[@{/}]]');
+        actualizarDatos.init();
+    });
+</script>
+
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title></title>
+</head>
+<body>
+
+<th:block th:fragment="topmenu">
+  <nav class="g-header">
+    <div class="container">
+      <div class="g-header--container" id="sesion-iniciada">
+        <a class="g-header--container__logo" href="/LaFabrilWeb/recompensas/index">
+          <img th:src="${@resources.web('recompensa/img/logo.png')}" alt="Logo" class="logo">
+        </a>
+        <a href="/LaFabrilWeb/recompensas/login" class="g-button" id="login">
+          <span>Iniciar sesión</span>
+        </a>
+
+        <div class="dropdown " id="logout">
+          <button class="g-button--profile" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <img th:src="${@resources.web('recompensa/img/ico/ico-profile.svg')}" alt="">
+          </button>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/LaFabrilWeb/recompensas/logout">Cerrar sesión</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+</th:block>
+
+</body>
+</html>

@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Membership Rewards</title>
+  <th:block th:replace="~{fragments/recompensas/resources :: styles}" />
+</head>
+
+<body>
+  <!-- Header -->
+  <div th:replace="~{fragments/recompensas/topmenu :: topmenu}"></div>
+
+
+  <!-- Banner -->
+  <section class="g-bg-light g-banner hero-section">
+    <div class="g-banner--info">
+      <div class="g-banner--info__content">
+        <span class="g-tag">Programa de Recompensas</span>
+        <h2>Completa misiones usando tu American Express y gana recompensas</h2>
+        <p>Cashback, pago de subscripciones, millas y más de XXXX premios.</p>
+        <button class="g-button" type="button">
+          <span>Participar ahora</span>
+        </button>
+      </div>
+    </div>
+    <div class="g-banner--img">
+      <img th:src="${@resources.web('recompensa/img/banner.jpg')}" alt="Banner">
+
+    </div>
+    <div class="g-banner--img__mobile">
+      <img th:src="${@resources.web('recompensa/img/banner-mobile.jpg')}" alt="Banner">
+    </div>
+  </section>
+
+  <!-- Misiones -->
+  <section class="hero-section">
+    <div class="g-space">
+      <div class="container">
+        <ul class="g-tab" id="myTab" role="tablist">
+          <li class="g-tab--item" role="presentation">
+            <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane"
+              type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Misiones</button>
+          </li>
+          <li class="g-tab--item" role="presentation">
+            <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane"
+              type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Promociones</button>
+          </li>
+        </ul>
+        <div class="tab-content" id="myTabContent">
+          <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab"
+            tabindex="0">
+            <div class="g-tab--content">
+              <div class="text-lg-center">
+                <p class="g-counter">Misiones nuevas en: <span class="nro">23:59:59</span></p>
+              </div>
+              <div class="g-box-mision">
+                <div class="g-box-mision--item">
+                  <div class="g-box-mision--item__img">
+                    <img th:src="${@resources.web('recompensa/img/cash-back.svg')}" alt="Mision">
+                  </div>
+                  <div class="g-box-mision--item__info">
+                    <p class="g-box-mision--item__info__title">Realiza algún consumo con tu Tarjeta de Crédito</p>
+                    <div class="g-progress-bar">
+                      <span style="width: 10%;"></span>
+                    </div>
+                    <span class="g-tag g-tag--yellow">No iniciada</span>
+                    <div class="text-end w-100">
+                      <a class="g-link" href="./detail-mission.html">Ver más</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="g-box-mision--item">
+                  <div class="g-box-mision--item__img">
+                    <img th:src="${@resources.web('recompensa/img/cash-back.svg')}" alt="Mision">
+                  </div>
+                  <div class="g-box-mision--item__info">
+                    <p class="g-box-mision--item__info__title">Realiza algún consumo con tu Tarjeta de Crédito</p>
+                    <div class="g-progress-bar">
+                      <span style="width: 10%;"></span>
+                    </div>
+                    <span class="g-tag g-tag--yellow">No iniciada</span>
+                    <div class="text-end w-100">
+                      <a class="g-link" href="./detail-mission.html">Ver más</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="g-box-mision--item">
+                  <div class="g-box-mision--item__img">
+                    <img th:src="${@resources.web('recompensa/img/cash-back.svg')}" alt="Mision">
+                  </div>
+                  <div class="g-box-mision--item__info">
+                    <p class="g-box-mision--item__info__title">Realiza algún consumo con tu Tarjeta de Crédito</p>
+                    <div class="g-progress-bar">
+                      <span style="width: 10%;"></span>
+                    </div>
+                    <span class="g-tag g-tag--yellow">No iniciada</span>
+                    <div class="text-end w-100">
+                      <a class="g-link" href="./detail-mission.html">Ver más</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+            <div class="g-tab--content">
+              <div class="g-filter pb-4">
+                <div class="g-filter--search">
+                  <div class="g-search">
+                    <img th:src="${@resources.web('recompensa/img/ico/ico-search.svg')}" alt="">
+                    <input placeholder="Buscar local comercial" type="text" id="agregar-palabra-clave">
+                  </div>
+                  <button class="g-button--secondary" onclick="cargarPromocionesAjax();">
+                    <img th:src="${@resources.web('recompensa/img/ico/ico-filter.svg')}" alt="">
+                    <span class="text-nowrap">Editar filtros</span>
+                  </button>
+                </div>
+                <div class="g-filter--tags" id="tag-filtrar-promociones">
+                </div>
+              </div>
+              <div class="g-promotions" id="g-promotions">
+
+
+              </div>
+              <div class="d-flex justify-content-center align-items-center g-pagination">
+                <button class="g-button--secondary">
+                  <img th:src="${@resources.web('recompensa/img/ico/ico-arrow-left.svg')}" alt="">
+                </button>
+                <span class="g-pagination--text">Página 1 de 10</span>
+                <button class="g-button--secondary">
+                  <img th:src="${@resources.web('recompensa/img/ico/ico-arrow-right.svg')}" alt="">
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Benefits -->
+  <section class="hero-section">
+    <div class="g-space g-bg-light">
+      <div class="container">
+        <div class="g-benefits">
+          <div class="g-benefits--item">
+            <div class="g-benefits--item__info">
+              <h3 class="g-benefits--item__title">Viajar usando tus puntos está cada vez más cerca</h3>
+              <p class="g-benefits--item__description">Convierte tus millas Membership Rewards en millas Lifemiles.</p>
+              <button class="g-button" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <span>Ver más</span>
+              </button>
+            </div>
+            <div class="g-benefits--item__img">
+              <img th:src="${@resources.web('recompensa/img/user-1.png')}" alt="">
+            </div>
+          </div>
+          <div class="g-benefits--item">
+            <div class="g-benefits--item__info">
+              <h3 class="g-benefits--item__title">Tus recompensas te están esperando</h3>
+              <p class="g-benefits--item__description">Convierte tus compras en beneficios exclusivos solo con tu
+                American Express.</p>
+              <a href="./login" class="g-button" type="button">
+                <span>Iniciar sesión</span>
+              </a>
+            </div>
+            <div class="g-benefits--item__img">
+              <img th:src="${@resources.web('recompensa/img/user-2.png')}" alt="">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Questions -->
+  <section class="hero-section">
+    <div class="g-space g-bg-light2">
+      <div class="container">
+        <div class="g-questions">
+          <h3 class="g-questions--title">Respondemos tus dudas</h3>
+          <div class="g-questions--content">
+            <div class="g-accordion accordion" id="accordionExample">
+              <div class="accordion-item g-accordion--item">
+                <h2 class="accordion-header g-accordion--item__header">
+                  <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                    aria-expanded="true" aria-controls="collapseOne">
+                    ¿Qué son las misiones de Membership Rewards?
+                  </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
+                  <div class="accordion-body g-accordion--item__body">
+                    <p>Son desafíos simples que puedes completar usando tu Tarjeta American Express.</p>
+                    <p>Al realizar consumos específicos (como comprar online, en supermercados o pagar suscripciones),
+                      desbloqueas recompensas exclusivas como cashback, millas o beneficios adicionales.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item g-accordion--item">
+                <h2 class="accordion-header g-accordion--item__header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    ¿Cómo empiezo una misión?
+                  </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                  <div class="accordion-body g-accordion--item__body">
+                    <p>Son desafíos simples que puedes completar usando tu Tarjeta American Express.</p>
+                    <p>Al realizar consumos específicos (como comprar online, en supermercados o pagar suscripciones),
+                      desbloqueas recompensas exclusivas como cashback, millas o beneficios adicionales.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item g-accordion--item">
+                <h2 class="accordion-header g-accordion--item__header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                    ¿Qué tipo de recompensas puedo conseguir?
+                  </button>
+                </h2>
+                <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                  <div class="accordion-body g-accordion--item__body">
+                    <p>Son desafíos simples que puedes completar usando tu Tarjeta American Express.</p>
+                    <p>Al realizar consumos específicos (como comprar online, en supermercados o pagar suscripciones),
+                      desbloqueas recompensas exclusivas como cashback, millas o beneficios adicionales.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item g-accordion--item">
+                <h2 class="accordion-header g-accordion--item__header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                    ¿Puedo completar más de una misión al mismo tiempo?
+                  </button>
+                </h2>
+                <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                  <div class="accordion-body g-accordion--item__body">
+                    <p>Son desafíos simples que puedes completar usando tu Tarjeta American Express.</p>
+                    <p>Al realizar consumos específicos (como comprar online, en supermercados o pagar suscripciones),
+                      desbloqueas recompensas exclusivas como cashback, millas o beneficios adicionales.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="accordion-item g-accordion--item">
+                <h2 class="accordion-header g-accordion--item__header">
+                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                    ¿Qué pasa si no completo la misión a tiempo?
+                  </button>
+                </h2>
+                <div id="collapseFive" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+                  <div class="accordion-body g-accordion--item__body">
+                    <p>Son desafíos simples que puedes completar usando tu Tarjeta American Express.</p>
+                    <p>Al realizar consumos específicos (como comprar online, en supermercados o pagar suscripciones),
+                      desbloqueas recompensas exclusivas como cashback, millas o beneficios adicionales.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="g-footer">
+    <div class="container">
+      <div class="g-footer--container">
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="g-footer--logo">
+              <img th:src="${@resources.web('recompensa/img/logo-footer.svg')}" alt="Logo">
+            </div>
+            <div>
+              <p class="g-footer--social__title">Síguenos en redes</p>
+              <ul class="g-footer--social">
+                <li>
+                  <a href="">
+                    <img th:src="${@resources.web('recompensa/img/ico/ico-facebook.svg')}" alt="">
+                  </a>
+                </li>
+                <li>
+                  <a href="">
+                    <img th:src="${@resources.web('recompensa/img/ico/ico-instagram.svg')}" alt="">
+                  </a>
+                </li>
+                <li>
+                  <a href="">
+                    <img th:src="${@resources.web('recompensa/img/ico/ico-youtube.svg')}" alt="">
+                  </a>
+                </li>
+                <li>
+                  <a href="">
+                    <img th:src="${@resources.web('recompensa/img/ico/ico-tiktok.svg')}" alt="">
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="g-footer--info">
+                  <p class="g-footer--info__title">Información</p>
+                  <ul class="g-footer--info__list">
+                    <li>
+                      <a href="">Preguntas frecuentes</a>
+                    </li>
+                    <li>
+                      <a href="">Términos y Condiciones</a>
+                    </li>
+                    <li>
+                      <a href="">Políticas de Privacidad</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="g-footer--info">
+                  <p class="g-footer--info__title">Contacto</p>
+                  <ul class="g-footer--info__list">
+                    <li>
+                      <a href="">
+                        <img th:src="${@resources.web('recompensa/img/ico/ico-clock.svg')}" alt="">
+                        <span>Lun-Vie de 9 am a 6 pm</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="">
+                        <img th:src="${@resources.web('recompensa/img/ico/ico-whatsapp.svg')}" alt="">
+                        <span>+593 xxx xxx xxx</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="">
+                        <img th:src="${@resources.web('recompensa/img/ico/ico-mail.svg')}" alt="">
+                        <span>soporte@membershiprewards.com.ec</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="g-footer--separator"></div>
+        <div class="g-footer--copyright">
+          <p>American Express Membership Rewards x Banco Guayaquil</p>
+          <p>© 2025 Todos los derechos reservados</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog g-modal">
+      <div class="modal-content">
+        <div class="modal-body">
+          <img class="w-100" th:src="${@resources.web('recompensa/img/banner-modal.png')}" alt="">
+          <div class="g-modal--content">
+            <h3>✈️ Muy pronto podrás volar con tus recompensas</h3>
+            <div>
+              <p>Prepárate para convertir tus millas Membership Rewards en millas LifeMiles.</p>
+              <p>Sé el primero en enterarte cuando esta opción esté disponible.</p>
+            </div>
+          </div>
+          <div class="g-modal--button">
+            <button class="g-button" type="button">
+              <span>Iniciar sesión</span>
+            </button>
+            <button type="button" class="g-button--secondary" data-bs-dismiss="modal">Regresar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <th:block th:replace="~{fragments/recompensas/resources :: script}" />
+
+
+
+
+  <!-- Script para manejar los datos de la API -->
+  <script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function () {
+      /*<![CDATA[*/
+      // Obtener datos del servidor
+      var misionesData = /*[[${misiones}]]*/ '';
+      var tokenStatus = /*[[${tokenStatus}]]*/ '';
+      var cedulaData = /*[[${cedula}]]*/ '';
+
+      // Procesar datos si la conexión es exitosa
+
+      if (tokenStatus === 'success') {
+        try {
+          sesionIniciada(cedulaData);
+          cargarPromocionesAjax();
+          procesarMisiones(misionesData,cedulaData);
+        } catch (e) {
+          console.log('📝 Los datos no son JSON válido, mostrando como texto');
+          console.log('Datos misionesssssssss:', misionesData);
+        }
+      } else {
+        console.log('❌ No hay conexión con la API');
+      }
+
+      /*]]>*/
+
+    });
+
+    function cargarPromocionesAjax() {
+
+      var palabra = document.querySelector('#agregar-palabra-clave').value.trim();
+
+      // Si hay palabra, primero agrega el tag y luego busca promociones
+      if (palabra !== "") {
+        agregarTagPalabraClaveAjax(palabra).then(() => {
+          inputPalabraClave.value = '';
+          buscarPromocionesPorPalabras();
+        });
+      } else {
+        // Si no hay palabra nueva, solo busca promociones con los tags actuales
+        buscarPromocionesPorPalabras();
+      }
+    }
+
+
+    function agregarTagPalabraClaveAjax(palabra) {
+      // Realiza una petición AJAX al backend para obtener el bloque HTML de la palabra
+
+      return fetch('./api/tag-palabra?palabra=' + encodeURIComponent(palabra))
+        .then(response => response.text()) // Espera HTML
+        .then(html => {
+
+          var tagsContainer = document.getElementById('tag-filtrar-promociones');
+          if (tagsContainer) {
+            // Agrega el bloque HTML recibido al contenedor
+            tagsContainer.insertAdjacentHTML('beforeend', html);
+          }
+        })
+        .catch(error => {
+          console.log('❌ Error al agregar el tag de palabra clave:', error);
+        });
+    }
+
+
+    function buscarPromocionesPorPalabras() {
+      // Obtén todos los tags actuales
+      var tags = document.querySelectorAll('#tag-filtrar-promociones .g-tag span');
+      var palabras = Array.from(tags).map(tag => tag.textContent.trim());
+
+      // Mostrar mensaje de cargando
+      var container = document.getElementById('g-promotions');
+      if (container) {
+        container.innerHTML = `
+          <div class="g-loading text-center py-5 d-flex flex-column align-items-center justify-content-center" style="min-height:200px;">
+            <div class="spinner-border text-primary mb-3" role="status" style="width: 3rem; height: 3rem;">
+              <span class="visually-hidden">Cargando...</span>
+            </div>
+            <div class="g-loading--text">
+              <span class="fw-bold" style="font-size: 1.2rem;">Cargando promociones...</span>
+            </div>
+          </div>
+        `;
+      }
+
+
+      fetch('./api/promociones', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ palabras: palabras }) // Puedes usar "palabras" como name o id
+      })
+        .then(response => response.json())
+        .then(data => {
+          procesarPromociones(data);
+        })
+        .catch(error => {
+          console.log('❌ Error al buscar promociones:', error);
+        });
+    }
+
+
+
+    var inputPalabraClave = document.getElementById('agregar-palabra-clave');
+    // Evento Enter en el input
+    if (inputPalabraClave) {
+
+      inputPalabraClave.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+          cargarPromocionesAjax();
+        }
+      });
+    }
+
+
+
+
+
+
+    // Función para formatear fecha - Opción 3
+    function formatearFecha(fechaISO) {
+      if (!fechaISO) return 'Por definir';
+
+      try {
+        var fecha = new Date(fechaISO);
+
+        if (isNaN(fecha.getTime())) {
+          return 'Fecha inválida';
+        }
+
+        var dia = fecha.getDate();
+        var meses = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+          'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+        var año = fecha.getFullYear();
+
+        return dia + ' de ' + meses[fecha.getMonth()] + ' ' + año;
+
+      } catch (e) {
+        console.log('Error formateando fecha:', e);
+        return 'Error en fecha';
+      }
+    }
+
+    // Función para procesar promociones
+    function procesarPromociones(promociones) {
+
+      // Variables de paginación de la función
+      var promocionesGlobales = [];
+      var paginaActual = 1;
+      var elementosPorPagina = 6;
+      var totalPaginas = 1;
+
+      console.log('🔄 Procesando promociones...');
+      if (typeof promociones === 'object' && promociones.data) {
+        // Obtener el container
+        var container = document.getElementById('g-promotions');
+        if (!container) {
+          console.log('❌ No se encontró el container g-promotions');
+          return;
+        }
+
+
+        console.log('✅ Container encontrado:', container);
+
+        // Inicializar variables de paginación
+        promocionesGlobales = promociones.data;
+        totalPaginas = Math.ceil(promocionesGlobales.length / elementosPorPagina);
+
+        // Función interna para mostrar página actual
+        function mostrarPaginaActual() {
+          // Limpiar contenedor
+          container.innerHTML = '';
+
+          // Calcular índices para la página actual
+          var inicio = (paginaActual - 1) * elementosPorPagina;
+          var fin = inicio + elementosPorPagina;
+          var promocionesPagina = promocionesGlobales.slice(inicio, fin);
+
+          console.log(`📄 Mostrando página ${paginaActual}: promociones ${inicio + 1}-${Math.min(fin, promocionesGlobales.length)} de ${promocionesGlobales.length}`);
+
+          // Crear elementos para las promociones de esta página
+          promocionesPagina.forEach(function (promocion, index) {
+            var promoElement = document.createElement('div');
+            promoElement.className = 'g-promotions--item';
+
+            var fechaFormateada = formatearFecha(promocion.pr_valido_hasta);
+
+            promoElement.innerHTML = `
+              <div class="g-promotions--item__info">
+                <p class="g-promotions--item__info__title">${promocion.pr_nombre_comercio || 'Sin nombre'}</p>
+                <p class="g-promotions--item__info__description">${promocion.pr_descripcion || 'Sin descripción'}</p>
+              </div>
+              <p class="g-promotions--item__info__date">Válido hasta: ${fechaFormateada}</p>
+              <button class="g-button--tertiary">
+                <span>Compartir</span>
+              </button>
+            `;
+
+            container.appendChild(promoElement);
+          });
+
+          // Actualizar controles de paginación
+          actualizarControlesPaginacion();
+
+          // Mostrar mensaje si no hay promociones
+          if (promocionesPagina.length === 0) {
+            container.innerHTML = '<div class="alert alert-info text-center"><h6>📭 No hay promociones en esta página</h6></div>';
+          }
+        }
+
+
+        // Función interna para actualizar controles
+        function actualizarControlesPaginacion() {
+          var paginationText = document.querySelector('.g-pagination--text');
+          var btnAnterior = document.querySelector('.g-pagination .g-button--secondary:first-child');
+          var btnSiguiente = document.querySelector('.g-pagination .g-button--secondary:last-child');
+
+          // Actualizar texto de paginación
+          if (paginationText) {
+            paginationText.textContent = `Página ${paginaActual} de ${totalPaginas}`;
+          }
+
+          // Configurar botón anterior
+          if (btnAnterior) {
+            btnAnterior.disabled = paginaActual === 1;
+            btnAnterior.style.opacity = paginaActual === 1 ? '0.5' : '1';
+            btnAnterior.style.cursor = paginaActual === 1 ? 'not-allowed' : 'pointer';
+
+            // Asignar evento
+            btnAnterior.onclick = function () {
+              if (paginaActual > 1) {
+                paginaActual--;
+                mostrarPaginaActual();
+                console.log(`⬅️ Página anterior: ${paginaActual}`);
+              }
+            };
+          }
+
+          // Configurar botón siguiente
+          if (btnSiguiente) {
+            btnSiguiente.disabled = paginaActual === totalPaginas;
+            btnSiguiente.style.opacity = paginaActual === totalPaginas ? '0.5' : '1';
+            btnSiguiente.style.cursor = paginaActual === totalPaginas ? 'not-allowed' : 'pointer';
+
+            // Asignar evento
+            btnSiguiente.onclick = function () {
+              if (paginaActual < totalPaginas) {
+                paginaActual++;
+                mostrarPaginaActual();
+                console.log(`➡️ Página siguiente: ${paginaActual}`);
+              }
+            };
+          }
+
+          console.log(`🔢 Controles actualizados: Página ${paginaActual}/${totalPaginas}`);
+        }
+
+        // Mostrar primera página
+        mostrarPaginaActual();
+
+        console.log('✅ Paginación configurada correctamente');
+      }
+    }
+
+    function procesarMisiones(misiones,cedulaData) {
+      console.log(cedulaData);
+      // Intenta parsear si es string
+      if (typeof misiones === 'string') {
+        try {
+          misiones = JSON.parse(misiones);
+        } catch (e) {
+          console.log('❌ Misiones no es JSON válido:', misiones);
+          return;
+        }
+      }
+      // if (cedulaData == null) {
+      //   ruta_detalle_mision = 'detalle_mision';
+      // } else {
+      //   ruta_detalle_mision = 'detalle_mision_logeado';
+      // }
+      ruta_detalle_mision = 'detalle_mision';
+      // Si la estructura es { data: [...] }
+      var listaMisiones = Array.isArray(misiones) ? misiones : (misiones && Array.isArray(misiones.data) ? misiones.data : []);
+
+      var container = document.querySelector('.g-box-mision');
+      if (!container) {
+        console.log('❌ No se encontró el container de misiones');
+        return;
+      }
+
+      container.innerHTML = ''; // Limpiar contenido anterior
+
+      if (listaMisiones.length === 0) {
+        container.innerHTML = '<div class="alert alert-info text-center"><h6>📭 No hay misiones disponibles</h6></div>';
+        return;
+      }
+      console.log(cedulaData,"cedulaData");
+      if (cedulaData) {
+        detalle_link = '';
+      }
+
+      listaMisiones.forEach(function (mision) {
+        var misionElement = document.createElement('div');
+        misionElement.className = 'g-box-mision--item';
+
+        misionElement.innerHTML = `
+          <div class="g-box-mision--item__img">
+            <img src="${mision.imagen}" alt="Misión">
+          </div>
+          <div class="g-box-mision--item__info">
+            <p class="g-box-mision--item__info__title">${mision.mi_descripcion}</p>
+            <div class="g-progress-bar">
+              <span style="width: ${mision.progreso || 0}%;"></span>
+            </div>
+            <span class="g-tag g-tag--yellow">${mision.estado || 'No iniciada'}</span>
+            <div class="text-end w-100">
+              <a class="g-link" href="./${ruta_detalle_mision}/${mision.mi_id_mision}">Ver más</a>
+            </div>
+          </div>
+        `;
+        container.appendChild(misionElement);
+      });
+    }
+
+    function sesionIniciada(cedula) {
+      var login = document.querySelector('#login');
+      var logout = document.querySelector('#logout');
+      if (!cedula || cedula === '') {
+        // No hay sesión: mostrar login, ocultar logout
+        if (login) login.style.display = '';
+        if (logout) logout.style.display = 'none';
+      } else {
+        // Hay sesión: ocultar login, mostrar logout
+        if (login) login.style.display = 'none';
+        if (logout) logout.style.display = '';
+      }
+    }
+
+  </script>
+
+
+
+</body>
+
+</html>

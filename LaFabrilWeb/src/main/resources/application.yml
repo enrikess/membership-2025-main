@@ -1,0 +1,28 @@
+#Logger
+logging:
+  level:
+    com.promotick: DEBUG
+    com.promotick.lafabril.dao: INFO
+    org.springframework: INFO
+    org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: DEBUG
+
+#Promotick
+promotick:
+  web:
+    helper: false
+    thymeleaf:
+      enabled: true
+      admin: false
+  logger: true
+
+#Server
+server:
+  error:
+    whitelabel:
+      enabled: false
+
+spring:
+  application:
+    name: LaFabrilWeb
+  jmx:
+    default-domain: LaFabrilWeb

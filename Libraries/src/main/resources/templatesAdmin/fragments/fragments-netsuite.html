@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+    <th:block th:fragment="detallePedidoNetsuiteRebote">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th class="colum-1"></th>
+                    <th class="colum-2 product">Producto</th>
+                    <th class="colum-1">Puntos</th>
+                    <th class="colum-2">Cantidad</th>
+                    <th class="colum-1">Subtotal</th>
+                </tr>
+                </thead>
+                <tbody>
+                    <!--/*@thymesVar id="pedidoDetalles" type="java.util.List<com.promotick.nissan.model.web.PedidoDetalle>"*/-->
+                    <tr th:each="pedidoDetalle : ${pedidoDetalles}" th:object="${pedidoDetalle}">
+                        <td class="text-center">
+                            <div class="image"><img th:src="${@resources.web('img/productos/').concat(pedidoDetalle.producto.imagenUno)}" src="" alt="" style="max-height: 70px"></div>
+                        </td>
+                        <td style="vertical-align: middle;">
+                            <div class="content">
+                                <div class="cell-view">
+                                    <div class="code" th:text="*{producto.nombreProducto}"></div>
+                                    <div class="code" th:text="|Cod *{producto.codigoWeb}|"></div>
+
+                                    <div class="code" th:if="*{producto.tipoProducto.isRecargaCelular()}" th:text="|Recarga celular: *{nroCelular}|"></div>
+                                    <div class="code" th:if="*{producto.tipoProducto.isRecargaTv()}" th:text="|Recarga TV: *{nroDecodificador}|"></div>
+                                    <div class="code" th:if="*{producto.tipoProducto.isColores()}" th:text="|Color: *{color1 + (color2 != '' ? ', ' + color2 : '')}|"></div>
+                                    <div class="code" th:if="*{producto.tipoProducto.isCorreo()}" th:text="|Correo: *{correo}|"></div>
+                                </div>
+                            </div>
+                        </td>
+                        <td style="vertical-align: middle;"><span class="puntos" th:text="|*{puntosUnitario} Pts|"></span></td>
+                        <td style="vertical-align: middle;"><span class="cantidad" th:text="|*{cantidad}|"></span></td>
+                        <td style="vertical-align: middle;">
+                            <div class="subtotal"><span class="total" th:text="*{puntosTotal}"></span> Pts.</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </th:block>
+
+</body>
+</html>

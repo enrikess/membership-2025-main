@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}"
+      th:with="title='Administracion | ' + ${objMarca.idMarca== null ? 'Registro de marca' : 'Detalle de marca'}, menu='G. Productos', hijo='Marcas'">
+
+<head>
+    <title>Layout</title>
+</head>
+
+<body>
+
+<div layout:fragment="content">
+    <!--/*@thymesVar id="objMarca" type="Marca"*/-->
+
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>Gestion de marcas</h2>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="" th:href="@{/}">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="" th:href="@{/catalogos/marcas}">G. Marcas</a>
+                </li>
+                <li class="breadcrumb-item active">
+                    <strong th:text="${objMarca.idMarca == null ? 'Registro de marca' : 'Detalle de marca'}"></strong>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="wrapper wrapper-content animated fadeInUp">
+
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h5>Informacion de marca</h5>
+                        <div class="ibox-tools ibox-tools-button">
+
+                        </div>
+                    </div>
+
+                    <div class="ibox-content">
+
+
+                        <input type="hidden" th:value="${objMarca.idMarca}" value="" id="idMarca" />
+
+                        <form role="form" class="" id="form-registro" onsubmit="return false;">
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-sm-6 b-r">
+
+
+                                        <div class="form-group row">
+                                            <label for="nombresMarca" class="col-sm-3 col-form-label">Nombre de marca</label>
+                                            <div class="col-sm-9">
+                                                <input type="text"class="form-control" name="nombresMarca" id="nombresMarca" th:value="${objMarca.nombreMarca}" value="" placeholder="">
+                                            </div>
+                                        </div>
+
+                                        <div class="hr-line-dashed"></div>
+
+                                        <div class="form-group row">
+                                            <label for="chkEstadoMarca" class="col-sm-3 col-form-label">Estado Marca</label>
+                                            <div class="col-sm-9 padding-form-flat">
+                                                <div class="switch">
+                                                    <div class="onoffswitch">
+                                                        <input type="checkbox" class="onoffswitch-checkbox" id="chkEstadoMarca" th:checked="${objMarca.idMarca!= null ? (objMarca.estadoMarca == 1 ? true : false): true}" name="chkEstadoMarca">
+                                                        <label class="onoffswitch-label" for="chkEstadoMarca">
+                                                            <span class="onoffswitch-inner"></span>
+                                                            <span class="onoffswitch-switch"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-sm-6">
+
+                                        <div class="form-group row">
+                                            <label for="descripcionLarga" class="col-sm-3 col-form-label">Descripcion larga</label>
+                                            <div class="col-sm-9">
+                                                <textarea type="text"class="form-control" name="descripcionLarga"
+                                                          id="descripcionLarga" th:text="${objMarca.descripcionLarga}"
+                                                          value="" placeholder="" rows="5">
+                                                </textarea>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <!--<div class="hr-line-dashed"></div>
+
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="form-group row">
+                                            <label for="nombresMarca" class="col-sm-3 col-form-label">Imagen de marca</label>
+                                        </div>
+                                        <div class="content-product col-lg-6 col-lg-offset-3 col-xs-12">
+                                            <div class="col-sm-12 text-center">
+                                                <div><label for="">Imagen</label></div>
+                                                <div class="kv-avatar text-center">
+                                                    <div class="file-loading">
+                                                        <input id="imagenPrincipal" name="imagenPrincipal" type="file"
+                                                               th:attr="
+                                                                    data-uri=${objMarca.idMarca != null && objMarca.imagenLogo != null ? @resources.web('img/marcas/'.concat(objMarca.imagenLogo)) : @resources.web('img/productos/imagen_defecto.png')},
+                                                                    data-default=${@resources.web('img/productos/imagen_defecto.png')}
+                                                                    ">
+                                                    </div>
+                                                </div>
+                                                <div id="imagenError" class="center-block"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>-->
+
+                                <div class="hr-line-dashed"></div>
+
+                                <div class="form-group row">
+                                    <div class="col-sm-4 col-sm-offset-2" >
+                                        <a th:href="@{/catalogos/marcas}" class="btn btn-white">Cancelar</a>
+                                        <button class="btn btn-primary" id="btnGuardar">Guardar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <th:block th:replace="~{fragments/resources :: scripts}"/>
+
+    <script th:src="${@resources.admin('js/views/marcas-detalle.js', true)}"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            var marcasDetalle = new MarcasDetalle('[[@{/}]]', '[[${objMarca.idMarca == null ? "1" : "0"}]]');
+            marcasDetalle.init();
+        });
+    </script>
+</div>
+
+</body>
+</html>

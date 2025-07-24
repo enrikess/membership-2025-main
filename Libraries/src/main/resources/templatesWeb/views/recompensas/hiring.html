@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Membership Rewards</title>
+  <!-- Google Fonts - Inter -->
+  <th:block th:replace="~{fragments/recompensas/resources :: styles}" />
+</head>
+
+<body>
+  <!-- Header -->
+  <div th:replace="~{fragments/recompensas/topmenu :: topmenu}"></div>
+
+  <section class="container">
+    <div class="g-back">
+      <a class="g-button--secondary" href="index.html">
+        <img src="./img/ico/ico-left.svg" alt="">
+        <span>Regresar</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="container">
+    <div>
+      <div class="pb-4">
+        <img th:src="${@resources.web('recompensa/img/banner-hiring.png')}" alt="" class="w-100">
+      </div>
+      <div class="pb-4">
+        <div class="g-texto2">
+          <div class="pb-2">
+            <span class="g-tag">Programa de Recompensas</span>
+          </div>
+          <h2 class="g-texto2--title">Contrata tu programa de recompensas American Express</h2>
+          <p class="g-texto2--description">Membership Rewards® de American Express premia tus consumos con Millas que no caducan y puedes canjear por viajes o productos.</p>
+        </div>
+        <div class="g-box-benefits">
+          <div class="g-box-benefits--item">
+            <div class="g-box-benefits--item__img">
+              <img th:src="${@resources.web('recompensa/img/benefits-1.svg')}" alt="">
+            </div>
+            <div class="g-box-benefits--item__info">
+              <p class="g-box-benefits--item__info__title">Millas sin vencimiento</p>
+              <p class="g-box-benefits--item__info__description">Canjea cuando quieras, sin preocuparte por fechas límite.</p>
+            </div>
+          </div>
+          <div class="g-box-benefits--item">
+            <div class="g-box-benefits--item__img">
+              <img th:src="${@resources.web('recompensa/img/benefits-1.svg')}" alt="">
+            </div>
+            <div class="g-box-benefits--item__info">
+              <p class="g-box-benefits--item__info__title">Recompensas flexibles</p>
+              <p class="g-box-benefits--item__info__description">Viajes, productos o servicios a tu elección.</p>
+            </div>
+          </div>
+          <div class="g-box-benefits--item">
+            <div class="g-box-benefits--item__img">
+              <img th:src="${@resources.web('recompensa/img/benefits-1.svg')}" alt="">
+            </div>
+            <div class="g-box-benefits--item__info">
+              <p class="g-box-benefits--item__info__title">Promociones exclusivas</p>
+              <p class="g-box-benefits--item__info__description">Accede a beneficios adicionales por usar tu tarjeta en comercios aliados.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="g-texto">
+        <h3 class="g-texto--title">Elige tu forma de pago:</h3>
+        <p class="g-texto--description">Selecciona la forma de pago de tu plan de recompensas Membership Rewards</p>
+      </div>
+      <div class="reward-options">
+        <div class="reward-option selected" data-reward="suscripciones">
+          <div>
+            <span class="reward-title">En dólares</span>
+            <span class="reward-desc">Lorem ipsum dolor sit amet, consectetur adipis elised dosmod.</span>
+          </div>
+          <span class="reward-check" id="check-suscripciones"></span>
+        </div>
+        <div class="reward-option" data-reward="amazon">
+          <div>
+            <span class="reward-title">Con millas</span>
+            <span class="reward-desc">Lorem ipsum dolor sit amet, consectetur adipis elised dosmod.</span>
+          </div>
+          <span class="reward-check" id="check-amazon"></span>
+        </div>
+        <div class="reward-option" data-reward="amazon">
+          <div>
+            <span class="reward-title">Con consumo meta</span>
+            <span class="reward-desc">Lorem ipsum dolor sit amet, consectetur adipis elised dosmod.</span>
+          </div>
+          <span class="reward-check" id="check-amazon"></span>
+        </div>
+      </div>
+      <div class="d-flex justify-content-center mb-5">
+        <div class="g-button--fix">
+          <a href="login.html" class="g-button g-button--big">
+            <span>Registrarme</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="g-footer">
+    <div class="container">
+      <div class="g-footer--container">
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="g-footer--logo">
+              <img th:src="${@resources.web('recompensa/img/logo-footer.svg')}" alt="Logo">
+            </div>
+            <div>
+              <p class="g-footer--social__title">Síguenos en redes</p>
+              <ul class="g-footer--social">
+                <li>
+                  <a href="">
+                    <img th:src="${@resources.web('recompensa/img/ico/ico-facebook.svg')}" alt="">
+                  </a>
+                </li>
+                <li>
+                  <a href="">
+                    <img th:src="${@resources.web('recompensa/img/ico/ico-instagram.svg')}" alt="">
+                  </a>
+                </li>
+                <li>
+                  <a href="">
+                    <img th:src="${@resources.web('recompensa/img/ico/ico-youtube.svg')}" alt="">
+                  </a>
+                </li>
+                <li>
+                  <a href="">
+                    <img th:src="${@resources.web('recompensa/img/ico/ico-tiktok.svg')}" alt="">
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="g-footer--info">
+                  <p class="g-footer--info__title">Información</p>
+                  <ul class="g-footer--info__list">
+                    <li>
+                      <a href="">Preguntas frecuentes</a>
+                    </li>
+                    <li>
+                      <a href="">Términos y Condiciones</a>
+                    </li>
+                    <li>
+                      <a href="">Políticas de Privacidad</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="g-footer--info">
+                  <p class="g-footer--info__title">Contacto</p>
+                  <ul class="g-footer--info__list">
+                    <li>
+                      <a href="">
+                        <img th:src="${@resources.web('recompensa/img/ico/ico-clock.svg')}" alt="">
+                        <span>Lun-Vie de 9 am a 6 pm</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="">
+                        <img th:src="${@resources.web('recompensa/img/ico/ico-whatsapp.svg')}" alt="">
+                        <span>+593 xxx xxx xxx</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="">
+                        <img th:src="${@resources.web('recompensa/img/ico/ico-mail.svg')}" alt="">
+                        <span>soporte@membershiprewards.com.ec</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="g-footer--separator"></div>
+        <div class="g-footer--copyright">
+          <p>American Express Membership Rewards x Banco Guayaquil</p>
+          <p>© 2025 Todos los derechos reservados</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+  <script>
+    $(function() {
+      function renderChecks() {
+        $('.reward-option').each(function() {
+          var $checkSpan = $(this).find('.reward-check');
+          $checkSpan.empty();
+          if ($(this).hasClass('selected')) {
+            var icon = lucide.createElement('Check', { color: '#fff', size: 18, strokeWidth: 3 });
+            $checkSpan.append(icon);
+          }
+        });
+      }
+  
+      $('.reward-option').on('click', function() {
+        $('.reward-option').removeClass('selected');
+        $(this).addClass('selected');
+        renderChecks();
+      });
+  
+      // Render inicial
+      renderChecks();
+    });
+  </script>
+</body>
+
+</html>

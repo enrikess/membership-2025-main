@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Header</title>
+</head>
+
+<body>
+
+<th:block th:fragment="footer">
+
+    <footer id="footer" class="footer" th:fragment="footer">
+        <div class="footer-top">
+            <div class="container">
+                <div class="row flex-flow">
+                    <div class="col-sm-12 col-md-4 footer-sidebar">
+                        <div class="widget contact-info">
+                            <h3 class="widget-title">Contáctanos</h3>
+                            <div class="content">
+                                <p class="address" th:text="${session.configuracionWeb.emailContacto}"></p>
+                                <p class="address"><span th:text="${session.configuracionWeb.telefonoContacto}"></span></p>
+<!--                                <ul>-->
+<!--                                    <li><a href="" th:href="@{/contacto}" class="color-whit">Canjes a la carta</a></li>-->
+<!--                                </ul>-->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-4 footer-sidebar">
+                        <div class="widget our-service">
+                            <h3 class="widget-title">INFORMACIÓN</h3>
+                            <div class="content">
+                                <ul class="widget_social">
+                                    <li><a href="" th:href="@{/preguntas-frecuentes}">Preguntas frecuentes</a></li>
+                                    <li class="margin-top-20"><a href="" th:href="@{/terminos-y-condiciones}">Términos y condiciones</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-4 footer-sidebar">
+                        <div class="widget our-service">
+                            <div class="content">
+                                <ul>
+                                    <li><img th:src="${@resources.web('img/logos/').concat('logo.png')}" width="200" alt=""></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="container">
+                <p class="text-center">Sociedad Prestige <span th:text="${#dates.year(#dates.createNow())}"></span> Todos los derechos reservados</p>
+            </div>
+        </div>
+    </footer>
+
+    <a href="#" class="scroll_top" title="Scroll to Top" style="display: block;"><i class="fa fa-arrow-up"></i></a>
+    <!--    whatsapp-->
+    <button class="open-button"><img th:src="${@resources.web('img/').concat('ws.png')}" alt=""></button>
+    <div class="chat-popup appWhatsapp" id="myForm">
+        <div class="form-container" onsubmit="return false">
+            <div class="dis-flex padd-box1">
+                <h2 class="tittle-chatbot">Hola, ¿En que podemos ayudarte?, te responderemos lo más pronto posible. Nuestros horarios de atención son de lunes a viernes de 9h00 a 18h00.</h2>
+                <div style="width: 30px; height: 30px;">
+                    <button class="close-form" alt="">X</button>
+                </div>
+            </div>
+            <div class="padd-box2">
+                <input type="text" id="txtWhatsApp" placeholder="Introduce tu mensaje..." style="margin-bottom: 0px !important;">
+            </div>
+            <!-- <textarea placeholder="Type message.." name="msg" required></textarea> -->
+            <input type="hidden" id="urlWhatsApp"
+                   th:value="|https://api.whatsapp.com/send?phone=${session.configuracionWeb.telefonoWhatsapp}&text=${session.configuracionWeb.textoWhatsapp}|"/>
+
+            <a class="btn-enviar" target="_blank" href="#">
+                <img th:src="${@resources.web('img/').concat('enviar.png')}" alt="whatsapp">
+            </a>
+        </div>
+    </div>
+
+    <!--POPUP PRODUCTO-->
+    <div class="modal fade no-padding" id="modalUI" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content popup-container-v2">
+                <div class="modal-header"> <!--style="padding: 20px 40px"-->
+                    <h4 style="margin-bottom: 0;font-weight: 600;display: inline-block">Detalle de producto</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: 3px">x</button>
+                </div>
+                <div class="modal-body margin-bottom-20"> <!--style="overflow: auto ;padding: 20px 40px;"-->
+                    <div class="popup-container"> </div>
+                </div>
+                <div class="row text-center">
+                    <div class="col-md-12">
+                        <br> o <a data-dismiss="modal" style="text-decoration: underline;cursor: pointer">Seguir canjeando</a>
+                    </div>
+<!--                    <div class="col-md-12">-->
+<!--                        <a class="button style-10" data-dismiss="modal">Cerrar</a>-->
+<!--                    </div>-->
+                </div>
+                <br>
+            </div>
+        </div>
+    </div>
+
+    <!--POPUP Resultados 2-->
+    <div class="modal fade no-padding" id="modalUI-2" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content popup-container-dinamico"></div>
+        </div>
+    </div>
+
+    <!--NO USADO-->
+    <!--POPUP RESULTADOS-->
+    <div id="add-car" class="overlay-popup">
+        <div class="overflow">
+            <div class="table-view">
+                <div class="cell-view">
+                    <div class="close-layer"></div>
+                    <div class="popup-container">
+                        <div class="popup-container-dinamico"></div>
+                        <div class="close-popup"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- POPUP BIENVENIDA -->
+    <!--/*@thymesVar id="popup" type="java.lang.Boolean"*/-->
+    <th:block th:if="${popup != null && popup  && session.participante.catalogo.popup == 1 && session.participante.catalogo.popupInicio != null}">
+        <div id="bienvenida-popup" style="display:none">
+            <div class="white-popup">
+                <div class="kt-popup-newsletter">
+                    <div class="popup-title">
+                        <img th:src="${@resources.web('img/').concat(session.participante.catalogo.popupInicio)}"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </th:block>
+
+    <script th:src="${@resources.web('js/views/footer.js', true)}"></script>
+
+    <!--/*@thymesVar id="footer" type="java.lang.Boolean"*/-->
+    <script type="text/javascript" th:if="${footer == null || footer}">
+        $(function() {
+            var footer = new Footer('[[@{/}]]');
+            footer.init();
+        });
+    </script>
+
+</th:block>
+
+</body>
+
+</html>

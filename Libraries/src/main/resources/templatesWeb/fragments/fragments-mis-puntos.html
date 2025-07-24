@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+    <th:block th:fragment="historialFacturasAgrupadas">
+        <!--/*@thymesVar id="facturasAgrupadas" type="java.util.List<com.promotick.nissan.model.util.FacturaAgrupado>"*/-->
+        <!--/*@thymesVar id="porcentaje" type="java.lang.Integer"*/-->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="table-responsive" style="clear:both">
+
+                    <table class="cart-table">
+                        <tr>
+                            <th>Mes</th>
+                            <th>No cumplí <span class="lnr lnr-sad" style="color: red;font-size: 20px;margin-left: 5px;"></span></th>
+                            <th>Cumplí <span class="lnr lnr-neutral" style="color: #f7d22e;font-size: 20px;margin-left: 5px;"></span></th>
+                            <th>Sobrecumplí <span class="lnr lnr-smile" style="color: #92d050;font-size: 20px;margin-left: 5px;"></span></th>
+                            <th>Total puntos</th>
+                        </tr>
+                        <tr th:each="fAgrupada : ${facturasAgrupadas}" th:with="metaPorc=${fAgrupada.metaMensual != null ? (fAgrupada.metaMensual * porcentaje) / 100 : 0}">
+
+                            <td><span class="labely">Mes: </span><span th:text="${fAgrupada.nombreMes}"></span></td>
+
+                            <th:block th:unless="${fAgrupada.metaMensual != null}">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </th:block>
+                            <th:block th:if="${fAgrupada.metaMensual != null}">
+                                <td th:style="${fAgrupada.puntosAcreditados < metaPorc ? 'background: red' : ''}">
+                                    <span th:if="${fAgrupada.puntosAcreditados < metaPorc}" class="labely">No cumplí <span class="lnr lnr-sad" style="color: red"></span></span>
+                                </td>
+                                <td th:style="${fAgrupada.puntosAcreditados == metaPorc ? 'background: yellow' : ''}">
+                                    <span th:if="${fAgrupada.puntosAcreditados == metaPorc}" class="labely">Cumplí <span class="lnr lnr-neutral" style="color: #f7d22e"></span></span>
+                                </td>
+                                <td th:style="${fAgrupada.puntosAcreditados > metaPorc ? 'background: #92d050' : ''}">
+                                    <span th:if="${fAgrupada.puntosAcreditados > metaPorc}" class="labely">Sobrecumplí <span class="lnr lnr-smile" style="color: #92d050"></span></span>
+                                </td>
+                                <td><span class="labely">Total puntos: </span><span th:text="|${fAgrupada.puntosAcreditados} Pts|"></span></td>
+                            </th:block>
+
+                        </tr>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="table-responsive" style="clear:both">
+                    <table class="cart-table">
+                        <tr>
+                            <th>Calificación</th>
+                            <th>Puntos</th>
+                        </tr>
+                        <tr>
+                            <td><span class="labely">Calificación: </span>No cumplí <span class="lnr lnr-sad" style="color: red;font-size: 20px;margin-left: 5px;"></span></td>
+                            <td><span class="labely">Puntos: </span>&#60;
+                            <span th:text="${porcentaje}"></span>%</td>
+                        </tr>
+                        <tr>
+                            <td><span class="labely">Calificación: </span>Cumplí <span class="lnr lnr-neutral" style="color: #f7d22e;font-size: 20px;margin-left: 5px;"></span></td>
+                            <td><span class="labely">Puntos: </span><span th:text="${porcentaje}"></span>%</td>
+                        </tr>
+                        <tr>
+                            <td><span class="labely">Calificación: </span>Sobrecumplí <span class="lnr lnr-smile" style="color: #92d050;font-size: 20px;margin-left: 5px;"></span></td>
+                            <td><span class="labely">Puntos: </span> &#62;<span th:text="${porcentaje}"></span>% </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+<!--
+        <table class="cart-table">
+            <tr>
+                <th>Descripción</th>
+                <th>Facturación</th>
+                <th>Puntos posibles</th>
+                <th>Descuentos N/C **</th>
+                <th>Puntos acreditados</th>
+            </tr>
+
+            <tr th:each="fAgrupada : ${facturasAgrupadas}">
+                <td th:text="${fAgrupada.nombreMes}"></td>
+                <td><span class="labely">Facturación: </span><span th:if="${fAgrupada.montoFactura} != null" th:text="'$ ' + ${fAgrupada.montoFactura}"></span></td>
+                <td><span class="labely">Puntos posibles: </span><span th:if="${fAgrupada.puntosPosibles} != null" th:text="|${fAgrupada.puntosPosibles} Pts|"></span></td>
+                <td><span class="labely">Descuentos N/C **: </span><span th:if="${fAgrupada.descuentos} != null" th:text="'$ ' + ${fAgrupada.descuentos}"></span></td>
+                <td><span class="labely">Puntos acreditados: </span><span th:if="${fAgrupada.puntosAcreditados} != null" th:text="|${fAgrupada.puntosAcreditados} Pts|"></span></td>
+            </tr>
+
+            <tr style="color: #333;font-weight: bold;">
+                <td th:text="|TOTAL FACTURACIÓN ${anio}|"></td>
+                <td><span class="labely">Facturación: </span><span th:text="'$ ' + ${(#aggregates.sum(facturasAgrupadas.?[montoFactura != null].![montoFactura])) ?: 0}"></span></td>
+                <td><span class="labely">Puntos posibles: </span></td>
+                <td><span class="labely">Descuentos N/C **: </span></td>
+                <td><span class="labely">Puntos acreditados: </span></td>
+            </tr>
+
+        </table>-->
+
+    </th:block>
+
+    <th:block th:fragment="resumenMetas">
+        <!--/*@thymesVar id="metaFacturacion" type="com.promotick.nissan.model.util.MetaFacturacion"*/-->
+<!--        <div class="col-md-6">-->
+<!--            <p style="font-size: 13px; text-transform: uppercase;font-weight: 600; color: #333">Meta Anual: <span th:text="${metaFacturacion != null && metaFacturacion.metaAnual != null ? '$ ' + metaFacturacion.metaAnual : 'Sin meta anual'}"></span></p>-->
+<!--        </div>-->
+<!--        <div class="col-md-6">-->
+<!--            <p style="font-size: 13px; text-transform: uppercase;font-weight: 600; color: #333">Meta trimestral: <span th:text="${metaFacturacion != null && metaFacturacion.metaTrimestral != null ? '$' + metaFacturacion.metaTrimestral : 'Sin meta trimestral'}"></span></p>-->
+<!--        </div>-->
+
+        <div class="row">
+            <div class="col-md-12">
+                <p style="font-weight: 600" th:text="${session.participante.nombresParticipante.concat(' ').concat(session.participante.appaternoParticipante)} + ', ¡SIGUE ACUMULANDO COMPRAS!'"></p>
+            </div>
+        </div>
+
+        <div class="row margin-top-40">
+            <div class="col-md-12">
+                <h4 style="font-weight: 600"><i class="fa fa-calendar"></i><span th:text="| ${mes} ${anio}|"></span></h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-5 margin-top-40">
+                <p>➤ HAS COMPRADO EN ESTE PERIODO: <span class="monto-compra">US$ 80</span></p>
+                <div class="division"></div>
+                <p>➤ SÓLO TE FALTAN: <span class="monto-compra">US$ 120</span></p>
+            </div>
+            <div class="col-sm-7 text-center">
+                <p style="font-weight: 600">TU META DEL MES: <span class="monto-compra" th:text="'US$ ' + ${session.participante.metaAnual / 12}"></span></p>
+                <img th:src="${@resources.web('img/amchart.png')}" src="" alt="">
+            </div>
+        </div>
+    </th:block>
+
+    <th:block th:fragment="detallePedidoCanjeado">
+        <!--/*@thymesVar id="pedido" type="com.promotick.nissan.model.web.Pedido"*/-->
+        <div class="section-title style6 text-center margin-top-40 cabecera-detalle">
+            <h3>Detalle canje</h3>
+            <span class="sub-title"></span>
+        </div>
+
+        <div class="widget widget_recent_product" style="border-top: 1px solid #e5e5e5;padding-top: 20px;">
+            <div class="row">
+                <div class="col-md-6">
+                    <h2 class="widget-title" style="font-weight: 600"><span class="icon pe-7s-news-paper"></span> Nº pedido:</h2>
+                    <div class="col-md-12">
+                        <p th:text="${pedido.idPedido}"></p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h2 class="widget-title" style="font-weight: 600"><span class="icon pe-7s-date"></span> Fecha: </h2>
+                    <div class="col-md-12">
+                        <p th:text="${pedido.fechaEntregaString}"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <h2 class="widget-title" style="font-weight: 600"><span class="icon pe-7s-map-marker"></span> Dirección de entrega:</h2>
+                    <div class="col-md-12">
+                        <p th:text="|${pedido.direccion.direccionCalle}, ${pedido.direccion.ubigeo.provincia}, ${pedido.direccion.ubigeo.distrito}|"></p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h2 class="widget-title" style="font-weight: 600"><span class="icon pe-7s-comment"></span> Indicaciones particulares:</h2>
+                    <div class="col-md-12">
+                        <p th:text="${pedido.direccion.referencia}"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <h2 class="widget-title" style="font-weight: 600"><span class="icon pe-7s-cart"></span> Detalle de canje:</h2>
+                    <div class="col-md-12">
+                        <ul class="product-categories">
+                            <li th:each="pedidoDetalle : ${pedido.pedidoDetalles}" th:object="${pedidoDetalle}" th:attr="data-id=*{producto.idProducto}">
+                                <div class="product-thumb">
+                                    <a><img th:src="${@resources.web('img/productos/').concat(pedidoDetalle.producto.imagenUno)}" src="" alt=""></a>
+                                </div>
+                                <div class="product-info">
+                                    <h3 class="product-name"><a href="" th:href="${pedidoDetalle.nombreTemporal == null ? pedidoDetalle.producto.url : '#'}"
+                                                                th:text="${pedidoDetalle.nombreTemporal != null ? pedidoDetalle.nombreTemporal : 'Cod.' + pedidoDetalle.producto.codigoWeb + ' / ' + pedidoDetalle.producto.nombreProducto}"></a></h3>
+                                    <h3 class="product-name"><a th:text="${pedidoDetalle.producto.marca.nombreMarca}"></a></h3>
+                                    <span class="price" style="font-weight: 600" th:text="|*{cantidad} x *{puntosUnitario} Puntos|"></span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h2 class="widget-title" style="font-weight: 600"><span class="icon pe-7s-credit"></span> Total:</h2>
+                    <div class="col-md-12" style="background: #2b9361;padding-top: 10px;padding-bottom: 10px">
+                        <span class="price" style="font-weight: 600;color: #fff" th:text="|${pedido.puntosTotal} Puntos|"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--NO USADO-->
+        <div class="col-md-8 col-md-offset-2" style="margin-bottom:30px; display: none">
+            <div class="block-title size-3 accordeon-title cabecera-detalle"><span class="title-check-1 block-title">Detalle del canje  </span></div>
+            <div class="accordeon-entry ae-1" style="display:block">
+                <div class="table-responsive">
+                    <table class="cart-table">
+                        <tr>
+                            <th class="colum-1"></th>
+                            <th class="colum-2 product">Producto</th>
+                            <th class="colum-1">Puntos</th>
+                            <th class="colum-2">Cantidad</th>
+                            <th class="colum-1">Subtotal</th>
+                        </tr>
+
+
+                        <tr th:each="pedidoDetalle : ${pedido.pedidoDetalles}" th:object="${pedidoDetalle}" th:attr="data-id=*{producto.idProducto}">
+                            <td>
+                                <div class="traditional-cart-entry">
+                                    <div class="image"><img th:src="${@resources.web('img/productos/').concat(pedidoDetalle.producto.imagenUno)}" src="" alt=""></div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="traditional-cart-entry">
+                                    <div class="content">
+                                        <div class="cell-view">
+                                            <a href="" th:href="${pedidoDetalle.nombreTemporal == null ? pedidoDetalle.producto.url : '#'}" class="title" th:text="${pedidoDetalle.nombreTemporal != null ? pedidoDetalle.nombreTemporal : pedidoDetalle.producto.nombreProducto}"></a>
+                                            <div class="code" th:text="|Cod *{producto.codigoWeb}|"></div>
+
+                                            <div class="code" th:if="*{producto.tipoProducto.isRecargaCelular()}" th:text="|Recarga celular: *{nroCelular}|"></div>
+                                            <div class="code" th:if="*{producto.tipoProducto.isRecargaTv()}" th:text="|Recarga TV: *{nroDecodificador}|"></div>
+                                            <div class="code" th:if="*{producto.tipoProducto.isColores()}" th:text="|Color: *{color1 + (color2 != '' ? ', ' + color2 : '')}|"></div>
+                                            <div class="code" th:if="*{producto.tipoProducto.isCorreo()}" th:text="|Correo: *{correo}|"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="td-puntos"><span class="labely">Puntos: </span><span class="puntos" th:text="|*{puntosUnitario} Pts|"></span></td>
+                            <td><span class="labely">Cantidad: </span><span th:text="*{cantidad}"></span></td>
+                            <td>
+                                <span class="labely">Subtotal: </span>
+                                <div class="subtotal"><span class="total" th:text="|*{(puntosUnitario * cantidad)} Pts|"></span></div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-md-5 information-entry" style="float:right;">
+                        <div class="cart-summary-box">
+                            <div class="grand-total" th:text="|Total: ${pedido.puntosTotal} Pts|"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <th:block th:if="!${pedido.pedidoManual}">
+                <div class="block-title size-3 accordeon-title"><span class="title-check-2 block-title">Datos de envío  </span></div>
+                <div class="range-wrapper accordeon-entry ae-2">
+                    <form>
+                        <div class="col-sm-12 sinpad-resp" style="overflow:hidden; float:none;">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-6 sinpad-resp">
+                                    <label for="infoTipoDocumento">Tipo de documento</label>
+                                    <input class="form-control" type="text" disabled th:value="${pedido.tipoDocumento.nombreTipoDocumento}" id="infoTipoDocumento">
+                                </div>
+                                <div class="col-xs-12 col-sm-6 sinpad-resp">
+                                    <label for="infoNroDocumento">Nº de documento</label>
+                                    <input class="form-control" type="text" disabled th:value="${pedido.nroDocumentoPedido}" id="infoNroDocumento">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 sinpad-resp">
+                                    <label for="infoNombres" >Nombres</label>
+                                    <input class="form-control" type="text" placeholder="" disabled th:value="${pedido.nombrePedido}" id="infoNombres" name="infoNombres">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-6 sinpad-resp">
+                                    <label for="infoApPaterno" >Apellido paterno</label>
+                                    <input class="form-control" type="text" placeholder="" disabled th:value="${pedido.apellidoPaternoPedido}" id="infoApPaterno" name="infoApPaterno">
+                                </div>
+                                <div class="col-xs-12 col-sm-6 sinpad-resp">
+                                    <label for="infoApMaterno" >Apellido materno</label>
+                                    <input class="form-control" type="text" placeholder="" disabled th:value="${pedido.apellidoMaternoPedido}" id="infoApMaterno" name="infoApMaterno">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12 sinpad-resp">
+                                    <label for="infoEmail" >Correo electrónico</label>
+                                    <input class="form-control"type="text" placeholder="" disabled th:value="${pedido.emailPedido}" id="infoEmail" name="infoEmail">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-6 sinpad-resp">
+                                    <label for="infoTelefono" >Telefono fijo</label>
+                                    <input class="form-control" type="text" placeholder="" disabled th:value="${pedido.telefonoPedido}" id="infoTelefono" name="infoTelefono">
+                                </div>
+                                <div class="col-xs-12 col-sm-6 sinpad-resp">
+                                    <label for="infoCelular" >Telefono celular</label>
+                                    <input class="form-control" type="text" placeholder="" disabled th:value="${pedido.movilPedido}" id="infoCelular" name="infoCelular">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="separador" style="margin-top:20px;"></div>
+
+                        <div class="col-sm-12 sinpad-resp" th:object="${pedido.direccion}">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-6 sinpad-resp form-group">
+                                    <label  for="dirProvincia">Provincia</label>
+                                    <input class="form-control" type="text" placeholder="" disabled th:value="*{ubigeo.provincia}" id="dirProvincia" name="dirProvincia">
+                                </div>
+                                <div class="col-xs-12 col-sm-6 sinpad-resp form-group">
+                                    <label  for="dirCiudad">Ciudad</label>
+                                    <input class="form-control" type="text" placeholder="" disabled th:value="*{ubigeo.distrito}" id="dirCiudad" name="dirCiudad">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-6 sinpad-resp form-group">
+                                    <label for="dirZona" >Tipo de zona</label>
+                                    <input class="form-control" type="text" placeholder="" disabled th:value="*{zona.nombreZona}" id="dirZona" name="dirZona">
+                                </div>
+                                <div class="col-xs-12 col-sm-6  sinpad-resp form-group">
+                                    <label for="dirVivienda" >Tipo de vivienda</label>
+                                    <input class="form-control" type="text" placeholder="" disabled th:value="*{tipoVivienda.nombreTipoVivienda}" id="dirVivienda" name="dirVivienda">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-12 sinpad-resp form-group">
+                                    <label  for="dirDireccion">Dirección</label>
+                                    <input type="text" class="form-control" name="dirDireccion" disabled id="dirDireccion" th:value="*{direccionCalle}">
+                                </div>
+                                <div class="col-xs-12 col-sm-12 sinpad-resp form-group">
+                                    <label  for="dirReferencia">Referencia</label>
+                                    <input type="text" class="form-control" name="dirReferencia" disabled id="dirReferencia" th:value="*{referencia}">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </th:block>
+        </div>
+    </th:block>
+
+
+    <!--Nuevos-->
+    <th:block th:fragment="todosMisPuntos">
+        <div class="title-subpage">
+            <h4 style="border-bottom: 1px solid #e5e5e5;line-height: 45px;font-weight: 600" th:text="'Puntos disponibles: ' + ${session.participante.puntosDisponibles}"></h4>
+            <span style="float:right; font-size:15px;" th:text="|Última actualización: ${fechaActualizacion != null ? #dates.format(fechaActualizacion, 'dd/MM/yyyy') : '--/--/----'}|"></span><br>
+        </div>
+
+        <div class="row">
+            <!-- NO USADO-->
+<!--                <div class="left-puntos box-periodo">-->
+<!--                    <div>Periodo: </div>-->
+<!--                    <div><span class="lnr lnr-calendar-full"></span><input style="margin: 0 10px;" type="date" id="fechaInicio" name="fechaInicio" placeholder="" th:value="${fechaDesde}"></div>-->
+<!--                    <div><span class="lnr lnr-calendar-full"></span><input style="margin: 0 10px;" type="date" id="fechaFin" name="fechaFin" placeholder="" th:value="${fechaHasta}"></div>-->
+<!--                </div>-->
+            <div class="col-sm-12 col-md-12" style="clear:both">
+                <table class="group-product table" id="tblPuntos">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Evento</th>
+                            <th>Cantidad de puntos</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </th:block>
+
+    <th:block th:fragment="puntosAcumulados">
+        <div class="title-subpage">
+            <h4 style="border-bottom: 1px solid #e5e5e5;line-height: 45px;font-weight: 600" th:text="'Puntos disponibles: ' + ${session.participante.puntosDisponibles}"></h4>
+            <span style="float:right; font-size:15px;" th:text="|Última actualización: ${fechaActualizacion != null ? #dates.format(fechaActualizacion, 'dd/MM/yyyy') : '--/--/----'}|"></span><br>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <p>
+                    <label for="">Desde</label><br>
+                    <input value="" type="date" style="width: 100%;height: 38px" id="fechaInicio" name="fechaInicio" th:value="${fechaDesde}">
+                </p>
+            </div>
+            <div class="col-md-4">
+                <p>
+                    <label for="">Hasta</label><br>
+                    <input value="" type="date" style="width: 100%;height: 38px" id="fechaFin" name="fechaFin" th:value="${fechaHasta}">
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-12" style="clear:both">
+                <table class="group-product table" id="tblPuntos">
+                    <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Evento</th>
+                        <th>Cantidad de puntos</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </th:block>
+
+    <th:block th:fragment="puntosCanjeados">
+        <div class="title-subpage">
+            <h4 style="border-bottom: 1px solid #e5e5e5;line-height: 45px;font-weight: 600" th:text="'Puntos canjeados: ' + ${puntosCanjeados}"></h4>
+            <span style="float:right; font-size:15px;" th:text="|Última actualización: ${fechaActualizacion != null ? #dates.format(fechaActualizacion, 'dd/MM/yyyy') : '--/--/----'}|"></span><br>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <p>
+                    <label for="">Desde</label><br>
+                    <input value="" type="date" style="width: 100%;height: 38px" id="fechaInicio" name="fechaInicio" th:value="${fechaDesde}">
+                </p>
+            </div>
+            <div class="col-md-4">
+                <p>
+                    <label for="">Hasta</label><br>
+                    <input value="" type="date" style="width: 100%;height: 38px" id="fechaFin" name="fechaFin" th:value="${fechaHasta}">
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-12" style="clear:both">
+                <table class="cart-table group-product table" id="tblPuntos">
+                    <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Evento</th>
+                        <th>Cantidad de puntos</th>
+                        <th>Ver detalle</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </th:block>
+
+    <th:block th:fragment="puntosDescargados">
+        <div class="title-subpage">
+            <h4 style="border-bottom: 1px solid #e5e5e5;line-height: 45px;font-weight: 600" th:text="'Puntos descargados: ' + ${puntosDescargados}"></h4>
+            <span style="float:right; font-size:15px;" th:text="|Última actualización: ${fechaActualizacion != null ? #dates.format(fechaActualizacion, 'dd/MM/yyyy') : '--/--/----'}|"></span><br>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <p>
+                    <label for="">Desde</label><br>
+                    <input value="" type="date" style="width: 100%;height: 38px" id="fechaInicio" name="fechaInicio" th:value="${fechaDesde}">
+                </p>
+            </div>
+            <div class="col-md-4">
+                <p>
+                    <label for="">Hasta</label><br>
+                    <input value="" type="date" style="width: 100%;height: 38px" id="fechaFin" name="fechaFin" th:value="${fechaHasta}">
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-12" style="clear:both">
+                <table class="cart-table group-product table" id="tblPuntos">
+                    <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Evento</th>
+                        <th>Cantidad de puntos</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </th:block>
+
+    <th:block th:fragment="puntosVencidos">
+        <div class="title-subpage">Mis puntos vencidos<span style="float:right; font-size:15px;" th:text="|Última actualización: ${fechaActualizacion != null ? #dates.format(fechaActualizacion, 'dd/MM/yyyy') : '--/--/----'}|"></span></div>
+        <div class="row">
+            <div class="col-md-3 right-puntos">
+                <div class="block-r_puntos">
+                    <div>Puntos Vencidos</div>
+                    <span th:text="${puntosVencidos}"></span>
+                </div>
+            </div>
+
+            <div th:include="this :: puntosCommon(false)" th:remove="tag"></div>
+
+
+            <!--<div class="col-md-9 left-puntos_1">
+                <div class="left-puntos box-periodo">
+                    <div>Periodo: </div>
+                    <div><span class="lnr lnr-calendar-full"></span><input style="margin: 0 10px;" type="date" id="fechaInicio" name="fechaInicio" placeholder="" th:value="${fechaDesde}"></div>
+                    <div><span class="lnr lnr-calendar-full"></span><input style="margin: 0 10px;" type="date" id="fechaFin" name="fechaFin" placeholder="" th:value="${fechaHasta}"></div>
+                </div>
+                <div class="table-responsive" style="clear:both">
+                    <table class="cart-table" id="tblPuntos">
+                        <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Evento</th>
+                            <th>Cantidad de puntos</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>-->
+        </div>
+    </th:block>
+
+    <th:block th:fragment="puntosCommon(conDetalle)">
+        <div class="col-md-9 left-puntos_1">
+            <div class="left-puntos box-periodo">
+                <div>Periodo: </div>
+                <div><span class="lnr lnr-calendar-full"></span><input style="margin: 0 10px;" type="date" id="fechaInicio" name="fechaInicio" placeholder="" th:value="${fechaDesde}"></div>
+                <div><span class="lnr lnr-calendar-full"></span><input style="margin: 0 10px;" type="date" id="fechaFin" name="fechaFin" placeholder="" th:value="${fechaHasta}"></div>
+            </div>
+            <div class="table-responsive" style="clear:both">
+                <table class="cart-table" id="tblPuntos">
+                    <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Evento</th>
+                        <th>Cantidad de puntos</th>
+                        <th th:if="${conDetalle}">Ver detalle</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </th:block>
+</body>
+</html>

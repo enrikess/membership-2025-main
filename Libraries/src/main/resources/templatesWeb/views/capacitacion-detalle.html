@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}"
+      th:with="title='La Fabril | Capacitaciones', menu='Capacitaciones'">
+
+<head>
+    <title>Title</title>
+</head>
+<body>
+
+<th:block layout:fragment="content">
+
+    <div class="container margin-bottom-50">
+        <div class="section-title style6  margin-top-40">
+            <div class="breadcrumbs">
+                <a href="" th:href="@{/capacitacion}"><span class="lnr lnr-arrow-left"></span> Capacitaciones</a>
+                <span th:text="${capacitacion.nombreCapacitacion}"></span>
+            </div>
+        </div>
+        <div class="row">
+
+            <div class="col-sm-6 text-center">
+                <img src="" alt="" th:src="${capacitacion.imagenDetalle}">
+
+            </div>
+            <div class="col-sm-6">
+                <div class="product-detail-box">
+                    <h3 class="product-title">Completa el cuestionario y acumula puntos</h3>
+                    <p>Disponible hasta el [[${capacitacion.disponibleHasta}]]</p>
+                    <div class="product-description detail-info-entry">
+                        <p th:utext="${capacitacion.descripcionCapacitacion}"></p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <br><br>
+        <h3>Recursos disponibles</h3>
+        <hr>
+        <div class="row">
+
+            <div th:if="${capacitacion.recursos.isEmpty()}" class="col-md-12" style="padding: 30px; text-align: center">
+                <span>No tenemos recursos disponibles para esta capacitación</span>
+            </div>
+
+            <div class="col-md-12 border-text" th:unless="${capacitacion.recursos.isEmpty()}">
+                <div th:remove="tag" th:each="recurso : ${capacitacion.recursos}">
+                    <!--Texto-->
+                    <div th:if="${recurso.esTexto()}" class="capacitacion-recurso">
+                        <div th:remove="tag" th:utext="${recurso.contenido}"></div>
+                    </div>
+
+                    <!--Imagen-->
+                    <div th:if="${recurso.esImagen()}" class="txt-cent capacitacion-recurso">
+                        <img src="" th:src="${recurso.contenido}" alt="">
+                    </div>
+
+                    <!--Video-->
+                    <div th:if="${recurso.esVideo()}" class="box-video txt-cent capacitacion-recurso">
+                        <video th:id="|video-${recurso.idCapacitacionRecurso}|" class="video-js vjs-default-skin vjs-fluid video-item" controls preload="none">
+                            <source src="" th:src="${recurso.contenido}" type="video/mp4">
+                            <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
+                        </video>
+                    </div>
+
+                    <!--PDF-->
+                    <div th:if="${recurso.esPDF()}" class="txt-cent capacitacion-recurso">
+                        <div class="post-format-document" th:id="|pdf-${recurso.idCapacitacionRecurso}|" th:attr="data-file=${recurso.contenido}">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <a th:if="${capacitacion.estadoCuestionario && capacitacion.conteoPreguntas > 0}" class="button style-10" href="" th:href="@{/capacitacion/{id}/cuestionario(id=${capacitacion.idCapacitacion})}">[[${capacitacion.resuelto ? 'Ver cuestionario' : 'Inicio de Cuestionario'}]]</a>
+
+        </div>
+    </div>
+
+    <th:block th:replace="~{fragments/resources :: scripts}"/>
+
+    <script th:src="${@resources.web('js/views/capacitacion-detalle.js', true)}"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            var capacitacionDetalle = new CapacitacionDetalle('[[@{/}]]');
+            capacitacionDetalle.init();
+        });
+    </script>
+
+</th:block>
+
+</body>
+</html>

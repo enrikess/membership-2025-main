@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+
+    <th:block th:fragment="encuestaPedido">
+
+        <div class="col-md-offset-3 col-md-6 col-sm-12 text-center">
+            <img th:src="${@resources.web('img/logos/logo-uno.png')}" alt="">
+            <br><br>
+            <div class="newsletter style2">
+                <div class="section-title text-center">
+                    <h4 th:text="|ENCUESTA SOBRE EL Nº DE PEDIDO: ${idPedido} |"></h4>
+                </div>
+                <form class="text-left" id="frm-encuesta" onsubmit="return false;">
+                    <p>Tu opinión es muy importante y nos ayudará a mejorar</p>
+                    <input type="hidden" id="idPedido" th:value="${idPedido}">
+                    <label for="" id="preguntaUno">1. ¿Tu pedido llegó antes de los 15 días? Califica su tiempo de entrega.</label><br>
+                    <table style="margin-top: 10px">
+                        <tr>
+                            <td style="width: 20%;text-align: center">
+                                <input type="radio" name="rptaUno" value="1">
+                                <p style="font-size: 25px;margin:10px 0;">&#128545;</p>
+                                <p>Enojado</p>
+                            </td>
+                            <td style="width: 20%;text-align: center">
+                                <input type="radio" name="rptaUno" value="2">
+                                <p style="font-size: 25px;margin:10px 0;">&#128546;</p>
+                                <p>Triste</p>
+                            </td>
+                            <td style="width: 20%;text-align: center">
+                                <input type="radio" name="rptaUno" value="3">
+                                <p style="font-size: 25px;margin:10px 0;">&#128528;</p>
+                                <p>Normal</p>
+                            </td>
+                            <td style="width: 20%;text-align: center">
+                                <input type="radio" name="rptaUno" value="4">
+                                <p style="font-size: 25px;margin:10px 0;">&#128578;</p>
+                                <p>Feliz</p>
+                            </td>
+                            <td style="width: 20%;text-align: center">
+                                <input type="radio" name="rptaUno"  value="5">
+                                <p style="font-size: 25px;margin:10px 0;">&#128513;</p>
+                                <p>Muy feliz</p>
+                            </td>
+                        </tr>
+                    </table>
+                    <label for="" id="preguntaDos">2. Califica el/los productos que solicitaste en tu canje.</label>
+
+                    <table style="margin-top: 10px">
+                        <tr>
+                            <td style="width: 20%;text-align: center">
+                                <input type="radio" name="rptaDos" value="1">
+                                <p style="font-size: 25px;margin:10px 0;">&#128545;</p>
+                                <p>Enojado</p>
+                            </td>
+                            <td style="width: 20%;text-align: center">
+                                <input type="radio" name="rptaDos" value="2">
+                                <p style="font-size: 25px;margin:10px 0;">&#128546;</p>
+                                <p>Triste</p>
+                            </td>
+                            <td style="width: 20%;text-align: center">
+                                <input type="radio" name="rptaDos" value="3">
+                                <p style="font-size: 25px;margin:10px 0;">&#128528;</p>
+                                <p>Normal</p>
+                            </td>
+                            <td style="width: 20%;text-align: center">
+                                <input type="radio" name="rptaDos" value="4">
+                                <p style="font-size: 25px;margin:10px 0;">&#128578;</p>
+                                <p>Feliz</p>
+                            </td>
+                            <td style="width: 20%;text-align: center">
+                                <input type="radio" name="rptaDos" value="5">
+                                <p style="font-size: 25px;margin:10px 0;">&#128513;</p>
+                                <p>Muy feliz</p>
+                            </td>
+                        </tr>
+                    </table>
+                    <label for="" id="preguntaTres">3. Déjanos tus comentarios <span style="font-size: 11px">(Máximo 150 caracteres)</span></label><br>
+                    <textarea  name="txtComentarios" id="txtComentarios" cols="30" rows="3" style="width: 100%" maxlength="150"></textarea>
+                    <br><br>
+                    <a id="btnEnviar" class="button style-10" style="width: 100%">Enviar respuestas</a>
+
+                    <br><br>
+                    <a id="btnSaltar" class="button style-11" style="width: 100%;">Saltar</a>
+                </form>
+            </div>
+        </div>
+
+    </th:block>
+
+    <th:block th:fragment="encuestaProcesoCanje">
+        <div class="modal-header" style="padding: 20px 40px">
+            <h4 style="margin-bottom: 0;font-weight: 600;display: inline-block"><span class="icon pe-7s-note" style="font-size: 25px;vertical-align: middle;"></span> Encuesta</h4> <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: 3px">x</button>
+        </div>
+        <div class="modal-body margin-bottom-20" style="padding: 20px 40px">
+            <form class="text-left" onsubmit="return false;" id="frmEncuesta">
+                <h5><b>Antes de finalizar el canje nos interesa saber tu opinión:</b></h5>
+                <br>
+                <label for="" id="preguntaUno">1. Califica la variedad de productos que se encuentra dentro de la plataforma.</label><br>
+                <table style="margin-top: 10px">
+                    <tr>
+                        <td style="width: 20%;text-align: center">
+                            <input type="radio" name="rptaUno" id="enojado" value="1">
+                            <p style="font-size: 25px;margin:10px 0;">&#128545;</p>
+                            <p>Enojado</p>
+                        </td>
+                        <td style="width: 20%;text-align: center">
+                            <input type="radio" name="rptaUno" id="triste" value="2">
+                            <p style="font-size: 25px;margin:10px 0;">&#128546;</p>
+                            <p>Triste</p>
+                        </td>
+                        <td style="width: 20%;text-align: center">
+                            <input type="radio" name="rptaUno" id="normal" value="3">
+                            <p style="font-size: 25px;margin:10px 0;">&#128528;</p>
+                            <p>Normal</p>
+                        </td>
+                        <td style="width: 20%;text-align: center">
+                            <input type="radio" name="rptaUno" id="feliz" value="4">
+                            <p style="font-size: 25px;margin:10px 0;">&#128578;</p>
+                            <p>Feliz</p>
+                        </td>
+                        <td style="width: 20%;text-align: center">
+                            <input type="radio" name="rptaUno" id="refeliz" value="5">
+                            <p style="font-size: 25px;margin:10px 0;">&#128513;</p>
+                            <p>Muy feliz</p>
+                        </td>
+                    </tr>
+                </table>
+                <label for="" id="preguntaDos">2. ¿Consideras que es amigable el proceso de canjes en la plataforma?</label>
+
+                <table style="margin-top: 10px">
+                    <tr>
+                        <td style="width: 20%;text-align: center">
+                            <input type="radio" name="rptaDos" id="enojado2" value="1">
+                            <p style="font-size: 25px;margin:10px 0;">&#128545;</p>
+                            <p>Enojado</p>
+                        </td>
+                        <td style="width: 20%;text-align: center">
+                            <input type="radio" name="rptaDos" id="triste2" value="2">
+                            <p style="font-size: 25px;margin:10px 0;">&#128546;</p>
+                            <p>Triste</p>
+                        </td>
+                        <td style="width: 20%;text-align: center">
+                            <input type="radio" name="rptaDos" id="normal2" value="3">
+                            <p style="font-size: 25px;margin:10px 0;">&#128528;</p>
+                            <p>Normal</p>
+                        </td>
+                        <td style="width: 20%;text-align: center">
+                            <input type="radio" name="rptaDos" id="feliz2" value="4">
+                            <p style="font-size: 25px;margin:10px 0;">&#128578;</p>
+                            <p>Feliz</p>
+                        </td>
+                        <td style="width: 20%;text-align: center">
+                            <input type="radio" name="rptaDos" id="refeliz2" value="5">
+                            <p style="font-size: 25px;margin:10px 0;">&#128513;</p>
+                            <p>Muy feliz</p>
+                        </td>
+                    </tr>
+                </table>
+                <label for="" id="preguntaTres">3. Déjanos tus comentarios <span style="font-size: 11px">(Máximo 150 caracteres)</span></label><br>
+                <textarea name="txtComentarios" id="txtComentarios" cols="30" rows="3" style="width: 100%" maxlength="150"></textarea>
+                <br><br>
+                <a href="#" id="btnEnviar" class="button style-10" style="width: 100%">Enviar y confirmar canje</a>
+
+                <br><br>
+                <a href="#" id="btnSaltar" class="button style-11" style="width: 100%;">Saltar</a>
+
+            </form>
+        </div>
+    </th:block>
+</body>
+</html>

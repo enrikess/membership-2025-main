@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/header :: header (title='Cambiar contraseña | La Fabril')">
+    <title></title>
+</head>
+
+
+<body class="fondo">
+<div class="container">
+    <div class="row">
+        <div class="col-md-offset-4 col-md-4 col-sm-12 text-center">
+            <div class="newsletter style2">
+                <img th:src="${@resources.web('img/logos/logo-uno.png')}"  width="270">
+                <br>
+                <br>
+                <br>
+                <p class="text-left">Su token de cambio de contraseña ha expirado o es incorrecto</p>
+                <br>
+
+                <a href="" th:href="@{/login}" class="button style-10">Ir al Login</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

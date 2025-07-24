@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/header :: header (title='La Fabril ')">
+    <title></title>
+</head>
+
+
+<body class="home fondo">
+    <div class="container">
+
+        <div class="row">
+            <div class="col-md-offset-8 col-md-4 col-sm-12 text-center login-center">
+                <div class="newsletter style2">
+                    <img th:src="${@resources.web('img/logos/logo.png')}" src="" alt="" width="180">
+<!--                    <div class="section-title text-center">-->
+<!--                        <h4>INICIA SESIÓN</h4>-->
+<!--                    </div>-->
+                    <br>
+                    <br>
+                    <form id="frmLogin" class="text-left" role="form" th:method="post" th:action="@{autenticar}" onsubmit="return false;">
+
+                        <div class="form-group">
+                            <label for="username">Nº de documento</label>
+                            <br>
+                            <input type="text"  name="username" id="username" maxlength="13" style="width: 100%">
+                        </div>
+
+                        <input type="hidden" name="usernameTipoDoc" id="usernameTipoDoc"/>
+
+                        <div class="form-group">
+                            <label class="pass" for="password" style="display: inline-block;">Contraseña1</label>
+                            <br>
+                            <input type="password"  name="password" id="password" style="width: 100%">
+                        </div>
+                        <div class="checkbox">
+                            <label>
+                                <input type="checkbox">Recordar Nº de documento
+                            </label>
+                        </div>
+                        <br>
+                        <a class="button style-10" id="btnLogin" style="width: 100%">Ingresar</a>
+                        <br><br>
+                        <a th:href="@{/recuperar}" href="" style="text-decoration: underline;">Olvidé mi contraseña</a>
+<!--                        <a href="" th:href="@{/registro}" class="button style-11" style="width: 100%">Registrarme</a>-->
+                        <br>
+                        <div id="messageError" style="display: none;">
+                            <br>
+                            <p>Lo sentimos, las credenciales son incorrectas, por favor vuelva a intentarlo. </p>
+                            <p>
+                                Si el problema persiste escríbenos a <a href="" th:href="'mailto:' + ${configuracionWeb.emailContacto}" th:text="${configuracionWeb.emailContacto}"></a> o comunícate con nosotros al <span th:text="${configuracionWeb.telefonoContacto}"></span>
+                            </p>
+                            <p th:text="|Nuestro horario de atención es de ${configuracionWeb.horario}|"></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<th:block th:replace="~{fragments/resources :: scripts}"/>
+
+<script th:src="${@resources.web('js/views/login.js', true)}"></script>
+
+<script type="text/javascript">
+    $(function() {
+        var login = new Login('[[@{/}]]');
+        login.init();
+    });
+</script>
+
+</body>
+
+</html>

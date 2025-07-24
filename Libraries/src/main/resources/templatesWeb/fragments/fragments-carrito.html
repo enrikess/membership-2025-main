@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+    <th:block th:fragment="carritoPedidoTemplate">
+
+        <th:block th:if="${session.pedido.pedidoDetalles.isEmpty()}">
+            <div class="mozaic-banners-wrapper type-2" style="margin-top: 20px">
+                <div class="banner-column col-sm-12">
+                    <div class="information-blocks">
+                        <div class="accordeon accordeon-entry ae-1" style="display:block;">
+                            <div class="information-blocks">
+                                <div class="table-responsive text-center">
+                                    <table class="cart-table">
+                                        <tr>
+                                            <p style="font-size:20px">Lo sentimos, no tienes productos agregados a tu carrito.</p>
+                                            <br>
+                                            <a class="button style-11" th:href="@{/catalogo}" href="">VOLVER A LAS CATEGORIAS</a>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </th:block>
+
+        <th:block th:unless="${session.pedido.pedidoDetalles.isEmpty()}" th:object="${session.pedido}">
+            <div class="col-sm-12 col-md-12">
+                <table class="shop_table cart">
+                    <thead>
+                        <tr>
+                            <th colspan="2" class="product-name">Producto</th>
+                            <th class="product-price">Puntos</th>
+                            <th class="product-quantity">Cantidad</th>
+                            <th class="product-subtotal">Subtotal</th>
+                            <th class="product-remove">Eliminar</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="pedidoDetalle : ${session.pedido.pedidoDetalles}" th:object="${pedidoDetalle}" th:attr="data-id=*{producto.idProducto}">
+                            <td class="product-thumbnail">
+                                <img th:src="${@resources.web('img/productos/').concat(pedidoDetalle.producto.imagenUno)}" src="" alt="">
+                            </td>
+                            <td>
+                                <div class="traditional-cart-entry">
+                                    <div class="content">
+                                        <div class="cell-view">
+                                            <a href="" th:href="*{producto.url}" class="title" th:text="*{producto.nombreProducto}"></a>
+                                            <div class="code" th:text="|Cod. *{producto.codigoWeb}|"></div>
+
+                                            <div class="code" th:if="*{producto.tipoProducto.isRecargaCelular()}" th:text="|Recarga celular: *{nroCelular}|"></div>
+                                            <div class="code" th:if="*{producto.tipoProducto.isRecargaTv()}" th:text="|Recarga TV: *{nroDecodificador}|"></div>
+                                            <div class="code" th:if="*{producto.tipoProducto.isColores()}" th:text="|Color: *{color1 + (color2 != '' ? ', ' + color2 : '')}|"></div>
+                                            <div class="code" th:if="*{producto.tipoProducto.isCorreo()}" th:text="|Correo: *{correo}|"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="td-puntos"><span class="puntos" th:text="|*{producto.puntosProducto}|"></span></td>
+                            <td class="cantidad">
+                                <div class="info-qty">
+                                    <a href="#" class="qty-down number-minus updateTotal"><span class="lnr lnr-chevron-down"></span></a>
+                                    <span class="qty-val qty-val-modal" th:id="|number-*{producto.idProducto}|" th:text="*{cantidad}"></span>
+                                    <a href="#" class="qty-up number-plus updateTotal"><span class="lnr lnr-chevron-up"></span></a>
+                                </div>
+
+                            </td>
+                            <td>
+                                <span class="labely"></span>
+                                <div class="subtotal"><span class="total" th:text="*{(producto.puntosProducto * cantidad)}"></span> Puntos</div>
+                            </td>
+                            <td><a class="remove-button" th:id="*{producto.idProducto}"><span class="icon pe-7s-trash" style="font-size: 20px"></span></a></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+
+                <div class="information-blocks">
+                    <div class="table-responsive">
+                    </div>
+                </div>
+
+                <div class="col-md-3 col-xs-12 sinpad" style="float:right; margin-top:20px; margin-bottom:20px;">
+                    <button class="button style-11" style="float:right;" id="btnActualizar">Actualizar</button>
+                </div>
+
+                <table class="shop_table cart">
+                    <tbody>
+                        <tr>
+                            <td colspan="4">
+                                <h6 style="font-weight: 600;text-align: right">Total de carrito: </h6>
+                            </td>
+                            <td>
+                                <h6 style="font-weight: 600;" th:text="|*{puntosTotal} puntos|"></h6>
+                            </td>
+                            <td>
+                                <!--/*@thymesVar id="mensajeStock" type="java.lang.String"*/-->
+
+                                <!--Validacion de Stock-->
+                                <th:block th:if="${mensajeStock == null}">
+
+                                    <!--Validacion si puede canjear-->
+                                    <th:block th:if="${session.participante.estadoCanjes}">
+
+                                        <a class="button style-10" th:href="@{/checkout}" href="">Canjear ahora</a>
+
+                                        <!--Validacion puntos disponibles-->
+<!--                                        <a th:if="${session.participante.puntosDisponibles >= session.pedido.puntosTotal}" class="button style-10" th:href="@{/checkout}" href="" style="float:right; width:100%;">Canjear ahora</a>-->
+
+<!--                                        <div th:unless="${session.participante.puntosDisponibles >= session.pedido.puntosTotal}" class="alert alert-danger" style="text-align: center" role="alert">No tienes puntos suficientes para continuar</div>-->
+                                    </th:block>
+
+                                    <div th:unless="${session.participante.estadoCanjes}" class="alert alert-danger" style="text-align: center" role="alert">Estimado participante, al momento no podemos procesar su solicitud por encontrarse su cartera vencida. Agradecemos regularizar su pago.</div>
+                                </th:block>
+
+                                <button th:unless="${mensajeStock == null}" class="button btn-danger" th:text="${mensajeStock}"></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+<!--                <div class="col-md-12 col-xs-12 sinpad">-->
+<!--                    <div class="col-md-5 col-sm-8 col-xs-12 sinpad" style="float:right;">-->
+<!--                        <table class="table-cartotal">-->
+<!--                            <tr>-->
+<!--                                <th>Total de carrito</th>-->
+<!--                            </tr>-->
+<!--                            <tr>-->
+<!--                                <td th:text="|*{puntosTotal} Pts|"></td>-->
+<!--                            </tr>-->
+<!--                        </table>-->
+
+<!--                        &lt;!&ndash;/*@thymesVar id="mensajeStock" type="java.lang.String"*/&ndash;&gt;-->
+
+<!--                        &lt;!&ndash;Validacion de Stock&ndash;&gt;-->
+<!--                        <th:block th:if="${mensajeStock == null}">-->
+
+<!--                            &lt;!&ndash;Validacion si puede canjear&ndash;&gt;-->
+<!--                            <th:block th:if="${session.participante.estadoCanjes}">-->
+<!--                                &lt;!&ndash;Validacion puntos disponibles&ndash;&gt;-->
+<!--                                <a th:if="${session.participante.puntosDisponibles >= session.pedido.puntosTotal}" class="button style-10" th:href="@{/checkout}" href="" style="float:right; width:100%;">Canjear ahora</a>-->
+
+<!--                                <div th:unless="${session.participante.puntosDisponibles >= session.pedido.puntosTotal}" class="alert alert-danger" style="text-align: center" role="alert">No tienes puntos suficientes para continuar</div>-->
+<!--                            </th:block>-->
+
+<!--                            <div th:unless="${session.participante.estadoCanjes}" class="alert alert-danger" style="text-align: center" role="alert">Tu usuario no puede realizar canjes...</div>-->
+<!--                        </th:block>-->
+
+<!--                        <button th:unless="${mensajeStock == null}" class="button btn-danger" th:text="${mensajeStock}"></button>-->
+
+<!--                    </div>-->
+
+<!--                </div>-->
+
+            </div>
+        </th:block>
+
+    </th:block>
+
+    <th:block th:fragment="carritoPopupTemplate" th:object="${session.pedido}">
+        <li th:each="pedidoDetalle : ${session.pedido.pedidoDetalles}">
+            <div class="thumb">
+                <img src="" th:src="${@resources.web('img/productos/').concat(pedidoDetalle.producto.imagenUno)}" alt="">
+            </div>
+            <div class="info">
+                <h4 class="product-name"><a href="" th:href="@{/__${pedidoDetalle.producto.url}__}" th:text="${pedidoDetalle.producto.nombreProducto}"></a></h4>
+                <span class="price" th:text="|${pedidoDetalle.producto.puntosProducto} Pts|"></span>
+                <a class="remove-item" href="#"><i class="fa fa-close remove-cart-popup" th:id="${pedidoDetalle.producto.idProducto}"></i></a>
+            </div>
+        </li>
+        <div class="sub-total" th:text="|Total *{puntosTotal} Pts|"></div>
+        <div class="group-button">
+            <a th:href="@{/carrito}" th:ref="" class="button">Ver mi carrito</a>
+            <a th:href="@{/checkout}" th:ref="" class="check-out button">Canjear ahora</a>
+        </div>
+    </th:block>
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+    <th:block th:fragment="recursosCapacitacion(capacitacion)">
+        <div class="text-center font-bold" th:if="${capacitacion.recursos.size() == 0}">Aun no tenemos recursos para esta capacitación</div>
+
+        <div class="row col-md-12" th:unless="${capacitacion.recursos.size() == 0}" id="listaRecursos">
+
+            <div th:each="recurso : ${capacitacion.recursos}" th:attr="data-id=${recurso.idCapacitacionRecurso}">
+
+                <div class="file-box">
+                    <div class="file">
+                        <a href="#" class="resumenRecurso" th:attr="data-id=${recurso.idCapacitacionRecurso}">
+                            <i class="fa fa-align-justify draggable-item-recurso"></i>
+                            <span class="corner"></span>
+
+                            <div class="icon" th:if="${recurso.esTexto()}">
+                                <i class="fa fa-file-text-o"></i>
+                            </div>
+
+                            <div class="icon" th:if="${recurso.esImagen()}">
+                                <i class="fa fa-file-image-o"></i>
+                            </div>
+
+                            <div class="icon" th:if="${recurso.esVideo()}">
+                                <i class="fa fa-file-movie-o"></i>
+                            </div>
+
+                            <div class="icon" th:if="${recurso.esPDF()}">
+                                <i class="fa fa-file-pdf-o"></i>
+                            </div>
+
+                            <div class="file-name">
+                                [[${recurso.nombreCapacitacionRecurso}]]
+                                <br>
+                                <small>Tipo: [[${recurso.getTipoRecursoEnum().name()}]]</small>
+                                <br>
+                                <small th:if="${recurso.estadoCapacitacionRecurso}">Estado: <span class="badge badge-primary">Habilitado</span></small>
+                                <small th:unless="${recurso.estadoCapacitacionRecurso}">Estado: <span class="badge badge-danger">Deshabilitado</span></small>
+                                <br>
+                                <small>Agregado: [[${recurso.fechaCreacionString}]]</small>
+                            </div>
+                        </a>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-sm-12 text-center">
+                <button class="btn btn-danger" id="btnAgregarRecurso"><i class="fa fa-plus"></i> Agregar recurso</button>
+            </div>
+        </div>
+    </th:block>
+
+    <th:block th:fragment="recursosCapacitacionForm">
+        <input type="hidden" id="frmIdCapacitacionRecurso" th:value="${recurso.idCapacitacionRecurso}">
+
+            <form onsubmit="return false;" id="frmRecurso">
+                <div class="row">
+                    <div class="col-md-6 b-r" th:if="${esNuevo}">
+                        <div class="form-group col-sm-12" id="frmTipoTexto">
+                            <label for="frmContenido" class="col-form-label">Contenido</label>
+                            <textarea name="frmContenido" id="frmContenido" class="form-control" rows="8"></textarea>
+                        </div>
+
+                        <div class="form-group col-sm-12" id="frmTipoArchivo" style="display: none; text-align: center;">
+                            <div class="kv-avatar">
+                                <div class="file-loading">
+                                    <input id="frmFileContenido" name="frmFileContenido" type="file"
+                                           th:attr="
+                                                   data-uri=${@resources.web('img/productos/imagen_defecto.png')},
+                                                   data-default=${@resources.web('img/productos/imagen_defecto.png')}
+                                                   ">
+                                </div>
+                            </div>
+                            <div id="frmFileContenidoError" class="center-block"></div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6 b-r" th:unless="${esNuevo}">
+                        <!--Texto-->
+                        <div class="form-group col-sm-12" th:if="${recurso.esTexto()}">
+                            <label class="col-form-label">Contenido</label>
+                            <textarea name="frmContenido" id="frmContenido" class="form-control" rows="8" th:utext="${recurso.contenido}"></textarea>
+                        </div>
+
+                        <!--Imagen-->
+                        <div th:if="${recurso.esImagen()}">
+                            <label class="col-form-label">Contenido</label>
+                            <img src="" th:src="${recurso.contenido}" alt="" style="width: 100%;">
+                        </div>
+
+                        <!--Video-->
+                        <div th:if="${recurso.esVideo()}">
+                            <label class="col-form-label">Contenido</label>
+                            <video th:id="|video-${recurso.idCapacitacionRecurso}|" class="video-js vjs-default-skin vjs-fluid video-item" controls preload="none">
+                                <source src="" th:src="${recurso.contenido}" type="video/mp4">
+                                <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
+                            </video>
+                        </div>
+
+                        <!--PDF-->
+                        <div th:if="${recurso.esPDF()}">
+                            <label class="col-form-label">Contenido</label>
+                            <div class="post-format-document" th:id="|pdf-${recurso.idCapacitacionRecurso}|" th:attr="data-file=${recurso.contenido}">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <div class="row">
+                            <div class="form-group col-md-12" th:unless="${esNuevo}">
+                                <label for="frmTipoRecurso" class="col-form-label">Tipo de recurso</label>
+                                <input type="hidden" id="frmTipoRecurso" name="frmTipoRecurso" th:value="${recurso.idTipoRecurso}" class="has-input">
+                                <input type="text" class="form-control" th:value="${recurso.getTipoRecursoEnum().name()}" readonly>
+
+                            </div>
+
+                            <div class="form-group col-md-12" th:if="${esNuevo}">
+                                <label for="frmTipoRecurso" class="col-form-label">Tipo de recurso</label>
+                                <select class="form-control has-select" id="frmTipoRecurso" name="frmTipoRecurso">
+                                    <option value="1" th:selected="${recurso.idTipoRecurso == 1}" data-format="">TEXTO</option>
+                                    <option value="2" th:selected="${recurso.idTipoRecurso == 2}" data-format="jpg,png,gif,jpeg">IMAGEN</option>
+                                    <option value="3" th:selected="${recurso.idTipoRecurso == 3}" data-format="mp4,mpeg,avi">VIDEO</option>
+                                    <option value="4" th:selected="${recurso.idTipoRecurso == 4}" data-format="pdf">PDF</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group col-md-12">
+                                <label for="frmNombreRecurso" class="col-form-label">Nombre de recurso</label>
+                                <input type="text" class="form-control" th:value="${recurso.nombreCapacitacionRecurso}" id="frmNombreRecurso" name="frmNombreRecurso">
+                            </div>
+
+                            <div class="form-group col-md-12" th:unless="${esNuevo}">
+                                <label class="col-form-label">Estado</label>
+                                <br>
+                                <button th:if="${recurso.estadoCapacitacionRecurso}" class="btn btn-danger" th:attr="data-id=${recurso.idCapacitacionRecurso}" id="frmBotonEliminar">Deshabilitar</button>
+                                <button th:unless="${recurso.estadoCapacitacionRecurso}" class="btn btn-primary" th:attr="data-id=${recurso.idCapacitacionRecurso}" id="frmBotonActivar">Habilitar</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </form>
+
+    </th:block>
+
+
+    <th:block th:fragment="preguntasCapacitacionForm(pregunta)">
+        <form id="frmFormPregunta" onsubmit="return false;">
+            <div class="row">
+
+                <input type="hidden" id="frmIdCapacitacionPregunta" th:value="${pregunta.idCapacitacionPregunta}">
+                <input type="hidden" id="frmIdCapacitacion" th:value="${pregunta.idCapacitacion}">
+
+                <div class="col-md-12">
+                    <div class="panel panel-danger" id="frmErrorValidate" style="display: none; width: 100%">
+                        <div class="panel-body">
+                            <ul style="margin: 0;"></ul>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group col-sm-12">
+                    <label for="frmTipoPregunta" class="col-form-label">Tipo de pregunta</label>
+                    <select class="form-control has-select" id="frmTipoPregunta" name="frmTipoPregunta" th:disabled="${!esNuevo}">
+                        <option value="1" th:selected="${pregunta.idTipoPregunta == 1}">SELECCION SIMPLE</option>
+                        <option value="2" th:selected="${pregunta.idTipoPregunta == 2}">SELECCION MULTIPLE</option>
+                    </select>
+                </div>
+
+                <div class="form-group col-sm-12">
+                    <label for="frmPregunta" class="col-form-label">Pregunta</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" th:value="${pregunta.pregunta}" id="frmPregunta" name="frmPregunta" data-rule-required="true" data-msg-required="La pregunta es requerido">
+                        <span class="input-group-append" th:if="${!esNuevo}">
+                            <button type="button" class="btn btn-primary" id="btnPreguntaActualizar"><i class="fa fa-refresh"></i> Actualizar</button>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <label class="col-form-label">Respuestas</label>
+                    <div id="frmDivRespuestas">
+                        <div th:each="respuesta : ${pregunta.respuestas}" th:remove="tag">
+                            <div th:remove="tag" th:include="this :: respuestaCapacitacionForm(${pregunta.idTipoPregunta}, ${respuesta}, ${esNuevo}, ${false})"></div>
+                        </div>
+                    </div>
+                    <div id="frmDivRespuestasNuevas">
+                    </div>
+
+                    <div class="text-center">
+                        <button class="btn btn-success btn-sm" id="frmBtnAgregarRespuesta"><i class="fa fa-plus"></i> Agregar Respuesta</button>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+    </th:block>
+
+    <th:block th:fragment="respuestaCapacitacionForm(idTipoPregunta, respuesta, esNuevoPregunta, esNuevoRespuesta)">
+        <div class="input-group m-b" th:classappend="${esNuevoPregunta ? 'item-nuevo' : 'item-registrado'}" th:attr="data-nuevo=${esNuevoRespuesta}, data-id=${respuesta.idCapacitacionRespuesta}">
+            <div class="input-group-prepend" th:if="${!esNuevoPregunta}">
+                <span class="input-group-addon"><i class="fa fa-align-justify draggable-item-pregunta"></i></span>
+            </div>
+
+            <input type="text" data-rule-required="true" data-msg-required="La respuesta es requerida" class="form-control" th:classappend="${esNuevoRespuesta ? 'respuesta-new' : 'respuesta-saved'}" th:value="${respuesta.respuesta}" th:name="|respuesta${esNuevoRespuesta ? #strings.randomAlphanumeric(8) : respuesta.idCapacitacionRespuesta}|">
+
+            <!--Seleccion Simple-->
+            <span class="input-group-addon" th:if="${idTipoPregunta == 1}">
+                <small>Correcto ?</small> <input type="radio" th:checked="${respuesta.esCorrecta}" name="esCorrecta" style="margin-top: 2px;">
+            </span>
+
+            <!--Seleccion Multiple-->
+            <span class="input-group-addon" th:if="${idTipoPregunta == 2}">
+               <small>Correcto ?</small> <input type="checkbox" th:checked="${respuesta.esCorrecta}" name="esCorrecta" style="margin-top: 2px;">
+            </span>
+
+
+            <span class="input-group-append" th:unless="${esNuevoPregunta}">
+                <button th:unless="${esNuevoRespuesta}" type="button" class="btn btnRespuestaActualizar btn-primary"><i class="fa fa-refresh"></i> Actualizar</button>
+                <button th:if="${esNuevoRespuesta}" type="button" class="btn btnRespuestaCrear btn-success"><i class="fa fa-save"></i> Crear</button>
+                <button th:if="${esNuevoRespuesta}" type="button" class="btn btnRespuestaEliminar btn-danger"><i class="fa fa-trash"></i></button>
+            </span>
+
+        </div>
+    </th:block>
+</body>
+</html>

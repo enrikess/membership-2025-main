@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/header :: header(title='Administrador - Acceso no autorizado')">
+    <title></title>
+</head>
+
+<body class="gray-bg">
+
+<div class="middle-box text-center animated fadeInDown">
+    <h1>403</h1>
+    <h3 class="font-bold">Acceso no autorizado</h3>
+
+    <div class="error-desc">
+        No tienes acceso a esta pagina, tus privilegios son limitados, por favor comuniquese con el administrador.<br/><a th:href="@{/}" class="btn btn-primary m-t">Dashboard</a>
+    </div>
+</div>
+
+<th:block th:replace="~{fragments/resources :: scripts}"/>
+
+</body>
+
+</html>

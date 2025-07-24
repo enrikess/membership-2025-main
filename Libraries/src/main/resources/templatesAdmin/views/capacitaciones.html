@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}"
+      th:with="title='Administracion | Capacitaciones', menu='Capacitaciones', hijo='Capacitaciones'">
+
+<head>
+    <title>Layout</title>
+</head>
+
+<body>
+
+<div layout:fragment="content">
+
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>Capacitaciones</h2>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="" th:href="@{/}">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item active">
+                    <strong>Capacitaciones</strong>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="wrapper wrapper-content animated fadeInUp">
+
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h5>Capacitaciones</h5>
+                        <div class="ibox-tools ibox-tools-button">
+                            <button type="button" th:attr="data-descarga=@{/capacitaciones/nuevo}" class="btn btn-success btn-sm btnDescargar"><i class="fa fa-plus"></i> Nueva Capacitacion</button>
+                            <button type="button" th:attr="data-descarga=@{/capacitaciones/descargar-capacitaciones}" class="btn btn-danger btn-sm btnDescargar"><i class="fa fa-download"></i> Descargar</button>
+                        </div>
+                    </div>
+
+                    <div class="ibox-content">
+
+                        <div class="row m-b-sm m-t-sm">
+                            <div class="col-xs-12 col-md-6">
+                                <div class="form-group">
+
+                                    <label class="font-normal">Busqueda :</label>
+
+                                    <div class="input-daterange input-group">
+
+                                        <input type="text" class="form-control-sm form-control" name="buscar" id="buscar" placeholder="Buscar">
+
+                                        <button type="button" class="btn btn-primary btn-sm" id="btnBuscar" style="margin-left: 10px;"><i class="fa fa-search"></i> Buscar</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover" id="grid" style="width: 100%;">
+                                <thead>
+                                <tr>
+                                    <th>ID CAPACITACION</th>
+                                    <th>NOMBRE CAPACITACION</th>
+                                    <th>CATALOGO</th>
+                                    <th>FECHA INICIO</th>
+                                    <th>FECHA FIN</th>
+                                    <th>CANTIDAD RECURSOS</th>
+                                    <th>CANTIDAD PREGUNTAS</th>
+                                    <th>CONDICION</th>
+                                    <th>PUNTAJE CAPACITACION</th>
+                                    <th>ESTADO</th>
+                                </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <th:block th:replace="~{fragments/resources :: scripts}"/>
+
+    <script th:src="${@resources.admin('js/views/capacitaciones.js', true)}"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            var capacitaciones = new Capacitaciones('[[@{/}]]');
+            capacitaciones.init();
+        });
+    </script>
+</div>
+
+</body>
+</html>

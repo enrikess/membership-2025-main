@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}"
+      th:with="title='La Fabril | Detalle Carrito', menu=''">
+
+<head>
+    <title>Title</title>
+</head>
+<body>
+
+<th:block layout:fragment="content">
+
+
+    <div class="container margin-top-40">
+        <div class="main-content" th:with="cantidad=${session.pedido.pedidoDetalles.size()}">
+            <div class="page-title" th:if="${cantidad > 0}">
+                <h3><span class="icon pe-7s-cart" style="font-size: 25px"></span> Mis premios ([[${cantidad}]] [[${cantidad == 1 ? 'producto' : 'productos'}]])</h3>
+            </div>
+            <div class="row" id="contentCarrito">
+                <div class="col-sm-12 col-md-12">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <th:block th:replace="~{fragments/resources :: scripts}"/>
+
+    <script th:src="${@resources.web('js/views/carrito.js', true)}"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            var carrito = new Carrito('[[@{/}]]');
+            carrito.init();
+        });
+    </script>
+
+</th:block>
+
+</body>
+</html>

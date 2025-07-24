@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Impresion de pedido</title>
+    <style>
+        li{
+            line-height: 20px;
+            text-align: left;
+            font-size: 15px;
+            color: #767A7C;
+            font-family: Lato, sans-serif;
+            font-weight: 300;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body onLoad="imprimir();">
+
+<div th:utext="${html}" th:remove="tag"></div>
+
+<script type="text/javascript">
+    function imprimir() {
+        print();
+    }
+</script>
+
+</body>
+</html>

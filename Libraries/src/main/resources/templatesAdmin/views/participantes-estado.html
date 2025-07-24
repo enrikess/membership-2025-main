@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}"
+      th:with="title='Administracion | Gestion de participantes', menu='G. Participantes', hijo='Activar Participantes'">
+
+<head>
+    <title>Layout</title>
+</head>
+
+<body>
+
+<div layout:fragment="content">
+
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>Gestion de participantes</h2>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="" th:href="@{/}">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item active">
+                    <strong>Gestion de participantes</strong>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="wrapper wrapper-content animated fadeInUp">
+
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h5>Participantes Estado</h5>
+                        <div class="ibox-tools ibox-tools-button">
+                            <button type="button" th:attr="data-url=@{/participantes/importar/carga-activacion}" class="btn btn-danger btn-sm btnAccion"><i class="fa fa-upload"></i> Importar Activacion</button>
+                            <button type="button" th:attr="data-url=@{/participantes/importar/carga-estado}" class="btn btn-warning btn-sm btnAccion"><i class="fa fa-upload"></i> Importar Participantes Estado</button>
+                        </div>
+                    </div>
+
+                    <div class="ibox-content">
+
+                        <div class="row m-b-sm m-t-sm">
+                            <div class="col-xs-12 col-md-4">
+                                <div class="form-group">
+
+                                    <label class="font-normal">Busqueda :</label>
+
+                                    <div class="input-daterange input-group">
+
+                                        <input type="text" class="form-control-sm form-control" name="buscarParticipante" id="buscarParticipante" placeholder="Buscar">
+
+                                        <button type="button" class="btn btn-primary btn-sm" id="btnFiltrar" style="margin-left: 10px;"><i class="fa fa-search"></i> Buscar</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover" id="gridParticipantes" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th>Nro. Documento</th>
+                                        <th>Nombres</th>
+                                        <th>Apellido Paterno</th>
+                                        <th>Apellido Materno</th>
+                                        <th>Email</th>
+                                        <th>Estado</th>
+                                        <th>Estado Canje</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <th:block th:replace="~{fragments/resources :: scripts}"/>
+
+    <script th:src="${@resources.admin('js/views/participantes-estado.js', true)}"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            var participantesEstado = new ParticipantesEstado('[[@{/}]]');
+            participantesEstado.init();
+        });
+    </script>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}"
+      th:with="title='Administracion | Preguntas', menu='Capacitaciones', hijo='Preguntas'">
+
+<head>
+    <title>Layout</title>
+</head>
+
+<body>
+
+<div layout:fragment="content">
+
+    <style>
+        .modal {
+            overflow-y: auto !important;
+        }
+    </style>
+
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>Gestion de Preguntas</h2>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="" th:href="@{/}">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="" th:href="@{/capacitaciones}">Capacitaciones</a>
+                </li>
+                <li class="breadcrumb-item active">
+                    <strong>Preguntas</strong>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="wrapper wrapper-content animated fadeInUp">
+
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="tabs-container">
+
+                    <div class="ibox">
+                        <div class="ibox-title">
+                            <h5>Seleccionar de capacitacion</h5>
+                            <div class="ibox-tools ibox-tools-button">
+                            </div>
+                        </div>
+
+                        <div class="ibox-content">
+                            <div class="row">
+
+                                <div class="col-md-4 offset-md-4">
+                                    <div class="form-group">
+                                        <label>Capacitación</label>
+                                        <select class="form-control" id="slcCapacitacion">
+                                            <option value="0">Seleccionar</option>
+                                            <option th:each="cap : ${capacitaciones}" th:text="${cap.nombreCapacitacion}" th:value="${cap.idCapacitacion}" th:selected="${capacitacion != null && cap.idCapacitacion == capacitacion.idCapacitacion}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    <div id="divPreguntas" th:style="|display: ${capacitacion == null ? 'none' : 'block'}|">
+                        <div class="ibox">
+                            <div class="ibox-title">
+                                <h5>Preguntas</h5>
+                                <div class="ibox-tools ibox-tools-button">
+                                    <button type="button" id="btnNuevaPregunta" class="btn btn-danger btn-sm"><i class="fa fa-plus"></i> Agregar Pregunta</button>
+                                </div>
+                            </div>
+
+                            <div class="ibox-content">
+
+                                <div class="table-responsive">
+                                    <div class="alert alert-warning" id="alertPreguntas" style="margin: 15px; display: none"></div>
+
+                                    <table class="table table-bordered table-hover" id="grid" style="width: 100%;">
+                                        <thead>
+                                        <tr>
+                                            <th>ID Pregunta</th>
+                                            <th>Tipo pregunta</th>
+                                            <th>Pregunta</th>
+                                            <th>Respuestas</th>
+                                            <th>Estado</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="gridContent">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="modal inmodal fade show" id="modalPregunta" role="dialog" aria-hidden="true" style="overflow:hidden">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content animated fadeIn">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Pregunta</h4>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body" id="modalPreguntaContent">
+
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="modalPreguntaAceptar" style="display: none">Aceptar</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <th:block th:replace="~{fragments/resources :: scripts}"/>
+
+    <script th:src="${@resources.admin('js/views/capacitaciones-preguntas.js', true)}"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            var capacitacionesPreguntas = new CapacitacionesPreguntas('[[@{/}]]');
+            capacitacionesPreguntas.init();
+        });
+    </script>
+</div>
+
+</body>
+</html>

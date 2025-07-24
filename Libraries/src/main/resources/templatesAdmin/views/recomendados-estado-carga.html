@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}"
+      th:with="title='Administracion | Carga de referidos}', menu='Referidos', hijo='Reporte de Referidos'">
+
+<head>
+    <title>Layout</title>
+</head>
+
+<body>
+
+<div layout:fragment="content">
+
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>Activacion de referidos</h2>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="" th:href="@{/}">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="" th:href="@{/reportes/recomendados}">G. Referidos</a>
+                </li>
+                <li class="breadcrumb-item active">
+                    <strong>Activacion de referidos</strong>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="wrapper wrapper-content animated fadeInUp">
+
+        <div class="row">
+
+            <div class="col-xs-12 col-md-4">
+
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h5>Informacion</h5>
+                        <div class="ibox-tools ibox-tools-button">
+
+                        </div>
+                    </div>
+
+                    <div class="ibox-content">
+                        <span>Plantilla</span>
+                        <ul style="font-size: 11px;">
+                            <li>
+                                <a href="" th:href="${@resources.template('FORMATO_CARGA_RECOMENDADOS_ESTADO.xlsx')}">FORMATO_CARGA_REFERIDOS_ESTADO.xlsx</a>
+                            </li>
+                        </ul>
+
+                        <span>Estados</span>
+                        <ul style="font-size: 13px;">
+                            <li>0 Negado</li>
+                            <li>1 Aprobado</li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-md-8">
+
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h5>Carga</h5>
+                        <div class="ibox-tools ibox-tools-button">
+
+                        </div>
+                    </div>
+
+                    <div class="ibox-content">
+                        <input id="archivo" name="excelfile" type="file">
+                        <div class="error" style="color: red"></div>
+
+                        <div class="hr-line-dashed"></div>
+
+                        <div class="form-group row">
+                            <div class="col-sm-4 col-sm-offset-2" >
+                                <button class="btn btn-white" id="btnLimpiar"><i class="fa fa-ban"></i> Limpiar</button>
+                                <button class="btn btn-primary" id="btnCargar"><i class="fa fa-upload"></i> Subir archivo</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="modal inmodal" id="modalResumenCarga" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content animated flipInY" id="contentResumenCarga">
+
+            </div>
+        </div>
+    </div>
+
+
+    <th:block th:replace="~{fragments/resources :: scripts}"/>
+
+    <script th:src="${@resources.admin('js/views/recomendados-carga-estado.js', true)}"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            var recomendadosCargaEstado = new RecomendadosCargaEstado('[[@{/}]]');
+            recomendadosCargaEstado.init();
+        });
+    </script>
+</div>
+
+</body>
+</html>

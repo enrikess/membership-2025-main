@@ -1,0 +1,22 @@
+#promotick:
+#  datasource:
+#    url: jdbc:postgresql://promotick-desarrollo.cil17mskhgkp.us-east-1.rds.amazonaws.com:5432/db_mimma_06_06?autoConnect=true
+#    driver: org.postgresql.Driver
+#    username: desarrollo
+#    password: zDnQ5FkeX2EtKAzA
+
+#promotick:
+#  datasource:
+#    url: jdbc:postgresql://localhost:7000/db_clubpichincha_v2?autoConnect=true
+#    driver: org.postgresql.Driver
+#    username: promotick
+#    password: 2Ma6kApvcFP4AeeN
+
+
+promotick:
+  datasource:
+    url: jdbc:postgresql://ec2-54-152-126-169.compute-1.amazonaws.com/db_lafabril_ec_11072025
+    driver: org.postgresql.Driver
+    username: admin
+    password: bfa9T=8[#}AVF-<eYgqn&WRh~
+

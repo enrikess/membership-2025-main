@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}"
+      th:with="title='La Fabril', menu='Inicio'">
+
+<head>
+    <title>Title</title>
+</head>
+
+<body>
+
+    <th:block layout:fragment="content">
+        <div id="banner" class="container">
+            <!-- Home slide -->
+            <div class="owl-carousel nav-style4 nav-center-center margin-top-10" data-items="1" data-nav="true" data-dots="false" data-loop="true" data-autoplay="true">
+<!--                <div class="swiper-wrapper">-->
+
+                    <th:block th:each="banner : ${bannerInicio}">
+                        <a href="productos.html"><img src="images/slides/slider-home2.jpg" alt=""></a>
+                        <a href="productos.html"><img src="images/slides/slider-home2.jpg" alt=""></a>
+
+<!--                        <div class="swiper-slide active" data-val="0">-->
+<!--                            <div class="navigation-banner-wrapper light-text align-3" style="" th:style="'background-image:url(' + ${@resources.web('img/bg/' + banner.imagenBanner)} + ');background-position: center center;'">-->
+<!--                                <div class="navigation-banner-content content-push">-->
+<!--                                    <div class="cell-view">-->
+<!--                                        <h2 class="subtitle" th:text="${banner.textoUno}"></h2>-->
+<!--                                        <h2 class="subtitle" th:text="${banner.textoDos}"></h2>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="clear"></div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+                    </th:block>
+
+<!--                </div>-->
+
+<!--                <div class="clear"></div>-->
+<!--                <div class="pagination"></div>-->
+            </div>
+        </div>
+
+<!--        Banners home mediano-->
+<!--        <div class="full-width">-->
+<!--            <div class="container">-->
+<!--                <div class="row">-->
+
+<!--                    &lt;!&ndash;/*@thymesVar id="bannerFooter" type="java.util.List<com.promotick.nissan.model.configuracion.ConfiguracionBanner>"*/&ndash;&gt;-->
+<!--                    <th:block th:each="banner : ${bannerFooter}">-->
+<!--                        <div class="co-md-4 col-sm-4 col-xs-12">-->
+<!--                            <div class="banner-box banner-style1 box-left">-->
+<!--                                <a th:href="@{/__${banner.urlBoton}__}" href="" class="banner-box-link">-->
+<!--                                    <img th:src="${@resources.web('img/bg/'.concat(banner.imagenBanner))}" src="" alt="">-->
+<!--                                </a>-->
+<!--                                <div class="banner-box-info">-->
+<!--                                    <h2 class="title-banner-box-yellow"><span th:text="${banner.textoUno}"></span></h2>-->
+<!--                                    <h2 class="title-banner-box-blue"><span th:text="${banner.textoDos}"></span></h2>-->
+<!--                                    <a-->
+<!--                                            th:target="${banner.urlLocation} == 1 ? '_black' : '_self'"-->
+<!--                                            th:href="${banner.urlLocation} == 1 ? ${@resources.web(banner.urlBoton)} : @{/__${banner.urlBoton}__}"-->
+<!--                                            href=""-->
+<!--                                            th:class="|btn-box-banner ${banner.urlLocation == 2 ? 'btnVideo' : ''}|"-->
+<!--                                            th:text="${banner.textoBoton}"></a>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </th:block>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+
+        
+        <div class="container" style="margin-bottom: 20px">
+            <div class="relate-product">
+                <div class="nav-tabs-icon" style="margin-top: 20px">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active"><a href="#destacados" role="tab" data-toggle="tab">¡OFERTAS!</a></li>
+                        <li role="presentation"><a href="#novedades" role="tab" data-toggle="tab">NOVEDADES</a></li>
+                        <li role="presentation"><a href="#masvistos" role="tab" data-toggle="tab">MÁS VISTOS</a></li>
+                    </ul>
+                </div>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="destacados">
+                        <div class="product-slider arrow-style">
+                            <div class="row">
+                                <div class="wrap-item" id="contentDestacados">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div role="tabpanel" class="tab-pane" id="novedades">
+                        <div class="product-slider arrow-style">
+                            <div class="row">
+                                <div class="wrap-item" id="contentNovedades">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div role="tabpanel" class="tab-pane" id="masvistos">
+                        <div class="product-slider arrow-style">
+                            <div class="row">
+                                <div class="wrap-item" id="contentVistos">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade no-padding" id="videoModal" tabindex="-1" role="dialog" th:attr="data-video=${session.participante.catalogo.videoHome}, data-preview=${session.participante.catalogo.previewHome}">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="border: 0">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <th:block th:replace="~{fragments/resources :: scripts}"/>
+
+        <script th:src="${@resources.web('js/views/inicio.js', true)}"></script>
+
+        <script type="text/javascript">
+            $(function() {
+                var inicio = new Inicio('[[@{/}]]', '[[${@resources.web()}]]');
+                inicio.init();
+            });
+        </script>
+
+    </th:block>
+</body>
+
+</html>

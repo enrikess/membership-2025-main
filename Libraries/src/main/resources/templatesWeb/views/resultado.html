@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}"
+      th:with="title='La Fabril | Mi resultado', menu='Resultados'">
+
+<head>
+    <title>Title</title>
+</head>
+<body>
+
+<th:block layout:fragment="content">
+
+    <!-- Banner -->
+    <div class="banner_estatico">
+        <div class="banner_internas" th:style="|background-image:url(${@resources.web('img/bg/bg-meta.png')});|">
+            <div class="internas-banner-content content-push">
+                <div class="cell-view">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container margin-bottom-50">
+        <div class="section-title style6 text-center margin-top-40">
+            <h3>Mi meta</h3>
+            <span class="sub-title"></span>
+        </div>
+
+        <div id="contentAnual" th:if="${session.participante.idTipoParticipante == 2}"> <!--Externo-->
+
+        </div>
+
+        <div id="contentMensual" th:if="${session.participante.idTipoParticipante == 1}"> <!--Interno-->
+
+        </div>
+    </div>
+
+    <th:block th:replace="~{fragments/resources :: scripts}"/>
+
+    <script th:src="${@resources.web('js/views/resultado.js', true)}"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            var resultado = new Resultado('[[@{/}]]', '[[${session.participante.idTipoParticipante}]]');
+            resultado.init();
+        });
+    </script>
+
+</th:block>
+
+</body>
+</html>

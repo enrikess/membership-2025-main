@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}"
+      th:with="title='La Fabril | Canje de Productos', menu=''">
+
+<head>
+    <title>Title</title>
+</head>
+<body>
+
+<th:block layout:fragment="content">
+    <!-- Banner -->
+    <div class="banner_estatico">
+        <div class="banner_internas" th:style="|background-image:url(${@resources.web('img/bg/bg-checkout.png')});|">
+            <div class="internas-banner-content content-push">
+                <div class="cell-view">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="content-push box-checkout" th:id="contentCheckout">
+
+    </div>
+
+    <th:block th:replace="~{fragments/resources :: scripts}"/>
+
+    <div class="modal fade" id="modalDireccion" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-lg" role="document" style="z-index: 1041;margin-top: 100px;">
+            <div class="modal-content" id="modalDireccionContent">
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalEncuesta" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog" role="document" style="z-index: 1041;margin-top: 100px;">
+            <div class="modal-content" id="modalEncuestaContent">
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalCompra" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog" role="document" style="z-index: 1041;margin-top: 100px;">
+            <div class="modal-content" id="modalCompraContent">
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalDescuento" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog" role="document" style="z-index: 1041;margin-top: 100px;">
+            <div class="modal-content">
+                <div class="modal-content">
+                    <div class="modal-header" style="padding: 20px 40px">
+                        <h4 style="margin-bottom: 0;font-weight: 600;display: inline-block"><span class="icon pe-7s-check" style="font-size: 25px;vertical-align: middle;"></span> ¿Desea utilizar un codigo de descuento?</h4> <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: 3px">x</button>
+                    </div>
+
+                    <div id="dvCuerpoDescuento">
+                        <div class="modal-body margin-bottom-20" style="padding: 20px 40px">
+                            <div class="product-info">
+                                <input type="text" class="inpt-numcelular" value="" style="width:100%" placeholder="Codigo Descuento" id="inpt-descuento">
+                                <p style="color: red; font-size: small;" class="error-descuento"></p>
+                                <p style="color: green; font-size: small;" class="success-descuento"></p>
+                            </div>
+                            <div class="row text-center">
+                                <div class="col-md-12">
+                                    <a class="button style-10" id="btnValidarDescuento">Validar descuento</a>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row text-center">
+                                <div class="col-md-12">
+                                    o <a data-dismiss="modal" style="text-decoration: underline;cursor: pointer">Cancelar</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="${@resources.web('js/views/checkout.js', true)}"></script>
+    <script src="https://cdn.paymentez.com/checkout/1.0.1/paymentez-checkout.min.js"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            var checkout = new Checkout('[[@{/}]]');
+            checkout.init();
+        });
+    </script>
+
+</th:block>
+
+</body>
+</html>

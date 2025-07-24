@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}"
+      th:with="title='La Fabril | Nuevo recomendado', menu=''">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<th:block layout:fragment="content" th:object="${session.participante}">
+    <div class="container margin-bottom-50">
+        <div class="section-title style6 text-center margin-top-40">
+            <h3>Nuevo referido</h3>
+            <span class="sub-title"></span>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-12">
+                <h4 style="border-bottom: 1px solid #e5e5e5;line-height: 45px;font-weight: 600"> Tus datos:</h4>
+                <br>
+                <div class="row">
+
+                    <div class="col-md-4">
+                        <p>
+                            <label for="">Nº de documento</label><br>
+                            <input type="text" style="width:100%"  disabled id="nroDocumento" th:value="${session.participante.nroDocumento}">
+<!--                            <input value="465600256" type="text" style="width: 100%" disabled> -->
+                        </p>
+
+                    </div>
+
+                    <div class="col-md-4">
+                        <p>
+                            <label for="">Nombres</label><br>
+                            <input type="text" style="width:100%" disabled id="nombres" th:value="${session.participante.nombresParticipante}">
+<!--                            <input value="Juan" type="text" style="width: 100%" disabled> -->
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <p>
+                            <label for="">Apellidos</label><br>
+                            <input type="text" style="width:100%"  disabled id="apellidos" th:value="|${session.participante.appaternoParticipante} ${session.participante.apmaternoParticipante} |">
+<!--                            <input value="Pérez" type="text" style="width: 100%" disabled> -->
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <p>
+                            <label for="">Teléfono fijo</label><br>
+                            <input type="text" style="width:100%" disabled name="telefonoFijo" id="telefonoFijo" th:value="${session.participante.telefonoParticipante}">
+<!--                            <input value="3216549" type="text" style="width: 100%" disabled> -->
+                        </p>
+                    </div>
+                </div>
+                <h4 style="border-bottom: 1px solid #e5e5e5;line-height: 45px;font-weight: 600">Datos de tus referidos:</h4>
+                <br>
+                <form id="frmNuevoRecomendado" class="form-container" onsubmit="return false;">
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p>
+                                <label for="nroDocRecomendado" class="obl">Nº de documento</label><br>
+                                <input type="text" style="width: 100%" id="nroDocRecomendado" name="nroDocRecomendado">
+                            </p>
+                        </div>
+
+                        <div class="col-md-4">
+                            <p>
+                                <label for="nombresRecomendado" class="obl">Nombres</label><br>
+                                <input type="text" style="width: 100%" id="nombresRecomendado" name="nombresRecomendado">
+                            </p>
+                        </div>
+                        <div class="col-md-4">
+                            <p>
+                                <label for="" class="obl">Apellidos</label><br>
+                                <input type="text" style="width: 100%" id="apellidosRecomendado" name="apellidosRecomendado">
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p>
+                                <label for="celularRecomendado" class="obl">Celular</label><br>
+                                <input type="text" style="width: 100%" id="celularRecomendado" name="celularRecomendado">
+                            </p>
+                        </div>
+                        <div class="col-md-4">
+                            <p>
+                                <label for="correoRecomendado">Correo electrónico</label><br>
+                                <input type="text" style="width: 100%" id="correoRecomendado" name="correoRecomendado">
+                            </p>
+                        </div>
+                        <div class="col-md-4">
+                            <p>
+                                <label for="provinciaRecomendado">Provincia</label><br>
+                                <select name="provinciaRecomendado" class="normal" id="provinciaRecomendado" style="width: 100%;height: 40px">
+                                    <option value="" class="normal">Seleccionar</option>
+                                    <th:block th:each="objProvincia : ${provinciasRecomendado}" th:object="${objProvincia}">
+                                        <option th:value="*{codprov}" th:text="*{nombreUbigeo}"></option>
+                                    </th:block>
+                                </select>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p>
+                                <label for="ciudadRecomendado">Ciudad</label><br>
+                                <select name="ciudadRecomendado" class="normal" id="ciudadRecomendado" style="width: 100%;height: 40px">
+                                    <option value="0">Seleccionar</option>
+                                </select>
+                            </p>
+                        </div>
+                        <div class="col-md-4">
+                            <p>
+                                <label for="slcTiempoCompra">Tiempo compra</label><br>
+                                <select name="slcTiempoCompra" class="normal" id="slcTiempoCompra" style="width: 100%;height: 40px">
+                                    <option value="0" class="normal">Seleccionar</option>
+                                    <option value="inmediato" class="normal">Inmediato</option>
+                                    <option value="1 mes" class="normal">1 mes</option>
+                                    <option value="2 meses" class="normal">2 meses</option>
+                                    <option value="3 meses" class="normal">3 meses</option>
+                                    <option value="6 meses" class="normal">6 meses</option>
+                                </select>
+                            </p>
+                        </div>
+                        <div class="col-md-4">
+                            <p>
+                                <label for="slcFinanciamiento">Financiamiento</label><br>
+                                <select name="slcFinanciamiento" class="normal" id="slcFinanciamiento" style="width: 100%;height: 40px">
+                                    <option value="0" class="normal">Seleccionar</option>
+                                    <option value="pago de contado" class="normal">Pago de contado</option>
+                                    <option value="diferido" class="normal">Diferido</option>
+                                    <option value="credito" class="normal">Crédito</option>
+                                    <option value="credito directo" class="normal">Crédito Directo</option>
+                                </select>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p>
+                                <label for="observacionRecomendado">Observación</label><br>
+                                <input type="text" style="width: 100%" id="observacionRecomendado" name="observacionRecomendado">
+                            </p>
+                        </div>
+                        <div class="col-md-4">
+                            <a class="button button-add-cart margin-top-30" id="btnRegistrarRecomendado">Registrar recomendado</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="recomendado" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog" role="document" style="z-index: 1041;margin-top: 100px;">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 20px 40px">
+                    <h4 style="margin-bottom: 0;font-weight: 600;display: inline-block"><span class="icon pe-7s-check" style="font-size: 25px;vertical-align: middle;color: green"></span> Referido registrado</h4> <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: 3px">x</button>
+                </div>
+                <div class="modal-body margin-bottom-20 text-center" style="padding: 20px 40px">
+                    <p>Tu referido se encuentra registrado</p>
+                    <p>Recuerda continuar refiriendo para que acumules más puntos</p>
+                    <div class="row text-center">
+                        <div class="col-md-12">
+                            <a class="button style-10" th:href="@{/recomendado}">Ok</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <th:block th:replace="~{fragments/resources :: scripts}"/>
+
+    <script th:src="${@resources.web('js/views/nuevo-recomendado.js', true)}"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            var recomendado = new Recomendado('[[@{/}]]');
+            recomendado.init();
+
+        });
+    </script>
+
+</th:block>
+
+</body>
+</html>

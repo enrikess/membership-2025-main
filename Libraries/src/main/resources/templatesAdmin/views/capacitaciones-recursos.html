@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}"
+      th:with="title='Administracion | Recursos', menu='Capacitaciones', hijo='Recursos'">
+
+<head>
+    <title>Layout</title>
+</head>
+
+<body>
+
+<div layout:fragment="content">
+
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>Gestion de Recursos</h2>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="" th:href="@{/}">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="" th:href="@{/capacitaciones}">Capacitaciones</a>
+                </li>
+                <li class="breadcrumb-item active">
+                    <strong>Recursos</strong>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="wrapper wrapper-content animated fadeInUp">
+
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="tabs-container">
+
+                    <div class="ibox">
+                        <div class="ibox-title">
+                            <h5>Seleccionar de capacitacion</h5>
+                            <div class="ibox-tools ibox-tools-button">
+                            </div>
+                        </div>
+
+                        <div class="ibox-content">
+                            <div class="row">
+
+                                <div class="col-md-4 offset-md-4">
+                                    <div class="form-group">
+                                        <label>Capacitación</label>
+                                        <select class="form-control" id="slcCapacitacion">
+                                            <option value="0">Seleccionar</option>
+                                            <option th:each="cap : ${capacitaciones}" th:text="${cap.nombreCapacitacion}" th:value="${cap.idCapacitacion}" th:selected="${capacitacion != null && cap.idCapacitacion == capacitacion.idCapacitacion}"></option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    <div id="divRecursos" th:style="|display: ${capacitacion == null ? 'none' : 'block'}|">
+                        <div class="ibox">
+                            <div class="ibox-title">
+                                <h5>Recursos</h5>
+                                <div class="ibox-tools ibox-tools-button">
+                                </div>
+                            </div>
+
+                            <div class="ibox-content" id="divRecursosContent">
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="modal inmodal fade show" id="modalRecurso" role="dialog" aria-hidden="true" style="overflow:hidden">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content animated fadeIn">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Recurso</h4>
+                    <label class="col-form-label">Nota: el nombre de los recursos multimedia(jpg, png, jpeg, pdf o mp4) no deben tener espacios ni caracteres especiales</label>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body" id="modalRecursoContent">
+
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" id="modalRecursoAceptar">Aceptar</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <th:block th:replace="~{fragments/resources :: scripts}"/>
+
+    <script th:src="${@resources.admin('js/views/capacitaciones-recursos.js', true)}"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            var capacitacionesRecursos = new CapacitacionesRecursos('[[@{/}]]');
+            capacitacionesRecursos.init();
+        });
+    </script>
+</div>
+
+</body>
+</html>

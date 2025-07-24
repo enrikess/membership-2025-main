@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}"
+      th:with="title='Administracion | Gestion de descuentos', menu='Administracion', hijo='Descuentos'">
+
+<head>
+    <title>Layout</title>
+</head>
+
+<body>
+
+<div layout:fragment="content">
+
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>Gestion de descuentos</h2>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="" th:href="@{/}">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item active">
+                    <strong>Gestion de descuentos</strong>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="wrapper wrapper-content animated fadeInUp">
+
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h5>Descuento</h5>
+                        <div class="ibox-tools ibox-tools-button">
+                            <button type="button" th:attr="data-url=@{/administracion/descuento/registrar}" class="btn btn-danger btn-sm btnAccion"><i class="fa fa-plus"></i> Nuevo descuento</button>
+                        </div>
+                    </div>
+
+                    <div class="ibox-content">
+
+<!--                        <div class="col-xs-12 col-md-4">-->
+<!--                            <div class="form-group">-->
+
+<!--                                <label class="font-normal">Orden :</label>-->
+
+<!--                                <div class="form-group">-->
+<!--                                    <select class="form-control" id="slcOrden">-->
+<!--                                        <option value="1">Seleccione</option>-->
+<!--                                        <option value="1">Nombre</option>-->
+<!--                                        <option value="2">Estado</option>-->
+<!--                                    </select>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover" id="grid" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th>Codigo</th>
+                                        <th>Codigo Descuento</th>
+                                        <th>Tipo Descuento</th>
+                                        <th>Valor</th>
+                                        <th>Fecha Inicio</th>
+                                        <th>Fecha Fin</th>
+                                        <th>Catalogo</th>
+                                        <th>Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <th:block th:replace="~{fragments/resources :: scripts}"/>
+
+    <script th:src="${@resources.admin('js/views/descuento.js', true)}"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            var descuentos = new Descuentos('[[@{/}]]');
+            descuentos.init();
+        });
+    </script>
+</div>
+
+</body>
+</html>

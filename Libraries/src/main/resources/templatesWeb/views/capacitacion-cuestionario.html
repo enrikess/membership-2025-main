@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}"
+      th:with="title='La Fabril | Capacitaciones', menu='Capacitaciones'">
+
+<head>
+    <title>Title</title>
+</head>
+<body>
+
+<th:block layout:fragment="content">
+
+    <div class="container margin-bottom-50" id="divCuestionario">
+        <div class="section-title style6  margin-top-40">
+            <div class="breadcrumbs">
+                <a href="" th:href="@{/capacitacion/{id}(id=${capacitacion.idCapacitacion})}"><span class="lnr lnr-arrow-left"></span> [[${capacitacion.nombreCapacitacion}]]</a>
+                <span>Cuestionario</span>
+            </div>
+        </div>
+        <h3>Cuestionario</h3>
+        <hr>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="accordeon">
+
+                    <div class="accordeon-entry">
+                        <div class="article-container style-1">
+                            <form id="frmCuestionario" onsubmit="return false;" th:attr="data-id-capacitacion=${capacitacion.idCapacitacion}">
+                                <div th:remove="tag" th:each="pregunta : ${capacitacion.preguntas}">
+                                    <p th:text="|${pregunta.posicion}. ${pregunta.pregunta}|"></p>
+                                    <div class="col-md-12 pregunta" th:attr="data-id-pregunta=${pregunta.idCapacitacionPregunta}" >
+
+                                        <!--Seleccion Simple-->
+                                        <div th:if="${pregunta.esSeleccionSimple()}" th:remove="tag">
+
+                                            <div  class="col-md-3" th:each="respuesta : ${pregunta.respuestas}" style="margin-bottom: 30px">
+                                                <p style="margin-bottom: 0!important;"><label><input class="cuestionario" type="radio" th:value="${respuesta.idCapacitacionRespuesta}" th:name="|pregunta${respuesta.idCapacitacionPregunta}|"> [[${respuesta.respuesta}]]</label></p>
+                                            </div>
+
+                                        </div>
+
+                                        <!--Seleccion Multiple-->
+                                        <div th:if="${pregunta.esSeleccionMultiple()}" th:remove="tag">
+                                            <div class="col-md-3" th:each="respuesta : ${pregunta.respuestas}" style="margin-bottom: 30px">
+                                                <p style="margin-bottom: 0!important;"><label><input class="cuestionario" type="checkbox" th:value="${respuesta.idCapacitacionRespuesta}" th:name="|pregunta${respuesta.idCapacitacionPregunta}|"> [[${respuesta.respuesta}]]</label></p>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </form>
+
+                            <a class="button style-10" href="#" id="btnEnviar">Enviar respuestas</a>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="" id="divCorrecto" style="display: none">
+        <div class="container margin-bottom-50">
+            <div class="section-title style6 text-center margin-top-40">
+                <h3>¡Felicitaciones!</h3>
+
+                <span class="sub-title"></span>
+                <br><br>
+                <h1><span class="lnr lnr-gift" style="color: #5f7800"></span> Alcanzaste la calificaci&oacute;n para ganar m&aacute;s puntos <span class="lnr lnr-gift" style="color: #5f7800"></span></h1>
+                <br><br>
+                <a class="button style-10" href="" th:href="@{/capacitacion/{id}(id=${capacitacion.idCapacitacion})}">Volver</a>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="" id="divError" style="display: none">
+        <div class="container margin-bottom-50">
+            <div class="section-title style6 text-center margin-top-40">
+                <h3>Sigue intentando</h3>
+
+                <span class="sub-title"></span>
+                <br><br>
+                <h1>En esta ocasión no ganaste puntos. El puntaje mínimo requerido es
+                    8/10. ¡No te desanimes! Tendrás más oportunidades para ganar</h1>
+                <br><br>
+                <a class="button style-10" th:href="@{/capacitacion/{id}(id=${capacitacion.idCapacitacion})}">Volver</a>
+            </div>
+
+        </div>
+    </div>
+
+    <th:block th:replace="~{fragments/resources :: scripts}"/>
+
+    <script th:src="${@resources.web('js/views/capacitacion-cuestionario.js', true)}"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            var capacitacionCuestionario = new CapacitacionCuestionario('[[@{/}]]');
+            capacitacionCuestionario.init();
+        });
+    </script>
+
+</th:block>
+
+</body>
+</html>

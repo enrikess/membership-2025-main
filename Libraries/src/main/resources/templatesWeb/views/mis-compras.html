@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}"
+      th:with="title='La Fabril | Mis compras', menu='Compras'">
+
+<head>
+    <title>Title</title>
+</head>
+<body>
+
+<th:block layout:fragment="content" >
+
+    <!-- Banner -->
+    <div class="banner_estatico">
+        <div class="banner_internas" th:style="|background-image:url(${@resources.web('img/bg/bg-compras.png')});|">
+            <div class="internas-banner-content content-push">
+                <div class="cell-view">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-push">
+        <div class="title-subpage">Mis compras</div>
+        <div class="row">
+            <div class="col-md-1">
+                <div style="margin: 15px 0;">Buscar:</div>
+            </div>
+            <div class="col-md-8">
+                <input type="text" placeholder="Nro de factura" name="nroFactura" id="nroFactura">
+            </div>
+            <div class="col-md-3 text-right">
+                <a href="" th:href="@{/mis-compras/descargar-excel}" style="" class="button style-10"><span class="lnr lnr-download"></span> DESCARGAR</a>
+            </div>
+        </div>
+        <div class="table-responsive" style="clear:both">
+            <table class="cart-table" id="tableFacturas" style="width: 100%!important;">
+                <thead>
+                <tr>
+                    <th>Fecha de carga</th>
+                    <th>Evento</th>
+                    <th>Nº factura</th>
+                    <th>Fecha facturación</th>
+                    <th>Monto</th>
+                    <th>Puntos posibles</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                </tbody>
+            </table>
+
+        </div>
+
+    </div>
+
+    <th:block th:replace="~{fragments/resources :: scripts}"/>
+
+    <script th:src="${@resources.web('js/views/mis-compras.js', true)}"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            var misCompras = new MisCompras('[[@{/}]]');
+            misCompras.init();
+        });
+    </script>
+
+</th:block>
+
+</body>
+</html>

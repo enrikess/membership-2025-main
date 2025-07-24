@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}"
+      th:with="title='Administracion | ' + ${objUsuario.idUsuario== null ? 'Registro de usuario' : 'Detalle de usuario'}, menu='Administracion', hijo='Usuarios'">
+
+<head>
+    <title>Layout</title>
+</head>
+
+<body>
+
+<div layout:fragment="content">
+    <!--/*@thymesVar id="objUsuario" type="Usuario"*/-->
+
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>Gestion de usuarios</h2>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="" th:href="@{/}">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="" th:href="@{/administracion/usuarios}">Usuarios</a>
+                </li>
+                <li class="breadcrumb-item active">
+                    <strong th:text="${objUsuario.idUsuario == null ? 'Registro de usuario' : 'Detalle de usuario'}"></strong>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="wrapper wrapper-content animated fadeInUp">
+
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h5>Informacion de usuario</h5>
+                        <div class="ibox-tools ibox-tools-button">
+
+                        </div>
+                    </div>
+
+                    <div class="ibox-content">
+
+
+                        <input type="hidden" th:value="${objUsuario.idUsuario}" value="" id="idUsuario" />
+
+                        <form role="form" class="" id="form-registro" onsubmit="return false;">
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-sm-6 b-r">
+
+                                        <div class="form-group row">
+                                            <label for="nombreUsuario" class="col-sm-3 col-form-label">Usuario</label>
+                                            <div class="col-sm-9">
+                                                <input type="text"class="form-control" name="nombreUsuario" id="nombreUsuario" th:value="${objUsuario.usuario}" value="" placeholder="">
+                                            </div>
+                                        </div>
+
+                                        <div class="hr-line-dashed"></div>
+
+                                        <div class="form-group row">
+                                            <label for="nombres" class="col-sm-3 col-form-label">Nombres de usuario</label>
+                                            <div class="col-sm-9">
+                                                <input type="text"class="form-control" name="nombres" id="nombres" th:value="${objUsuario.nombresUsuario}" value="" placeholder="">
+                                            </div>
+                                        </div>
+
+                                        <div class="hr-line-dashed"></div>
+
+                                        <div class="form-group row">
+                                            <label for="apellidoPaterno" class="col-sm-3 col-form-label">Apellido paterno</label>
+                                            <div class="col-sm-9">
+                                                <input type="text"class="form-control" name="apellidoPaterno" id="apellidoPaterno" th:value="${objUsuario.apellidoPaterno}" value="" placeholder="">
+                                            </div>
+                                        </div>
+
+                                        <div class="hr-line-dashed"></div>
+
+                                        <div class="form-group row">
+                                            <label for="apellidoMaterno" class="col-sm-3 col-form-label">Apellido materno</label>
+                                            <div class="col-sm-9">
+                                                <input type="text"class="form-control" name="apellidoMaterno" id="apellidoMaterno" th:value="${objUsuario.apellidoMaterno}" value="" placeholder="">
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+
+                                    <div class="col-sm-6">
+
+                                        <div class="form-group row">
+                                            <label for="correoUsuario" class="col-sm-3 col-form-label">Correo de usuario</label>
+                                            <div class="col-sm-9">
+                                                <input type="text"class="form-control" name="correoUsuario" id="correoUsuario" th:value="${objUsuario.correoUsuario}" value="" placeholder="">
+                                            </div>
+                                        </div>
+
+                                        <th:block th:if="${objUsuario.idUsuario == null || session.usuario.rol.esSuperUsuario}">
+                                            <div class="hr-line-dashed"></div>
+
+                                            <div class="form-group row">
+                                                <label for="claveUsuario" class="col-sm-3 col-form-label">Contraseña [[${objUsuario.idUsuario != null ? '(Opcional)' : ''}]]</label>
+                                                <div class="col-sm-9">
+                                                    <input type="password"class="form-control" name="claveUsuario" id="claveUsuario" value="" placeholder="">
+                                                </div>
+                                            </div>
+                                        </th:block>
+
+                                        <th:block th:if="${objUsuario.idUsuario == null || session.usuario.rol.esSuperUsuario}">
+                                            <div class="hr-line-dashed"></div>
+
+                                            <div class="form-group row">
+                                                <label for="claveUsuarioRepite" class="col-sm-3 col-form-label">Confirmacion Contraseña [[${objUsuario.idUsuario != null ? '(Opcional)' : ''}]]</label>
+                                                <div class="col-sm-9">
+                                                    <input type="password"class="form-control" name="claveUsuarioRepite" id="claveUsuarioRepite" value="" placeholder="">
+                                                </div>
+                                            </div>
+                                        </th:block>
+
+                                        <div class="hr-line-dashed"></div>
+
+                                        <div class="form-group row">
+                                            <label for="rolUsuario" class="col-sm-3 col-form-label">Rol</label>
+                                            <div class="col-sm-9">
+                                                <select class="form-control" name="rolUsuario" id="rolUsuario">
+                                                    <!--/*@thymesVar id="roles" type="java.util.List<Rol>"*/-->
+                                                    <th:block th:if="${objUsuario.idUsuario == null || (!objUsuario.rol.esSuperUsuario)}">
+                                                        <option value="">Seleccionar</option>
+                                                        <option th:each="rol : ${roles}" th:value="${rol.idRol}" th:text="${rol.nombreRol}" th:selected="${objUsuario.idUsuario != null && objUsuario.rol.idRol == rol.idRol}"></option>
+                                                    </th:block>
+
+                                                    <th:block th:unless="${objUsuario.idUsuario == null || (!objUsuario.rol.esSuperUsuario)}">
+                                                        <option value="1">Super administrador</option>
+                                                    </th:block>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="hr-line-dashed"></div>
+
+                                <div class="form-group row">
+                                    <div class="col-sm-4 col-sm-offset-2" >
+                                        <a th:href="@{/administracion/usuarios}" class="btn btn-white">Cancelar</a>
+                                        <button class="btn btn-primary" id="btnGuardar">Guardar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <th:block th:replace="~{fragments/resources :: scripts}"/>
+
+    <script th:src="${@resources.admin('js/views/usuarios-detalle.js', true)}"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            var usuariosDetalle = new UsuariosDetalle('[[@{/}]]', '[[${objUsuario.idUsuario == null ? "1" : "0"}]]', '[[${session.usuario.rol.esSuperUsuario}]]', '[[${session.usuario.rol.idRol}]]');
+            usuariosDetalle.init();
+        });
+    </script>
+</div>
+
+</body>
+</html>

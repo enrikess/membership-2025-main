@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}"
+      th:with="title='La Fabril | ' + ${producto.nombreProducto}, menu='Catalogo'">
+
+<head>
+    <title>Title</title>
+</head>
+<body>
+
+    <!--/*@thymesVar id="producto" type="com.promotick.nissan.model.web.Producto"*/-->
+    <th:block layout:fragment="content" th:object="${producto}">
+
+        <input type="hidden" id="idTipoProducto" th:value="${producto.tipoProducto.idTipoProducto}"/>
+        <div class="product-details-full margin-top-10">
+            <div class="container">
+                <div class="col-md-4 col-sm-12">
+                    <div class="product-detail-image">
+                        <div class="main-image-wapper">
+                            <img class="main-image" th:src="${@resources.web('img/productos/').concat(producto.imagenDetalle)}" src="" alt="">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8 col-sm-12">
+                    <div class="product-details-right">
+
+                        <th:block th:if="${producto.imagenEnvioExpress == 1}">
+                            <span class="detail-delivery">
+                                <img th:src="${@resources.web('img/icono-delivery.png')}" src="" alt="" />
+                            </span>
+                        </th:block>
+
+                        <div class="breadcrumbs">
+                            <a href="" th:href="@{/}">Inicio</a>
+                            <a href="" th:href="@{/__${producto.categoria.url}__}">Cátalogo de Premios</a>
+                            <span>Detalle de producto</span>
+                        </div>
+
+                        <th:block th:replace="fragments/fragments-producto :: contenidoProductoDetalle(${producto}, true, false)"/>
+
+                        <div class="row margin-top-10">
+                            <th:block th:if="*{imagenEnvioExpress == 1}">
+                                <div class="col-md-12">
+                                    <br>
+                                    <table class="msj-express">
+                                        <tr>
+                                            <td style="width: 70px;text-align: center">
+                                                <img th:src="${@resources.web('img/alerta.png')}">
+                                            </td>
+                                            <td>
+                                                <p style="margin: 10px 10px 10px 0;    font-family: 'Gilroy-Light',sans-serif;font-size: 18px">"ENVÍO EXPRESS" está disponible para entregas hasta 48hrs luego del canje.
+                                                    <span >Aplica únicamente sí todos los productos seleccionados dentro del mismo
+                                                    canje son de "ENVÍO EXPRESS".</span> <br>
+                                                    Mayor información en términos y condiciones.
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </th:block>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="tab-details-product padding-40-60">
+                <ul class="box-tabs nav-tab">
+                    <li class="active"><a data-toggle="tab" href="#tab-1">Especificaciones</a></li>
+                    <li><a data-toggle="tab" href="#tab-2">Consideraciones</a></li>
+                </ul>
+                <div class="tab-container">
+                    <div id="tab-1" class="tab-panel active">
+                        <!--/*@thymesVar id="especificaciones" type="java.lang.String"*/-->
+<!--                        <p th:each="especificacion : ${especificacionesespecificaciones}" th:utext="${especificacion}"></p>-->
+                        <p th:utext="*{descripcionProducto}"></p>
+                    </div>
+
+                    <div id="tab-2" class="tab-panel">
+                        <!--/*@thymesVar id="especificaciones" type="java.lang.String"*/-->
+                        <!--                        <p th:each="especificacion : ${especificacionesespecificaciones}" th:utext="${especificacion}"></p>-->
+                        <p th:utext="*{especificacionesProducto}"></p>
+                    </div>
+                    <!--/*@thymesVar id="terminos" type="java.lang.String"*/-->
+<!--                    <div id="tab-2" class="tab-panel" th:each="termino : ${terminos}">-->
+<!--                        <ul>-->
+<!--                            <li th:utext="${termino}"></li>-->
+<!--                        </ul>-->
+<!--                    </div>-->
+                </div>
+            </div>
+            <div class="margin-bottom-50">
+                <div class="section-title text-center">
+                    <h3>Más sobre la marca</h3>
+                </div>
+                <p th:text="*{marca.descripcionLarga}"></p>
+                <ul id="contentInteres" class="row margin-top-40">
+                    <!--LISTADO DE EXPERIENCIAS-->
+                </ul>
+            </div>
+        </div>
+
+
+
+        <th:block th:replace="~{fragments/resources :: scripts}"/>
+
+        <script th:src="${@resources.web('js/views/producto-detalle.js', true)}"></script>
+
+        <script type="text/javascript">
+            $(function() {
+                var footer = new Footer('[[@{/}]]');
+                var productoDetalle = new ProductoDetalle('[[@{/}]]', footer, '[[${producto.marca.idMarca}]]');
+                footer.init();
+                productoDetalle.init();
+            });
+        </script>
+
+    </th:block>
+</body>
+</html>

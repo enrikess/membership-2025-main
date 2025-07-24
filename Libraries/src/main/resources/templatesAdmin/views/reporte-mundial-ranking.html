@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}"
+      th:with="title='Administracion | Reporte Mundial Ranking', menu='Mundial', hijo='Ranking'">
+
+<head>
+    <title>Layout</title>
+</head>
+
+<body>
+
+<div layout:fragment="content">
+
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>Reportes</h2>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="" th:href="@{/}">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item active">
+                    <strong>Reporte Mundial Ranking</strong>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="wrapper wrapper-content animated fadeInUp">
+
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h5>Reporte Mundial Ranking</h5>
+                        <div class="ibox-tools ibox-tools-button">
+                            <button type="button" id="btnDescargar" th:attr="data-descarga=@{/reportes/mundial-ranking/descargar-excel}" class="btn btn-danger btn-sm"><i class="fa fa-download"></i> Descargar reporte</button>
+                        </div>
+                    </div>
+
+                    <div class="ibox-content">
+
+<!--                        <div class="col-xs-12 col-md-4">-->
+<!--                            <div class="form-group">-->
+
+<!--                                <label class="font-normal">Orden :</label>-->
+
+<!--                                <div class="form-group">-->
+<!--                                    <select class="form-control" id="slcOrden">-->
+<!--                                        <option value="1">Seleccione</option>-->
+<!--                                        <option value="1">Nombre</option>-->
+<!--                                        <option value="2">Estado</option>-->
+<!--                                    </select>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover" id="grid" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th>Catalogo</th>
+                                        <th>Usuario</th>
+                                        <th>Nombres</th>
+                                        <th>Apellido Paterno</th>
+                                        <th>Apellido Materno</th>
+                                        <th>Broker</th>
+                                        <th>Ciudad</th>
+                                        <th>Regional</th>
+                                        <th>Estado</th>
+                                        <th>Principiante</th>
+                                        <th>Aficionado</th>
+                                        <th>Semi Profesional</th>
+                                        <th>Profesional</th>
+                                        <th>Clase Mundial</th>
+                                        <th>Legendario</th>
+                                        <th>Bono Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <th:block th:replace="~{fragments/resources :: scripts}"/>
+
+    <script th:src="${@resources.admin('js/views/reporte-mundial-ranking.js', true)}"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            var reporteMundialRanking = new ReporteMundialRanking('[[@{/}]]');
+            reporteMundialRanking.init();
+        });
+    </script>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}"
+      th:with="title='Administracion | Pedido Rebotado', menu='Netsuite', hijo='Pedidos Rebotados'">
+
+<head>
+    <title>Layout</title>
+</head>
+
+<body>
+
+<div layout:fragment="content">
+    <!--/*@thymesVar id="pedido" type="Pedido"*/-->
+
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>Pedido rebotado</h2>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="" th:href="@{/}">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item">
+                    <a href="" th:href="@{/pedidos/netsuite}">Pedidos Rebotados</a>
+                </li>
+                <li class="breadcrumb-item active">
+                    <strong>Pedido Rebotado</strong>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="wrapper wrapper-content animated fadeInUp">
+
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h5>Detalle de pedido rebotado</h5>
+                        <div class="ibox-tools ibox-tools-button">
+
+                        </div>
+                    </div>
+
+                    <div class="ibox-content">
+
+                        <input type="hidden" th:value="${pedido.idPedido}" value="" id="idPedido" />
+
+                        <form role="form" class="" id="form-registro" onsubmit="return false;">
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-sm-6 b-r">
+
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label">ID Pedido</label>
+                                            <div class="col-sm-9">
+                                                <input type="text"class="form-control" disabled th:value="${pedido.idPedido}" value="" placeholder="">
+                                            </div>
+                                        </div>
+
+                                        <div class="hr-line-dashed"></div>
+
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label">Fecha Pedido</label>
+                                            <div class="col-sm-9">
+                                                <input type="text"class="form-control" disabled th:value="${pedido.fechaPedidoString}" value="" placeholder="">
+                                            </div>
+                                        </div>
+
+                                        <div class="hr-line-dashed"></div>
+
+                                        <div class="form-group row">
+                                            <label for="nroDocumentoPedido" class="col-sm-3 col-form-label">Nro documento</label>
+                                            <div class="col-sm-9">
+                                                <input type="text"class="form-control" name="nroDocumentoPedido" id="nroDocumentoPedido" th:value="${pedido.nroDocumentoPedido}" value="" placeholder="">
+                                            </div>
+                                        </div>
+
+                                        <div class="hr-line-dashed"></div>
+
+                                        <div class="form-group row">
+                                            <label for="nombrePedido" class="col-sm-3 col-form-label">Nombres</label>
+                                            <div class="col-sm-9">
+                                                <input type="text"class="form-control" name="nombrePedido" id="nombrePedido" th:value="${pedido.nombrePedido}" value="" placeholder="">
+                                            </div>
+                                        </div>
+
+                                        <div class="hr-line-dashed"></div>
+
+                                        <div class="form-group row">
+                                            <label for="apellidoPaternoPedido" class="col-sm-3 col-form-label">Apellido Paterno</label>
+                                            <div class="col-sm-9">
+                                                <input type="text"class="form-control" name="apellidoPaternoPedido" id="apellidoPaternoPedido" th:value="${pedido.apellidoPaternoPedido}" value="" placeholder="">
+                                            </div>
+                                        </div>
+
+                                        <div class="hr-line-dashed"></div>
+
+                                        <div class="form-group row">
+                                            <label for="apellidoMaternoPedido" class="col-sm-3 col-form-label">Apellido Materno</label>
+                                            <div class="col-sm-9">
+                                                <input type="text"class="form-control" name="apellidoMaternoPedido" id="apellidoMaternoPedido" th:value="${pedido.apellidoMaternoPedido}" value="" placeholder="">
+                                            </div>
+                                        </div>
+
+                                        <div class="hr-line-dashed"></div>
+
+                                        <div class="form-group row">
+                                            <label for="emailPedido" class="col-sm-3 col-form-label">Email</label>
+                                            <div class="col-sm-9">
+                                                <input type="text"class="form-control" name="emailPedido" id="emailPedido" th:value="${pedido.emailPedido}" value="" placeholder="">
+                                            </div>
+                                        </div>
+
+                                        <div class="hr-line-dashed"></div>
+
+                                        <div class="form-group row">
+                                            <label for="telefonoPedido" class="col-sm-3 col-form-label">Telefono fijo</label>
+                                            <div class="col-sm-9">
+                                                <input type="text"class="form-control" name="telefonoPedido" id="telefonoPedido" th:value="${pedido.telefonoPedido}" value="" placeholder="">
+                                            </div>
+                                        </div>
+
+                                        <div class="hr-line-dashed"></div>
+
+                                        <div class="form-group row">
+                                            <label for="movilPedido" class="col-sm-3 col-form-label">Telefono movil</label>
+                                            <div class="col-sm-9">
+                                                <input type="text"class="form-control" name="movilPedido" id="movilPedido" th:value="${pedido.movilPedido}" value="" placeholder="">
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-sm-6">
+
+                                        <div class="form-group row">
+                                            <label class="col-sm-3 col-form-label">Fecha Entrega</label>
+                                            <div class="col-sm-9">
+                                                <input type="text"class="form-control" disabled th:value="${pedido.fechaEntregaString}" value="" placeholder="">
+                                            </div>
+                                        </div>
+
+                                        <div class="hr-line-dashed"></div>
+
+                                        <div class="form-group row">
+                                            <label for="direccionCalle" class="col-sm-3 col-form-label">Direccion</label>
+                                            <div class="col-sm-9">
+                                                <input type="text"class="form-control" name="direccionCalle" id="direccionCalle" th:value="${pedido.direccion.direccionCalle}" value="" placeholder="">
+                                            </div>
+                                        </div>
+
+                                        <div class="hr-line-dashed"></div>
+
+                                        <div class="form-group row">
+                                            <label for="referencia" class="col-sm-3 col-form-label">Referencia</label>
+                                            <div class="col-sm-9">
+                                                <input type="text"class="form-control" name="referencia" id="referencia" th:value="${pedido.direccion.referencia}" value="" placeholder="">
+                                            </div>
+                                        </div>
+
+                                        <div class="hr-line-dashed"></div>
+
+                                        <div class="form-group row">
+                                            <label for="slcProvincia" class="col-sm-3 col-form-label">Provincia</label>
+                                            <div class="col-sm-9">
+                                                <select class="form-control" id="slcProvincia">
+                                                    <!--/*@thymesVar id="provinciaList" type="java.util.List<com.promotick.nissan.model.web.Ubigeo>"*/-->
+                                                    <option th:each="provincia : ${provinciaList}" th:value="${provincia.codprov}" th:text="${provincia.nombreUbigeo}" th:selected="${provincia.codprov == pedido.direccion.ubigeo.codprov}"></option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="hr-line-dashed"></div>
+
+                                        <div class="form-group row">
+                                            <label for="slcCiudad" class="col-sm-3 col-form-label">Ciudad</label>
+                                            <div class="col-sm-9">
+                                                <select class="form-control" id="slcCiudad">
+                                                    <!--/*@thymesVar id="ciudadList" type="java.util.List<com.promotick.nissan.model.web.Ubigeo>"*/-->
+                                                    <option th:each="ciudad : ${ciudadList}" th:value="${ciudad.coddist}" th:text="${ciudad.nombreUbigeo}" th:selected="${ciudad.coddist == pedido.direccion.ubigeo.coddist}"></option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="hr-line-dashed"></div>
+
+                                        <div class="form-group row">
+                                            <label for="slcZona" class="col-sm-3 col-form-label">Zona</label>
+                                            <div class="col-sm-9">
+                                                <select class="form-control" id="slcZona">
+                                                    <!--/*@thymesVar id="zonaList" type="java.util.List<Zona>"*/-->
+                                                    <option th:each="zona : ${zonaList}" th:value="${zona.idZona}" th:text="${zona.nombreZona}" th:selected="${zona.idZona == pedido.direccion.zona.idZona}"></option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="hr-line-dashed"></div>
+
+                                        <div class="form-group row">
+                                            <label for="slcTipoVivienda" class="col-sm-3 col-form-label">Tipo de vivienda</label>
+                                            <div class="col-sm-9">
+                                                <select class="form-control" id="slcTipoVivienda">
+                                                    <!--/*@thymesVar id="tipoViviendaList" type="java.util.List<com.promotick.nissan.model.web.TipoVivienda>"*/-->
+                                                    <option th:each="tv : ${tipoViviendaList}" th:value="${tv.idTipoVivienda}" th:text="${tv.nombreTipoVivienda}" th:selected="${tv.idTipoVivienda == pedido.direccion.tipoVivienda.idTipoVivienda}"></option>
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div class="hr-line-dashed"></div>
+
+                                        <div class="form-group row">
+                                            <label for="registroNS" class="col-sm-3 col-form-label">Respuesta Netsuite</label>
+                                            <div class="col-sm-9">
+                                                <input type="text"class="form-control" name="registroNS" disabled id="registroNS" th:value="${pedido.registroNs}" value="" placeholder="">
+                                            </div>
+                                        </div>
+
+                                        <div class="hr-line-dashed"></div>
+
+                                        <div class="form-group row">
+                                            <label for="registroNS" class="col-sm-3 col-form-label">Observaciones Netsuite</label>
+                                            <div class="col-sm-9">
+
+                                                <th:block th:if="${pedido.erroresNetsuite} != null">
+                                                    <ul>
+                                                        <th:block th:each="data, status : ${#strings.arraySplit(pedido.erroresNetsuite, '|')}">
+                                                            <li><b th:text="${data}"></b></li>
+                                                        </th:block>
+                                                    </ul>
+                                                </th:block>
+
+                                                <th:block th:unless="${pedido.erroresNetsuite} != null">
+                                                    <span>No presenta lista de observaciones</span>
+                                                </th:block>
+
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-sm-12">
+                                        <div class="hr-line-dashed"></div>
+
+                                        <div id="contentDetalle"></div>
+
+                                    </div>
+                                </div>
+
+                                <div class="hr-line-dashed"></div>
+
+                                <div class="form-group row">
+                                    <div class="col-sm-12">
+                                        <a th:href="@{/pedidos/netsuite}" class="btn btn-white">Volver</a>
+                                        <button class="btn btn-primary" id="btnGuardar">Guardar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <th:block th:replace="~{fragments/resources :: scripts}"/>
+
+    <script th:src="${@resources.admin('js/views/pedidos-netsuite-detalle.js', true)}"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            var pedidosNetsuiteDetalle = new PedidosNetsuiteDetalle('[[@{/}]]');
+            pedidosNetsuiteDetalle.init();
+        });
+    </script>
+</div>
+
+</body>
+</html>

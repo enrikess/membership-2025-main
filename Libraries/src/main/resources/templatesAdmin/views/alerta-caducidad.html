@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}"
+      th:with="title='Administracion | Alerta Caducidad', menu='Administracion', hijo='Alerta Caducidad'">
+
+<head>
+    <title>Layout</title>
+</head>
+
+<body>
+
+<div layout:fragment="content">
+    <!--/*@thymesVar id="objSegmento" type="Catalogo"*/-->
+
+    <div class="row wrapper border-bottom white-bg page-heading">
+        <div class="col-lg-10">
+            <h2>Edicion de Datos Vencimientos</h2>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a href="" th:href="@{/}">Dashboard</a>
+                </li>
+                <li class="breadcrumb-item active">
+                    <strong>Edicion de Vencimiento</strong>
+                </li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="wrapper wrapper-content animated fadeInUp">
+
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="ibox">
+                    <div class="ibox-title">
+                        <h5>Datos</h5>
+                        <div class="ibox-tools ibox-tools-button">
+
+                        </div>
+                    </div>
+
+                    <div class="ibox-content">
+
+                        <form role="form" class="" id="form-registro" onsubmit="return false;">
+                            <div class="col-sm-12">
+                                <div class="row">
+                                    <div class="col-sm-6 b-r">
+
+
+                                        <div class="form-group row">
+                                            <label for="fechaVencimiento" class="col-sm-3 col-form-label">Fecha</label>
+                                            <div class="col-sm-9">
+                                                <input type="text"class="form-control" name="fechaVencimiento" id="fechaVencimiento" th:value="${#dates.format(configuracionWeb.fechaVencimiento, 'dd-MM-yyyy')}"placeholder="">
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+
+                                    <div class="col-sm-6">
+
+                                        <div class="form-group row">
+                                            <label for="horaVencimiento" class="col-sm-3 col-form-label">Hora (HH)</label>
+                                            <div class="col-sm-9">
+                                                <input type="text"class="form-control" name="horaVencimiento" id="horaVencimiento" th:value="${configuracionWeb.horaVencimiento}" value="" placeholder="">
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="hr-line-dashed"></div>
+
+                                <div class="form-group row">
+                                    <div class="col-sm-4 col-sm-offset-2" >
+                                        <button class="btn btn-primary" id="btnGuardar">Guardar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <th:block th:replace="~{fragments/resources :: scripts}"/>
+
+    <script th:src="${@resources.admin('js/views/fecha-vencimiento.js', true)}"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            var fechaVencimiento = new FechaVencimiento('[[@{/}]]');
+            fechaVencimiento.init();
+        });
+    </script>
+</div>
+
+</body>
+</html>

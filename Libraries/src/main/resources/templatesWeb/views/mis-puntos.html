@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}"
+      th:with="title='La Fabril | Mis puntos', menu='MisPuntos'">
+
+<head>
+    <title>Title</title>
+</head>
+<body>
+
+<th:block layout:fragment="content" th:object="${session.participante}">
+
+    <!--/*@thymesVar id="fechaActualizacion" type="java.util.Date"*/-->
+
+    <!-- Banner -->
+<!--    <div class="banner_estatico puntos" th:style="|background-image:url(${@resources.web('img/bg/bg-puntos.png')});background-position: top center;background-size: cover;|"  style="">-->
+    <div class="banner_estatico puntos" style="">
+        <div class="banner_internas">
+            <div class="internas-banner-content content-push">
+                <div class="cell-view" style="padding-left: 0;">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container margin-bottom-50">
+        <div class="section-title style6 text-center margin-top-40">
+            <h3>Mis puntos</h3>
+            <span class="sub-title"></span>
+        </div>
+        <div class="tab-product">
+            <ul class="box-tabs nav-tab tab-owl-fade-effect">
+                <li class="active"><a data-animated="slideInLeft" data-toggle="tab" href="#" aria-expanded="false" class="ver_mas cargar-detalle" data-value="1">Puntos acumulados</a></li>
+                <li class=""><a data-animated="slideInLeft" data-toggle="tab" href="#" aria-expanded="false" class="ver_mas cargar-detalle" data-value="2">Puntos canjeados</a></li>
+                <li class=""><a data-animated="slideInLeft" data-toggle="tab" href="#" aria-expanded="false" class="ver_mas cargar-detalle" data-value="3">Puntos descargados</a></li>
+            </ul>
+        </div>
+
+        <div class="table_puntos" id="contentPuntos">
+
+        </div>
+
+        <a href="" th:href="@{/mis-puntos/descargar-estado_cuenta}" class="button style-10"><span class="lnr lnr-download"></span> DESCARGAR ESTADO DE CUENTA</a>
+
+        <div class="col-md-12 estado_pedido" id="contentDetallePedido">
+
+        </div>
+    </div>
+
+    <th:block th:replace="~{fragments/resources :: scripts}"/>
+
+    <script th:src="${@resources.web('js/views/mis-puntos.js', true)}"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            var misPuntos = new MisPuntos('[[@{/}]]');
+            misPuntos.init();
+        });
+    </script>
+
+</th:block>
+
+</body>
+</html>

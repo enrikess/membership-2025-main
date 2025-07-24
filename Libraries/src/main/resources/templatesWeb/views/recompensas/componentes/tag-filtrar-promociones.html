@@ -1,0 +1,7 @@
+<th:block th:fragment="tag">
+    <span class="g-tag">
+        <span th:text="${palabra}"></span>
+        <img class="cursor-pointer2" th:src="${@resources.web('recompensa/img/ico/ico-x.svg')}" alt=""
+            onclick="this.parentElement.remove(); cargarPromocionesAjax();"> 
+    </span>
+</th:block>

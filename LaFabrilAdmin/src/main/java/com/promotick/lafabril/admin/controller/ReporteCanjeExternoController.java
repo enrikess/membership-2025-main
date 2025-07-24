@@ -1,0 +1,61 @@
+package com.promotick.lafabril.admin.controller;
+
+import com.promotick.apiclient.utils.file.excel.generator.ExcelBuilder;
+import com.promotick.lafabril.admin.util.BaseController;
+import com.promotick.lafabril.admin.service.ReporteAdminService;
+import com.promotick.lafabril.admin.util.ConstantesAdminView;
+import com.promotick.lafabril.common.ConstantesSesion;
+import com.promotick.lafabril.model.reporte.ReporteCanjeExterno;
+import com.promotick.lafabril.model.util.Datatable;
+import com.promotick.lafabril.model.util.FiltroVisitas;
+import com.promotick.lafabril.model.util.Util;
+import com.promotick.lafabril.model.util.UtilEnum;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+
+@Controller
+@RequestMapping("reportes/canjes-externos")
+public class ReporteCanjeExternoController extends BaseController {
+
+    private ReporteAdminService reporteAdminService;
+
+    @Autowired
+    public ReporteCanjeExternoController(ReporteAdminService reporteAdminService) {
+        this.reporteAdminService = reporteAdminService;
+    }
+
+    @GetMapping
+    public String init() {
+        return ConstantesAdminView.VIEW_REPORTE_CANJES_EXTERNOS;
+    }
+
+    @ResponseBody
+    @PostMapping(value = "listar-canjes-externos")
+    public Datatable listaVisitas(FiltroVisitas filtroVisitas) {
+        Datatable datatable = new Datatable();
+        filtroVisitas.setTipoOperacion(UtilEnum.TIPO_OPERACION_VISITA.CANJE_EXTERNO.getCodigo());
+
+        Util.getSession().setAttribute(ConstantesSesion.SESSION_FILTRO_REPORTE_CANJE_EXTERNO, filtroVisitas);
+
+        Integer total = reporteAdminService.contarVisitas(filtroVisitas);
+        datatable.setData(reporteAdminService.listarVisitas(filtroVisitas));
+        datatable.setRecordsFiltered(total);
+        datatable.setRecordsTotal(total);
+        return datatable;
+    }
+
+    @RequestMapping(value = "descargar-excel", method = RequestMethod.GET)
+    public ModelAndView descargarExcelPedidos() {
+        FiltroVisitas filtroVisitas = (FiltroVisitas) Util.getSession().getAttribute(ConstantesSesion.SESSION_FILTRO_REPORTE_CANJE_EXTERNO);
+        filtroVisitas.setLength(-1);
+
+        return new ModelAndView(
+                ExcelBuilder.getInstance(ReporteCanjeExterno.class)
+                        .setList(ReporteCanjeExterno.parseFromEntities(reporteAdminService.listarVisitas(filtroVisitas)))
+                        .buildView()
+        );
+    }
+
+}

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<!--/*@thymesVar id="metaParticipante" type="com.promotick.nissan.model.util.MetaParticipante"*/-->
+<!--/*@thymesVar id="tipo" type="java.lang.Integer"*/-->
+<th:block th:fragment="metaGrafico">
+    <input type="hidden" th:value="${#lists.size(metaParticipante)}" id="sizeBanners">
+    <br>
+    <div class="row">
+        <div class="col-md-12">
+            <p style="font-weight: 600" th:text="${session.participante.nombresParticipante.concat(' ').concat(session.participante.appaternoParticipante)} + ', ¡Sigue acumulando!'"></p>
+            <h3 style="margin-top: 22px"></h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h4 style="font-weight: 600"><i class="fa fa-calendar"></i> <span id="nombre-mes"></span> 2024</h4>
+        </div>
+    </div>
+    <th:block th:unless="${metaParticipante.isEmpty()}">
+        <th:block th:each="metaParticipante : ${metaParticipante}" th:object="${metaParticipante}">
+            <input type="hidden" th:value="${metaParticipante.avancePorcentaje}" th:id="|hfAvance-*{idTipoMeta}|"/>
+
+            <div th:unless="*{idTipoMeta == 0}" class="row">
+                <div class="col-md-12">
+                    <h4 style="font-weight: 600">
+                        <th:block th:unless="*{idTipoMeta == 3}">
+                            <img th:src="${@resources.web('img/water-bottle.png')}" src="" alt="" width="20">
+                        </th:block>
+                        <th:block th:if="*{idTipoMeta == 3}">
+                            <i class="fa fa-beer"></i>
+                        </th:block>
+                        <span th:text="|*{nombreTipoMeta}|"></span>
+                    </h4>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-5 margin-top-40">
+                    <p>➤ Meta: US$ <b th:text="|*{metaParticipante}|"></b></p>
+                    <div class="division"></div>
+                    <p>➤ Avance en este periodo: US$ <b th:text="|*{avanceMeta}|"></b></p>
+                    <div class="division"></div>
+                    <p>➤ Sólo te faltan: US$ <b th:text="|*{teFalta}|"></b></p>
+                </div>
+
+                <div class="col-sm-7 text-center">
+                    <div th:id="|chartdiv-*{idTipoMeta}|"></div>
+                </div>
+            </div>
+
+            <hr>
+        </th:block>
+    </th:block>
+
+    <th:block th:if="${metaParticipante.isEmpty()}">
+        <p class="margin-top-40 text-center">NO EXISTE META PARA ESTE MES</p>
+    </th:block>
+</th:block>
+
+
+<th:block th:fragment="rankingGraficoTrimestre">
+    <!-- Banner Trimestral-->
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <img th:src="${@resources.web('img/bg/').concat(bannerRanking.imagenBanner)}" src="" alt="">
+        </div>
+    </div>
+
+    <input type="hidden" th:value="${rankingParticipante==null?'':rankingParticipante.meta}" id="hfMetaTrimestre"/>
+    <input type="hidden" th:value="${rankingParticipante==null?'':rankingParticipante.valorAcumulado}" id="hfAcumuladoTrimestre"/>
+    <input type="hidden" th:value="${rankingParticipante==null?'':rankingParticipante.avance}" id="hfAvanceTrimestre"/>
+
+    <div class="row margin-top-40">
+        <div class="col-md-12">
+            <h4 style="font-weight: 600"><i class="fa fa-gift"></i> Sorteo trimestral</h4>
+            <p>Alcanza el 110% de tu cuota trimestral y automáticamente participa del sorteo por uno de estos grandes premios.</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-5 margin-top-40">
+            <p>➤ Tu meta acumulada: <b th:text="${rankingParticipante==null?'':rankingParticipante.meta}"></b></p>
+            <div class="division"></div>
+            <p>➤ Real acumulado: <b th:text="${rankingParticipante==null?'':rankingParticipante.valorAcumulado}"></b></p>
+            <div class="division"></div>
+            <p>➤ Sólo te faltan: <b th:text="${rankingParticipante==null?'':rankingParticipante.teFalta}"></b>
+            </p>
+        </div>
+
+        <div class="col-sm-7 text-center">
+            <div id="chartdivRan"></div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <p style="font-style: italic;font-weight: 600">* Debes llegar a un cumplimiento mínimo del 110%</p>
+        </div>
+    </div>
+
+    <hr>
+
+</th:block>
+
+<th:block th:fragment="rankingGraficoQatar">
+    <!-- Banner Qatar-->
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <img th:src="${@resources.web('img/bg/').concat(bannerRanking.imagenBanner)}" src="" alt="">
+        </div>
+    </div>
+
+    <input type="hidden" th:value="${rankingParticipante==null?'':rankingParticipante.meta}" id="hfMetaQatar"/>
+    <input type="hidden" th:value="${rankingParticipante==null?'':rankingParticipante.valorAcumulado}" id="hfAcumuladoQatar"/>
+    <input type="hidden" th:value="${rankingParticipante==null?'':rankingParticipante.avance}" id="hfAvanceQatar"/>
+
+    <div class="row margin-top-40">
+        <div class="col-md-12">
+            <h4 style="font-weight: 600"><i class="fa fa-gift"></i> Premio Qatar</h4>
+            <p>Obtén el mejor alcance sobre tu meta acumulada hasta octubre y sé el ganador de un paquete al mundial de Qatar.</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-5 margin-top-40">
+            <p>➤ Tu meta acumulada: <b th:text="${rankingParticipante==null?'':rankingParticipante.meta}"></b></p>
+            <div class="division"></div>
+            <p>➤ Real acumulado: <b th:text="${rankingParticipante==null?'':rankingParticipante.valorAcumulado}"></b></p>
+            <div class="division"></div>
+            <p>➤ Sólo te faltan: <b th:text="${rankingParticipante==null?'':rankingParticipante.teFalta}"></b>
+            </p>
+        </div>
+
+        <div class="col-sm-7 text-center">
+            <div id="chartdivQat"></div>
+        </div>
+    </div>
+
+</th:block>
+
+</body>
+</html>

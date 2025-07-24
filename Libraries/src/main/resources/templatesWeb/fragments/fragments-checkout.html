@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+
+    <th:block th:fragment="checkoutTemplate" th:object="${session.pedido}">
+
+        <th:block th:if="${session.pedido.pedidoDetalles.isEmpty()}">
+            <div class="mozaic-banners-wrapper type-2" style="margin-top: 20px">
+                <div class="banner-column col-sm-12">
+                    <div class="information-blocks">
+                        <div class="accordeon accordeon-entry ae-1" style="display:block;">
+                            <div class="information-blocks">
+                                <div class="table-responsive text-center">
+                                    <table class="cart-table">
+                                        <tr>
+                                            <p style="font-size:20px">Lo sentimos, no tienes productos agregados a tu carrito.</p>
+                                            <br>
+                                            <a class="button style-11" th:href="@{/catalogo}" href="">VOLVER A LAS CATEGORIAS</a>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </th:block>
+
+        <th:block th:unless="${session.pedido.pedidoDetalles.isEmpty()}">
+
+            <div class="container margin-top-20">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3 style="margin-top: 22px" th:text="'Bienvenido(a) ' + ${session.participante.nombresParticipante.concat(' ').concat(session.participante.appaternoParticipante)}"></h3>
+                        <p>Esta a solo 2 pasos de terminar su canje</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="product-details-full">
+                <div class="container">
+                    <div class="main-content">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div th:if="${session.participante.puntosDisponibles < session.pedido.puntosTotal && session.participante.puntosDisponibles * 1.5 >= session.pedido.puntosTotal  && session.participante.validaPasarela == 1}" class="product-details-right" id="content-compra-puntos" style="background: #222d57">
+                                    <p style="color: #fff;display: inline-block;margin-bottom: 0;">Usted no cuenta con los puntos suficientes para realizar este canje. <br> Compra puntos adicionales y llévate estos increíbles productos.</p>
+                                    <a id="btnComprarPuntos" class="button" style="margin-top: 0;float: right">Comprar puntos</a>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+
+                            <div class="col-sm-12 col-md-6">
+                                <div class="product-details-right">
+                                    <h4 style="font-weight: 600"><span class="pe-7s-map-marker"></span> ¿En dónde recibirás tu pedido?</h4>
+                                    <div class="row margin-top-20">
+                                        <div class="col-md-12" id="contentDireccionesCheckout">
+                                        </div>
+                                    </div>
+
+                                    <div class="row margin-top-20">
+                                        <div class="col-md-12">
+                                            <a style="text-decoration: underline" id="btnAgregarDireccion">+ Agregar nueva dirección</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-12 col-md-6">
+                                <div class="product-details-right">
+                                    <h4 style="font-weight: 600">Resumen de tu canje (<span th:text="${session.pedido.getPedidoDetalles().size() == 1 ? '1 producto' : session.pedido.getPedidoDetalles().size() + ' productos'}" th:remove="tag"></span>)</h4>
+                                    <div class="widget widget_recent_product row margin-top-30" id="contentResumenCheckout"></div>
+                                </div>
+                            </div>
+<!--                            <div class="col-sm-12 col-md-6">-->
+<!--                                <div class="product-details-right">-->
+<!--                                    <h4 style="font-weight: 600">Detalle de env&iacute;o</h4>-->
+<!--                                    <div id="contentDireccionCheckout"></div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+                        </div>
+<!--                        <br>-->
+<!--                        <div class="row">-->
+<!--                            <div class="col-sm-12">-->
+<!--                                &lt;!&ndash;/*@thymesVar id="mensajeStock" type="java.lang.String"*/&ndash;&gt;-->
+<!--                                &lt;!&ndash;Validacion de Stock&ndash;&gt;-->
+<!--                                <th:block th:if="${mensajeStock == null}">-->
+
+<!--                                    &lt;!&ndash;Validacion si puede canjear&ndash;&gt;-->
+<!--                                    <th:block th:if="${session.participante.estadoCanjes}">-->
+<!--                                            &lt;!&ndash;Validacion puntos disponibles&ndash;&gt;-->
+<!--                                            <button th:if="${session.participante.puntosDisponibles >= session.pedido.puntosTotal}" class="button style-10" style="width: 100%" id="btnResumenOK">Confirmar canje</button>-->
+<!--                                            <button th:unless="${session.participante.puntosDisponibles >= session.pedido.puntosTotal}" class="button btn-danger" style="width: 100%">No tienes puntos suficientes para continuar</button>-->
+<!--                                    </th:block>-->
+
+<!--                                    <button th:unless="${session.participante.estadoCanjes}" class="button btn-danger">Tu usuario no puede realizar canjes...</button>-->
+<!--                                </th:block>-->
+
+<!--                                <button th:unless="${mensajeStock == null}" class="button btn-danger" th:text="${mensajeStock}"></button>-->
+<!--                            </div>-->
+<!--                        </div>-->
+                    </div>
+                </div>
+            </div>
+
+<!--            <div class="title-subpage">Canje de productos</div>-->
+                <div class="banner-column col-sm-12" style="display: none">
+
+<!--                    Resumen-->
+                    <div class="information-blocks">
+                        <div class="block-title size-3 accordeon-title active" id="titleResumenCheckout"><span>1</span><span class="title-check-1 block-title">Resumen de canje </span></div>
+                        <div class="accordeon accordeon-entry ae-1" style="display:block;" id="contentResumenCheckout">
+                        </div>
+                    </div>
+
+<!--                    Datos Personales-->
+                    <div class="information-blocks">
+                        <div class="block-title size-3 accordeon-title" id="titleInfoCheckout"><span>2</span><span class="title-check-2 block-title">Datos personales</span></div>
+                        <div class="range-wrapper accordeon-entry ae-2" id="contentInfoCheckout">
+                        </div>
+                    </div>
+
+<!--                    Direccion-->
+                    <div class="information-blocks">
+                        <div class="block-title size-3 accordeon-title" id="titleDireccionCheckout"><span>3</span><span class="title-check-3 block-title">Dirección de envío </span></div>
+                        <div class="range-wrapper accordeon-entry ae-3" id="contentDireccionCheckout">
+                        </div>
+                    </div>
+
+<!--                    Puntos-->
+                    <div class="information-blocks">
+                        <div class="block-title size-3 accordeon-title" id="titlePuntosCheckout"><span>4</span><span class="title-check-4 block-title">Puntos usados  </span></div>
+                        <div class="range-wrapper accordeon-entry ae-4 formas_dpago" id="contentPuntosCheckout">
+                        </div>
+                    </div>
+                </div>
+        </th:block>
+
+    </th:block>
+
+    <th:block th:fragment="resumenCheckoutTemplate" th:unless="${session.pedido.pedidoDetalles.isEmpty()}" th:object="${session.pedido}">
+
+        <div class="col-md-12">
+            <ul class="product-categories">
+                <li th:each="pedidoDetalle : ${session.pedido.pedidoDetalles}" th:object="${pedidoDetalle}" th:attr="data-id=*{producto.idProducto}">
+                    <div class="product-thumb" style="position: relative">
+                        <span class="basket" th:text="*{cantidad}"></span>
+                        <a><img th:src="${@resources.web('img/productos/').concat(pedidoDetalle.producto.imagenUno)}" src="" alt=""></a>
+                    </div>
+                    <div class="product-info">
+                        <p class="text-uppercase marca" style="margin: 0" th:text="|Cod *{producto.codigoWeb}|"></p>
+                        <h3 class="product-name" style="margin-bottom: 5px;"><a href="" th:href="*{producto.url}" th:text="*{producto.nombreProducto}"></a></h3>
+                        <span class="price" style="font-weight: 600" th:text="|*{producto.puntosProducto} Puntos|"></span>
+                    </div>
+                </li>
+                <li>
+                    <a th:href="@{/carrito}" href=""><span class="icon pe-7s-cart"></span> Volver a mi carrito</a>
+                </li>
+                <th:block th:if="${session.descuento == null}">
+                    <li>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5 style="font-weight: 600">TOTAL:</h5>
+                            </div>
+                            <div class="col-md-6 text-right">
+                                <p style="font-weight: 600;font-size: 18px;color: #222;margin-bottom: 0" th:text="|*{puntosTotal} Puntos|"></p>
+                            </div>
+                        </div>
+                    </li>
+                </th:block>
+
+                <th:block th:unless="${session.descuento == null}" th:object="${session.descuento}">
+                    <li>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5 style="font-weight: 600">SUBTOTAL:</h5>
+                            </div>
+                            <div class="col-md-6 text-right">
+                                <p style="font-weight: 600;font-size: 18px;color: #222;margin-bottom: 0" th:text="|${session.pedido.puntosTotal} Puntos|"></p>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5 style="font-weight: 600" th:text="|DESCUENTO: (*{codigoDescuento})|"></h5>
+                            </div>
+                            <div class="col-md-6 text-right">
+                                <p style="font-weight: 600;font-size: 18px;color: #e64f3d;margin-bottom: 0" th:text="|- *{puntosDescuento} Puntos|"></p>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5 style="font-weight: 600">TOTAL:</h5>
+                            </div>
+                            <div class="col-md-6 text-right">
+                                <p style="font-weight: 600;font-size: 18px;color: #222;margin-bottom: 0" th:text="|${session.pedido.puntosTotal - session.descuento.puntosDescuento} Puntos|"></p>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <a href="#" id="btnRemoverDescuento">Remover Descuento</a>
+                    </li>
+                </th:block>
+            </ul>
+
+            <!--/*@thymesVar id="mensajeStock" type="java.lang.String"*/-->
+            <!--Validacion de Stock-->
+            <th:block th:if="${mensajeStock == null}">
+
+                <!--Validacion si puede canjear-->
+                <th:block th:if="${session.participante.estadoCanjes}">
+                    <!--Validacion puntos disponibles-->
+                    <button class="button" style="float:right; width:100%;" id="btnCodigo">Aplicar Descuento</button>
+                    <button th:if="${session.participante.puntosDisponibles >= session.pedido.puntosTotal}" class="button style-10" style="width: 100%; margin-top: 15px;" id="btnResumenOK">Continuar canje</button>
+                    <button th:unless="${session.participante.puntosDisponibles >= session.pedido.puntosTotal}" class="button btn-danger" style="width: 100%; margin-top: 15px">No tienes puntos suficientes para continuar</button>
+                </th:block>
+
+<!--                <button th:unless="${session.participante.estadoCanjes}" class="button btn-danger">Tu usuario no puede realizar canjes...</button>-->
+                <div th:unless="${session.participante.estadoCanjes}" class="alert alert-danger" style="text-align: center" role="alert">Estimado participante, al momento no podemos procesar su solicitud por encontrarse su cartera vencida. Agradecemos regularizar su pago.</div>
+            </th:block>
+
+            <button th:unless="${mensajeStock == null}" class="button btn-danger" th:text="${mensajeStock}"></button>
+
+
+
+<!--            <div class="content">-->
+<!--                <div class="cell-view">-->
+<!--                    <a href="" th:href="*{producto.url}" class="title" th:text="*{producto.nombreProducto}"></a>-->
+<!--                    <div class="code" th:text="|Cod *{producto.codigoWeb}|"></div>-->
+
+<!--                    <div class="code" th:if="*{producto.tipoProducto.isRecargaCelular()}" th:text="|Recarga celular: *{nroCelular}|"></div>-->
+<!--                    <div class="code" th:if="*{producto.tipoProducto.isRecargaTv()}" th:text="|Recarga TV: *{nroDecodificador}|"></div>-->
+<!--                    <div class="code" th:if="*{producto.tipoProducto.isColores()}" th:text="|Color: *{color1 + (color2 != '' ? ', ' + color2 : '')}|"></div>-->
+<!--                    <div class="code" th:if="*{producto.tipoProducto.isCorreo()}" th:text="|Correo: *{correo}|"></div>-->
+<!--                </div>-->
+<!--            </div>-->
+        </div>
+
+<!--        <div class="box-right" style="clear: inherit; border:none;">-->
+<!--            -->
+<!--        </div>-->
+    </th:block>
+
+    <!-- Fragment Direccion id="contentDireccionCheckout"-->
+    <th:block th:fragment="direccionCheckoutTemplate" th:unless="${session.pedido.pedidoDetalles.isEmpty()}" th:object="${session.participante}">
+        <!--/*@thymesVar id="provincias" type="java.util.List<com.promotick.nissan.model.web.Ubigeo>"*/-->
+        <!--/*@thymesVar id="ciudades" type="java.util.List<com.promotick.nissan.model.web.Ubigeo>"*/-->
+        <!--/*@thymesVar id="zonas" type="java.util.List<com.promotick.nissan.model.web.Zona>"*/-->
+        <!--/*@thymesVar id="tipoViviendas" type="java.util.List<com.promotick.nissan.model.web.TipoVivienda>"*/-->
+
+        <form class="container" id="frmDireccionCheckout" onsubmit="return false" style="width: auto">
+
+
+            <div class="row margin-top-30 dvDetalleEnvio">
+                <div class="col-md-12" >
+                    <label class="obl" for="dirProvincia">Provincia</label><br>
+                    <select class="form-control" name="dirProvincia" id="dirProvincia">
+                        <option value="" th:if="${ciudades == null}">Seleccionar</option>
+                        <th:block th:each="objProvincia : ${provincias}" th:object="${objProvincia}">
+                            <option th:value="*{codprov}" th:text="*{nombreUbigeo}" th:selected="${session.participante.direccion.ubigeo.codprov == objProvincia.codprov}"></option>
+                        </th:block>
+                    </select>
+                </div>
+            </div>
+            <div class="row margin-top-30 dvDetalleEnvio">
+                <div class="col-md-12" >
+                    <label class="obl" for="dirCiudad">Ciudad</label>
+                    <select class="form-control" name="dirCiudad" id="dirCiudad" data-is-select2="true">
+                        <th:block th:each="objCiudad : ${ciudades}" th:object="${objCiudad}">
+                            <option th:value="*{coddist}" th:text="*{nombreUbigeo}" th:selected="${session.participante.direccion.ubigeo.coddist == objCiudad.coddist}"></option>
+                        </th:block>
+                    </select>
+                </div>
+            </div>
+            <div class="row margin-top-30">
+                <div class="col-md-12">
+                    <label>Direcci&oacute;n</label><br>
+                    <input type="text" class="form-control" name="dirDireccion" id="dirDireccion" th:value="${session.participante.direccion.direccionCalle}">
+                </div>
+            </div>
+            <div class="row margin-top-30">
+                <div class="col-md-12">
+                    <label>Correo electr&oacute;nico</label><br>
+                    <input class="form-control"type="text" placeholder="" th:value="*{emailParticipante}" id="infoEmail" name="infoEmail">
+                </div>
+            </div>
+            <div class="row margin-top-30">
+                <div class="col-md-12">
+                    <label>Movil</label><br>
+                    <input class="form-control" type="text" placeholder="" th:value="*{movilParticipante}" id="infoCelular" name="infoCelular">
+                </div>
+            </div>
+            <div class="row margin-top-30">
+                <div class="col-md-12">
+                    <label>Indicaciones particulares</label><br>
+                    <input type="text" class="form-control" name="dirReferencia" id="dirReferencia" th:value="${session.participante.direccion.referencia}">
+                </div>
+            </div>
+        </form>
+<!--        <div class="col-md-12">-->
+<!--            <a class="button style-10" id="btnDireccionCheckout">Aceptar</a>-->
+<!--        </div>-->
+    </th:block>
+
+    <!-- NO USADO-->
+    <th:block th:fragment="puntosCheckoutTemplate" th:unless="${session.pedido.pedidoDetalles.isEmpty()}">
+        <div class="col-md-4 col-md-offset-4 sinpad">
+            <table class="table-cartotal total">
+                <tr>
+                    <th colspan=2>Total del canje</th>
+                </tr>
+                <tr>
+                    <td>Puntos disponibles</td>
+                    <td>
+                        <p th:text="|${session.participante.puntosDisponibles} Pts|"></p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Puntos por canjear</td>
+                    <td>
+                        <p th:text="|${session.pedido.puntosTotal} Pts|"></p>
+                    </td>
+                </tr>
+            </table>
+            <button th:if="${session.participante.puntosDisponibles >= session.pedido.puntosTotal}" class="button style-10" style="float:right; width:100%;" id="btnConfirmaCanje">Confirmar canje</button>
+
+            <div th:unless="${session.participante.puntosDisponibles >= session.pedido.puntosTotal}" class="alert alert-danger" style="text-align: center" role="alert">No tienes puntos suficientes para continuar</div>
+
+        </div>
+    </th:block>
+
+    <!-- NO USADO-->
+    <th:block th:fragment="infoCheckoutTemplate" th:unless="${session.pedido.pedidoDetalles.isEmpty()}" th:object="${session.participante}">
+        <form class="container" id="frmInfoCheckout" onsubmit="return false">
+            <div class="row">
+                <!--<div class="col-xs-12 col-sm-4 col-sm-offset-2 sinpad-resp">
+                    <label for="infoTipoDocumento">Tipo de documento</label>
+                    <input class="form-control" type="text" disabled th:value="*{tipoDocumento.nombreTipoDocumento}" id="infoTipoDocumento">
+                </div>-->
+                <div class="col-xs-12 col-sm-4 col-sm-offset-2 sinpad-resp">
+                    <label for="infoNroDocumento">Nº de documento</label>
+                    <input class="form-control" type="text" disabled th:value="*{nroDocumento}" id="infoNroDocumento">
+                </div>
+
+                <div class="col-xs-12 col-sm-4 sinpad-resp">
+                    <label for="infoNombres" class="obl">Nombres</label>
+                    <input class="form-control" type="text" placeholder="" th:value="*{nombresParticipante}" id="infoNombres" name="infoNombres">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-4 col-sm-offset-2 sinpad-resp">
+                    <label for="infoApPaterno" class="obl">Apellido paterno</label>
+                    <input class="form-control" type="text" placeholder="" th:value="*{appaternoParticipante}" id="infoApPaterno" name="infoApPaterno">
+                </div>
+                <div class="col-xs-12 col-sm-4 sinpad-resp">
+                    <label for="infoApMaterno" class="obl">Apellido materno</label>
+                    <input class="form-control" type="text" placeholder="" th:value="*{apmaternoParticipante}" id="infoApMaterno" name="infoApMaterno">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-8 col-sm-offset-2 sinpad-resp">
+                    <label for="infoEmail" class="obl">Correo electrónico</label>
+                    <input class="form-control"type="text" placeholder="" th:value="*{emailParticipante}" id="infoEmail" name="infoEmail">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-4 col-sm-offset-2 sinpad-resp">
+                    <label for="infoTelefono" class="obl">Telefono fijo</label>
+                    <input class="form-control" type="text" placeholder="" th:value="*{telefonoParticipante}" id="infoTelefono" name="infoTelefono">
+                </div>
+                <div class="col-xs-12 col-sm-4 sinpad-resp">
+                    <label for="infoCelular" class="obl">Telefono celular</label>
+                    <input class="form-control" type="text" placeholder="" th:value="*{movilParticipante}" id="infoCelular" name="infoCelular">
+                </div>
+            </div>
+        </form>
+        <div class="col-md-12">
+            <a class="button style-10" id="btnInfoCheckout">Aceptar</a>
+        </div>
+    </th:block>
+
+    <th:block th:fragment="graciasCheckoutTemplate" th:object="${session.pedidoGracias}">
+        <div class="container margin-top-20">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 style="margin-top: 22px">¡Canje exitoso!</h3>
+                    <p>La confirmación de tu canje fue enviada a <span style="font-weight: 600" th:text="*{emailPedido}"></span></p>
+                </div>
+            </div>
+        </div>
+        <div class="product-details-full">
+
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="product-details-right">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <p>El tiempo de envio de tu canje es de <span style="font-weight: 600" th:text="*{fechaEntregaString}"></span></p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-sm-12">
+                                    <div style="border: 1px dashed #bcbcbc;height: 150px;padding: 15px">
+                                        <p style="font-weight: 600;font-size: 16px;color: #222"><span class="icon pe-7s-date"></span> Fecha</p>
+                                        <p th:text="*{fechaPedidoString}"></p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-12">
+                                    <div style="border: 1px dashed #bcbcbc;height: 150px;padding: 15px">
+                                        <p style="font-weight: 600;font-size: 16px;color: #222"><span class="icon pe-7s-file"></span> Nº pedido</p>
+                                        <p th:text="*{idPedido}"></p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-12">
+                                    <div style="border: 1px dashed #bcbcbc;height: 150px;padding: 15px">
+                                        <p style="font-weight: 600;font-size: 16px;color: #222"><span class="icon pe-7s-map-marker"></span> Dirección</p>
+                                        <p style="margin-bottom: 0" th:text="|*{direccion.direccionCalle}, *{direccion.ubigeo.provincia}, *{direccion.ubigeo.distrito}|"></p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-sm-12">
+                                    <div style="border: 1px dashed #bcbcbc;height: 150px;padding: 15px">
+                                        <p style="font-weight: 600;font-size: 16px;color: #222"><span class="icon pe-7s-credit"></span> Total</p>
+                                        <p th:text="|${session.pedidoGracias.puntosTotal} Puntos|"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row margin-top-20">
+                                <div class="col-md-12">
+                                    <p style="margin-bottom: 0">Para revisar el detalle de tu canje puedes visitar la sección <a th:href="@{/mis-puntos}" href="" style="font-weight: 600;text-decoration: underline">"Puntos canjeados" en el módulo "Mis puntos"</a></p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <a th:href="@{/catalogo}" href="" class="button button-add-cart">Volver al catálogo</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!--NO USADO-->
+        <div class="mozaic-banners-wrapper type-2" style="display: none">
+            <div class="banner-column">
+                <div class="information-blocks">
+                    <div class="accordeon ae-1">
+                        <div class="information-blocks">
+                            <div class="col-sm-10 col-sm-offset-1" style="border: 1px solid #dcdcdc;padding: 10px;">
+                                <div class="col-sm-6">
+                                    <p style="line-height: 21px;font-weight:600;font-size:13.5px;">Nombre:</p>
+                                    <p th:text="|*{nombrePedido} *{apellidoPaternoPedido} *{apellidoMaternoPedido}|"></p>
+                                    <p style="line-height: 21px;font-weight:600;font-size:13.5px;">Nº de identidad:</p>
+                                    <p th:text="*{nroDocumentoPedido}"></p>
+                                    <p style="line-height: 21px;font-weight:600;font-size:13.5px;">Nº de pedido:</p>
+                                    <p th:text="*{idPedido}"></p>
+                                </div>
+                                <div class="col-sm-6">
+                                    <p style="line-height: 21px;font-weight:600;font-size:13.5px;">Dirección de entrega:</p>
+                                    <p th:text="|*{direccion.direccionCalle}, *{direccion.referencia}|"></p>
+                                    <p th:text="*{direccion.ubigeo.distrito} + ' - ' + *{direccion.ubigeo.provincia} + ' - ' + *{direccion.ubigeo.departamento}"></p>
+                                    <p style="line-height: 21px;font-weight:600;font-size:13.5px;">Fecha estimada de entrega:</p>
+                                    <p th:text="*{fechaEntregaString}"></p>
+                                    <p style="line-height: 21px;font-weight:600;font-size:13.5px;">Nº de teléfono</p>
+                                    <p th:text="*{telefonoPedido}"></p>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <a target="_blank" class="button style-10" th:href="@{/pedido/imprimir}" style="margin: 20px 0 0;"><i class="fa fa-print" aria-hidden="true" style="font-size:18px; padding-right:5px;"></i>Imprimir confirmación de canje</a>
+                            </div>
+
+                            <div class="table-responsive" style="clear:both;">
+                                <table class="cart-table">
+                                    <tr>
+                                        <th class="colum-1"></th>
+                                        <th class="colum-2 product">Producto</th>
+                                        <th class="colum-1">Puntos</th>
+                                        <th class="colum-2">Cantidad</th>
+                                        <th class="colum-1">Subtotal</th>
+                                    </tr>
+
+
+                                    <tr th:each="pedidoDetalle : ${session.pedidoGracias.pedidoDetalles}" th:object="${pedidoDetalle}" th:attr="data-id=*{producto.idProducto}">
+                                        <td>
+                                            <div class="traditional-cart-entry">
+                                                <div class="image"><img th:src="${@resources.web('img/productos/').concat(pedidoDetalle.producto.imagenUno)}" src="" alt=""></div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="traditional-cart-entry">
+                                                <div class="content">
+                                                    <div class="cell-view">
+                                                        <a href="" th:href="*{producto.url}" class="title" th:text="*{producto.nombreProducto}"></a>
+                                                        <div class="code" th:text="|Cod *{producto.codigoWeb}|"></div>
+
+                                                        <div class="code" th:if="*{producto.tipoProducto.isRecargaCelular()}" th:text="|Recarga celular: *{nroCelular}|"></div>
+                                                        <div class="code" th:if="*{producto.tipoProducto.isRecargaTv()}" th:text="|Recarga TV: *{nroDecodificador}|"></div>
+                                                        <div class="code" th:if="*{producto.tipoProducto.isColores()}" th:text="|Color: *{color1 + (color2 != '' ? ', ' + color2 : '')}|"></div>
+                                                        <div class="code" th:if="*{producto.tipoProducto.isCorreo()}" th:text="|Correo: *{correo}|"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="td-puntos"><span class="labely">Puntos: </span><span class="puntos" th:text="|*{producto.puntosProducto} Pts|"></span></td>
+                                        <td><span class="labely">Cantidad: </span><span th:text="*{cantidad}"></span></td>
+                                        <td>
+                                            <span class="labely">Subtotal: </span>
+                                            <div class="subtotal"><span class="total" th:text="|*{(producto.puntosProducto * cantidad)} Pts|"></span></div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+
+
+                            <div class="col-md-12 col-xs-12 sinpad">
+                                <div class="col-md-3 col-sm-3 col-xs-12 sinpad" style="float:right; margin-top:15px;">
+                                    <table class="table-cartotal">
+                                        <tr>
+                                            <td>Total</td>
+                                            <td class="text-center" style="color: #343434;font-weight: 600;font-size: 15px!important" th:text="|${session.pedidoGracias.puntosTotal} Pts|"></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <p class="df">Alguna pregunta o duda sobre tu canje?</p>
+                                <p class="df">Llámanos al <span th:text="${session.configuracionWeb.telefonoContacto}"></span> o escríbenos a <a th:href="|mailto: ${session.configuracionWeb.emailContacto}|" href="" class="text-fucsia" th:text="${session.configuracionWeb.emailContacto}"></a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </th:block>
+
+    <th:block th:fragment="direccionesTemplate(direcciones)">
+        <div th:if="${direcciones != null && direcciones.size() > 0}" th:remove="tag">
+            <div class="radio" th:each="direccion : ${direcciones}">
+                <label style="width: 100%">
+                    <input type="radio" class="radioDireccion" name="radioDireccion" th:attr="
+                    data-codprov=${direccion.direccion.ubigeo.codprov},
+                    data-coddist=${direccion.direccion.ubigeo.coddist},
+                    data-idzona=${direccion.direccion.zona.idZona},
+                    data-idVivienda=${direccion.direccion.tipoVivienda.idTipoVivienda},
+                    data-direccion=${direccion.direccion.direccionCalle},
+                    data-referencia=${direccion.direccion.referencia}
+                    ">
+                    <span style="font-weight: 600" th:text="${direccion.tagDireccion}"></span> <br>
+                    <p style="display: inline-block" th:text="|${direccion.direccion.direccionCalle}, ${direccion.direccion.ubigeo.provincia}, ${direccion.direccion.ubigeo.distrito}|"></p>
+                    <a style="text-decoration: underline;float: right" class="editarDireccion" th:attr="data-id=${direccion.idParticipanteDireccion}"><span class="pe-7s-pen"></span> Editar <input type="hidden"></a>
+                </label>
+            </div>
+        </div>
+
+        <div class="radio" style="padding-bottom: 15px; text-align: center" th:unless="${direcciones != null && direcciones.size() > 0}">
+            No tiene direcciones registradas
+        </div>
+    </th:block>
+
+    <th:block th:fragment="direccionFormTemplate(direccion)">
+        <div class="modal-header" style="border-bottom: 0;">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">X</button>
+            <h4 style="border-bottom: 1px solid #e5e5e5;line-height: 45px;font-weight: 600"><span class="icon pe-7s-map-marker" style="font-size: 25px"></span> <span th:text="${direccion == null ? 'Registrar dirección' : 'Editar dirección'}" th:remove="tag"></span></h4>
+        </div>
+        <div class="modal-body " style="margin-bottom: 20px;">
+            <form id="frmDirecciones" onsubmit="return false;">
+            <div class="row">
+                <input type="hidden" id="idParticipanteDireccion" th:value="${direccion != null ? direccion.idParticipanteDireccion : ''}">
+                <div class="col-md-6" style="display: none">
+                    <label for="">Nombre de dirección</label><br>
+                    <input type="text" style="width: 100%" id="inptNombreDireccion" name="inptNombreDireccion" th:value="${direccion != null ? direccion.tagDireccion : ''}">
+                </div>
+                <div class="col-md-6">
+                    <label for="dirTipoConstruccion">Tipo de vivienda</label>
+                    <select class="form-control" name="dirTipoConstruccion" id="dirTipoConstruccion" data-is-select2="true">
+                        <option value="">Seleccionar</option>
+                        <th:block th:each="objTipoV : ${tipoViviendas}" th:object="${objTipoV}">
+                            <option th:value="*{idTipoVivienda}" th:text="*{nombreTipoVivienda}" th:selected="${direccion != null ? direccion.direccion.tipoVivienda.idTipoVivienda == objTipoV.idTipoVivienda : false}"></option>
+                        </th:block>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label for="dirProvincia">Provincia</label><br>
+                    <select class="form-control" name="dirProvincia" id="dirProvincia" data-is-select2="true" style="width: 100%;height: 40px">
+                        <option value="">Seleccionar</option>
+                        <th:block th:each="objProvincia : ${provincias}" th:object="${objProvincia}">
+                            <option th:value="*{codprov}" th:text="*{nombreUbigeo}" th:selected="${direccion != null ? direccion.direccion.ubigeo.codprov == objProvincia.codprov : false}"></option>
+                        </th:block>
+                    </select>
+                </div>
+                <div class="col-md-6 margin-top-20">
+                    <label for="dirCiudad">Cantón</label>
+                    <select class="form-control" name="dirCiudad" id="dirCiudad" data-is-select2="true">
+                        <th:block th:each="objCiudad : ${ciudades}" th:object="${objCiudad}">
+                            <option th:value="*{coddist}" th:text="*{nombreUbigeo}" th:selected="${direccion != null ? direccion.direccion.ubigeo.coddist == objCiudad.coddist : false}"></option>
+                        </th:block>
+                    </select>
+                </div>
+                <div class="col-md-6 margin-top-20">
+                    <label for="dirTipoZona">Tipo de zona</label>
+                    <select class="form-control" name="dirTipoZona" id="dirTipoZona" data-is-select2="true" style="width: 100%;height: 40px">
+                        <option value="">Seleccionar</option>
+                        <th:block th:each="objZona : ${zonas}" th:object="${objZona}">
+                            <option th:value="*{idZona}" th:text="*{nombreZona}" th:selected="${direccion != null ? direccion.direccion.zona.idZona == objZona.idZona : false}"></option>
+                        </th:block>
+                    </select>
+                </div>
+                <div class="col-md-6 margin-top-20">
+                    <label for="inptDireccion">Dirección</label><br>
+                    <input type="text" style="width: 100%" id="inptDireccion" name="inptDireccion" th:value="${direccion != null ? direccion.direccion.direccionCalle : ''}">
+                </div>
+                <div class="col-md-6 margin-top-20">
+                    <label for="inptReferencia">Referencia</label><br>
+                    <input type="text" style="width: 100%" id="inptReferencia" name="inptReferencia" th:value="${direccion != null ? direccion.direccion.referencia : ''}">
+                </div>
+                <div class="col-md-6 margin-top-50">
+                    <a class="button button-add-cart" href="#" id="btnGuardarDireccion">Guardar dirección</a>
+                </div>
+            </div>
+            </form>
+        </div>
+    </th:block>
+
+
+    <th:block th:fragment="compraPuntos">
+        <div class="modal-header" style="padding: 20px 40px">
+            <h4 style="margin-bottom: 0;font-weight: 600;display: inline-block"><span class="icon pe-7s-check" style="font-size: 25px;vertical-align: middle;"></span> ¿Desea comprar los puntos?</h4> <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: 3px">x</button>
+        </div>
+
+        <div>
+            <div class="modal-body margin-bottom-20" style="padding: 20px 40px">
+                <div class="row margin-bottom-20">
+                    <div class="col-md-6">
+                        <h5 style="font-weight: 600">Cantidad:</h5>
+                    </div>
+                    <div class="col-md-6">
+                        <h5 style="font-weight: 600"><span id="spnPuntos"></span> Puntos*</h5>
+                    </div>
+                </div>
+                <div class="row margin-bottom-20">
+                    <div class="col-md-6">
+                        <h5 style="font-weight: 600">Monto a pagar:</h5>
+                    </div>
+                    <div class="col-md-6">
+                        <h5 style="font-weight: 600"><span id="spnMonto"></span> $USD</h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="dis-betw">
+                            <p class="mrg-0">El monto total incluye I.V.A: <span id="spnIVA"></span> $USD</p>
+                            <div class="txt-rg">
+                                <img src="" th:src="${@resources.web('img/logos/').concat('logo-masterc.png')}" alt="" width="60">
+                                <img src="" th:src="${@resources.web('img/logos/').concat('logo-visa.png')}" alt="" width="50">
+                            </div>
+                        </div>
+                        <p class="mrg-top20">*Solo podrá comprar puntos una vez por año. La cantidad máxima de puntos a comprar por año equivale a la mitad de los puntos al momento de la compra.</p>
+                    </div>
+                </div>
+                <div class="row text-center">
+                    <div class="col-md-12">
+                        <a class="button style-10" id="btnAceptarCompra">Comprar puntos</a>
+                    </div>
+                </div>
+                <br>
+                <div class="row text-center">
+                    <div class="col-md-12">
+                        o <a data-dismiss="modal" style="text-decoration: underline;cursor: pointer">Cancelar</a>
+                    </div>
+                </div>
+            </div>
+            <div style="background: #e64f3d; display:none" class="row product-details-right" id="dvMensajePuntos" >
+                <p style="color: #fff;display: inline-block;margin-bottom: 0;text-align:center">Usted no cuenta con los puntos suficientes aún realizando la compra de puntos para este canje.</p>
+            </div>
+
+            <div style="background: #e64f3d; display:none" class="row product-details-right" id="dvMensajeComponente" >
+                <p style="color: #fff;display: inline-block;margin-bottom: 0;text-align:center">Componente de Pago no inicializado.</p>
+            </div>
+
+        </div>
+    </th:block>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+
+<body>
+
+    <th:block th:fragment="direccionFormulario">
+
+        <h4 th:utext="|<span class='icon pe-7s-map-marker' style='font-size: 25px'></span> ${direccion == null ? 'Nueva Direccion' : 'Editar direccion'}|" style="border-bottom: 1px solid #e5e5e5;line-height: 45px;font-weight: 600"></h4>
+        <br>
+        <input type="hidden" id="hfIdDireccion" th:value="${direccion != null ? direccion.idParticipanteDireccion : ''}"/>
+        <div class="row">
+            <div class="col-md-6 text-center">
+                <img class="img-from-maps" th:attr="data-direccion=${direccion != null ? direccion.direccion.direccionCalle : ''},data-distrito=${direccion != null ? direccion.direccion.ubigeo.nombreUbigeo : ''}"  alt="">
+            </div>
+            <div class="col-md-6">
+                <p>
+                    <label for="dirTipo">Tipo de direccion</label><br>
+                    <input type="text" name="dirTipo" id="dirTipo" style="width: 100%" th:value="${direccion != null ? direccion.tagDireccion : ''}"/>
+                </p>
+                <p>
+                    <label for="dirProvincia">Provincia</label><br>
+                    <select name="dirProvincia" class="normal" id="dirProvincia" style="width: 100%;height: 40px">
+                        <option value="" class="normal">Seleccionar</option>
+                        <th:block th:each="objProvincia : ${provinciasPerfil}" th:object="${objProvincia}">
+                            <option th:value="*{codprov}" th:text="*{nombreUbigeo}" th:selected="${direccion != null ? direccion.direccion.ubigeo.codprov == objProvincia.codprov : false}"></option>
+                        </th:block>
+                    </select>
+                </p>
+                <p>
+                    <label for="dirCiudad">Cantón</label><br>
+                    <select name="dirCiudad" class="normal" id="dirCiudad" style="width: 100%;height: 40px">
+                        <option value="" class="normal">Seleccionar</option>
+                        <th:block th:each="objCiudad : ${ciudadesPerfil}" th:object="${objCiudad}">
+                            <option th:value="*{coddist}" th:text="*{nombreUbigeo}" th:selected="${direccion != null ? direccion.direccion.ubigeo.coddist == objCiudad.coddist : false}"></option>
+                        </th:block>
+                    </select>
+                </p>
+                <p>
+                    <label for="dirZona">Tipo de zona</label><br>
+                    <select class="normal" name="dirZona" id="dirZona" style="width: 100%;height: 40px">
+                        <option value="" class="normal">Seleccionar</option>
+                        <th:block th:each="objZona : ${zonasPerfil}" th:object="${objZona}">
+                            <option th:value="*{idZona}" th:text="*{nombreZona}" th:selected="${direccion != null ? direccion.direccion.zona.idZona == objZona.idZona : false}"></option>
+                        </th:block>
+                    </select>
+                </p>
+                <p>
+                    <label for="dirVivienda">Tipo de vivienda</label><br>
+                    <select name="dirVivienda" id="dirVivienda"class="normal"style="width: 100%;height: 40px">
+                        <option value="" class="normal">Seleccionar</option>
+                        <th:block th:each="objVivienda : ${tipoViviendasPerfil}" th:object="${objVivienda}">
+                            <option th:value="*{idTipoVivienda}" th:text="*{nombreTipoVivienda}" th:selected="${direccion != null ? direccion.direccion.tipoVivienda.idTipoVivienda == objVivienda.idTipoVivienda : false}"></option>
+                        </th:block>
+                    </select>
+                </p>
+                <p>
+                    <label for="dirDireccion">Dirección</label><br>
+                    <input type="text" style="width: 100%" name="dirDireccion" id="dirDireccion" th:value="*{direccion != null ? direccion.direccion.direccionCalle : ''}">
+                </p>
+                <p>
+                    <label for="dirReferencia">Referencia</label><br>
+                    <input type="text" style="width: 100%"  name="dirReferencia" id="dirReferencia" th:value="*{direccion != null ? direccion.direccion.referencia: ''}">
+                </p>
+                <p>
+                    <a class="button button-add-cart" id="btnGuardarDireccion">Guardar cambios</a>
+                </p>
+            </div>
+        </div>
+    </th:block>
+
+</body>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}"
+      th:with="title='La Fabril | Encuesta por catálogo', menu='Encuesta por catálogo'">
+
+<head>
+    <title>Title</title>
+</head>
+<body>
+
+<th:block layout:fragment="content">
+
+    <style>
+        .select2-container--default .select2-selection--single{
+            border: 1px solid #e8e8e8;
+            border-radius: 0;
+        }
+        .select2-container .select2-selection--single .select2-selection__rendered {
+            padding: 6px 15px;
+        }
+        .select2-container .select2-selection--single {
+            height: 41px;
+        }
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            height: 38px;
+        }
+    </style>
+
+    <div class="container margin-bottom-50" th:if="${campania == null}">
+        <div class="section-title style6 text-center margin-top-40">
+            <span class="sub-title"></span>
+            <p class="margin-top-20">No tenemos una encuesta disponible</p>
+            <span class="sub-title"></span>
+        </div>
+    </div>
+
+    <div class="container margin-bottom-50" th:if="${campania != null}">
+        <input type="hidden" th:value="${campania.idCampania}" id="idCampania">
+        <input type="hidden" th:value="${campania.encuesta.idEncuesta}" id="idEncuesta">
+        <input type="hidden" th:value="${@resources.web('img/' + catalogo.imagenEncuesta1)}" id="imagenEncuesta1">
+        <input type="hidden" th:value="${@resources.web('img/' + catalogo.imagenEncuesta2)}" id="imagenEncuesta2">
+        <input type="hidden" th:value="${@resources.web('img/' + catalogo.imagenEncuesta3)}" id="imagenEncuesta3">
+
+
+        <div class="section-title style6 text-center margin-top-40">
+            <h3 th:text="${campania.encuesta.nombreEncuesta}"></h3>
+            <span class="sub-title"></span>
+            <!--<p class="margin-top-20" id="descripcionEncuesta">Responde con el nombre del colaborador que crees idoneo y <br>
+                participa en el sorteo de grandes premios.</p>-->
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <img src="" alt="" id="imagenDinamica">
+            </div>
+        </div>
+
+        <div id="contentEncuesta">
+            <div class="row margin-top-20" >
+                <div class="col-md-12 text-center">
+                    <a style="margin-bottom: 10px" class="button button-add-cart" id="btnEmpezar" href="#" >Empezar</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <th:block th:replace="~{fragments/resources :: scripts}"/>
+
+    <script th:src="${@resources.web('js/views/encuesta-empleados.js', true)}"></script>
+
+    <script type="text/javascript">
+        $(function() {
+            var encuestaEmpleados = new EncuestaEmpleados('[[@{/}]]');
+            encuestaEmpleados.init();
+        });
+    </script>
+</th:block>
+
+</body>
+</html>

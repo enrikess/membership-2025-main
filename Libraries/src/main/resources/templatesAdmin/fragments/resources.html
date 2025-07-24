@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    <th:block th:fragment="styles">
+        <link th:href="${@resources.admin('css/animate.css')}" rel="stylesheet">
+        <link th:href="${@resources.admin('font-awesome/css/font-awesome.css')}" rel="stylesheet">
+
+        <!--Addons-->
+        <link th:href="${@resources.common('css/plugins/toastr/toastr.min.css')}" rel="stylesheet">
+        <link th:href="${@resources.common('css/plugins/datapicker/datepicker3.css')}" rel="stylesheet">
+        <link th:href="${@resources.common('css/plugins/ladda/ladda-themeless.min.css')}" rel="stylesheet">
+        <link th:href="${@resources.common('css/plugins/dataTables/datatables.min.css')}" rel="stylesheet">
+        <link th:href="${@resources.common('css/plugins/select2/select2.min.css')}" rel="stylesheet">
+        <link th:href="${@resources.common('css/plugins/switchery/switchery.css')}" rel="stylesheet">
+        <link th:href="${@resources.common('css/plugins/sweetalert/sweetalert.css')}" rel="stylesheet">
+        <link th:href="${@resources.common('css/plugins/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css')}" rel="stylesheet">
+        <link th:href="${@resources.common('css/plugins/fileinput/fileinput.min.css')}" rel="stylesheet">
+        <link th:href="${@resources.common('css/plugins/videojs/video-js.min.css')}" rel="stylesheet">
+        <link th:href="${@resources.common('css/plugins/iCheck/custom.css')}" rel="stylesheet">
+        <link rel="shortcut icon" href="https://s3.us-east-1.amazonaws.com/bucket.lafabril.ec/public/web/img/logos/favicon.png">
+
+        <!--General-->
+        <link th:href="${@resources.common('css/bootstrap.min.css')}" rel="stylesheet">
+        <link th:href="${@resources.admin('fonts/glyphicons/glyphicons.css')}" rel="stylesheet">
+        <link th:href="${@resources.admin('css/style.css', true)}" rel="stylesheet">
+
+    </th:block>
+
+    <th:block th:fragment="scripts">
+        <!--General-->
+        <script th:src="${@resources.common('js/jquery-3.1.1.min.js')}"></script>
+        <script th:src="${@resources.admin('js/popper.min.js')}"></script>
+        <script th:src="${@resources.common('js/bootstrap.min.js')}"></script>
+        <script th:src="${@resources.common('js/plugins/metisMenu/jquery.metisMenu.js')}"></script>
+        <script th:src="${@resources.common('js/plugins/slimscroll/jquery.slimscroll.min.js')}"></script>
+
+        <!--Configuration-->
+        <script th:src="${@resources.admin('js/inspinia.js')}"></script>
+        <script th:src="${@resources.common('js/plugins/pace/pace.min.js')}"></script>
+
+        <!--Addons-->
+        <script th:src="${@resources.common('js/plugins/chartJs/Chart.min.js')}"></script>
+        <script th:src="${@resources.common('js/plugins/toastr/toastr.min.js')}"></script>
+        <script th:src="${@resources.common('js/plugins/datapicker/bootstrap-datepicker.js')}"></script>
+        <script th:src="${@resources.common('js/plugins/handlebars/handlebars-v4.1.2.js')}"></script>
+        <script th:src="${@resources.common('js/plugins/ajaxform/jquery.form.min.js')}"></script>
+        <script th:src="${@resources.common('js/plugins/validate/jquery.validate.min.js')}"></script>
+        <script th:src="${@resources.common('js/plugins/validate/additional-methods.min.js')}"></script>
+        <script th:src="${@resources.common('js/plugins/dataTables/datatables.min.js')}"></script>
+        <script th:src="${@resources.common('js/plugins/dataTables/dataTables.bootstrap4.min.js')}"></script>
+        <script th:src="${@resources.common('js/plugins/dataTables/fnFindCellRowIndexes.js')}"></script>
+        <script th:src="${@resources.common('js/plugins/select2/select2.js')}"></script>
+        <script th:src="${@resources.common('js/plugins/ladda/spin.min.js')}"></script>
+        <script th:src="${@resources.common('js/plugins/ladda/ladda.min.js')}"></script>
+        <script th:src="${@resources.common('js/plugins/ladda/ladda.jquery.min.js')}"></script>
+        <script th:src="${@resources.common('js/plugins/loadingoverlay/loadingoverlay.js')}"></script>
+        <script th:src="${@resources.common('js/plugins/switchery/switchery.js')}"></script>
+        <script th:src="${@resources.common('js/plugins/sweetalert/sweetalert.min.js')}"></script>
+        <script th:src="${@resources.common('js/plugins/fileinput/fileinput.min.js')}"></script>
+        <script th:src="${@resources.common('js/plugins/fileinput/fileinput-es.js')}"></script>
+        <script th:src="${@resources.common('js/plugins/fileinput/fileinput-theme.min.js')}"></script>
+        <script th:src="${@resources.common('js/plugins/sortable/Sortable.min.js')}"></script>
+        <script th:src="${@resources.common('js/plugins/slimscroll/jquery.slimscroll.min.js')}"></script>
+        <script th:src="${@resources.common('js/plugins/videojs/videojs-ie8.min.js')}"></script>
+        <script th:src="${@resources.common('js/plugins/videojs/video.min.js')}"></script>
+        <script th:src="${@resources.common('js/plugins/videojs/video-es.js')}"></script>
+        <script th:src="${@resources.common('js/plugins/pdfobject/pdfobject.min.js')}"></script>
+        <script th:src="${@resources.common('js/plugins/iCheck/icheck.min.js')}"></script>
+
+        <!--Plugin-->
+        <script th:src="${@resources.common('js/utils/promotick.js', true)}"></script>
+        <script th:src="${@resources.common('js/utils/promotick-ajax.js', true)}"></script>
+        <script th:src="${@resources.common('js/utils/promotick-toast.js', true)}"></script>
+        <script th:src="${@resources.common('js/utils/promotick-loader.js', true)}"></script>
+        <script th:src="${@resources.common('js/utils/promotick-modal.js', true)}"></script>
+        <script th:src="${@resources.common('js/utils/promotick-render.js', true)}"></script>
+        <script th:src="${@resources.admin('js/config/promotick-admin.js', true)}"></script>
+
+    </th:block>
+</body>
+</html>
