@@ -1,5 +1,6 @@
 package com.promotick.lafabril.web.controller;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.promotick.lafabril.model.web.Log;
+import com.promotick.lafabril.web.service.LogService;
 import com.promotick.lafabril.web.service.RecompensasWebService;
 import com.promotick.lafabril.web.util.ConstantesWebView;
 
@@ -25,6 +28,10 @@ import com.promotick.lafabril.web.util.ConstantesWebView;
 @RequestMapping("/recompensas")
 public class RecompensaController {
 
+        @Autowired
+    private LogService logService;
+
+    
     @Autowired
     private RecompensasWebService recompensasService;
 
@@ -64,6 +71,7 @@ public class RecompensaController {
      */
     @GetMapping("/login")
     public String login() {
+
         return ConstantesWebView.VIEW_RECOMPENSAS_LOGIN;
     }
 
@@ -80,6 +88,20 @@ public class RecompensaController {
     @PostMapping("/login")
     @ResponseBody
     public Map<String, Object> loginPost(@RequestParam String cedula) {
+
+        Log log = new Log();
+        log.setUsuario("sistema");
+        log.setAccion("GET " );
+        log.setDetalle("No se pudo obtener token");
+        log.setFecha(LocalDateTime.now());
+        log.setHeaderJson("123");
+        log.setBodyJson("123");
+        log.setIp("123");
+        log.setRuta("123");
+        log.setRequest("123");
+        log.setResponse("123");
+        logService.guardarLog(log);
+
         System.out.println("📞 POST /recompensas/login llamado");
         System.out.println("🆔 Cédula recibida como identificador: " + cedula);
 
@@ -330,4 +352,18 @@ public class RecompensaController {
 
         return mision;
     }
+
+    @GetMapping("/api/registrar_mision_recompensa/{id_mision}/{id_recompensa}")
+    @ResponseBody
+    public Object registrarMisionRecompensa(@PathVariable("id_mision") Number id_mision,@PathVariable("id_recompensa") Number id_recompensa) {
+    
+        String token = recompensasService.obtenerToken();
+        String cedula = recompensasService.obtenerIdentificadorCache();
+
+        //List<String> palabras = (List<String>) payload.get("palabras");
+        // Usa el nombre "palabras" para identificar el array
+        Object respuesta = recompensasService.registrarMisionRecompensa(id_mision,id_recompensa);
+
+        return respuesta;
+    } 
 }

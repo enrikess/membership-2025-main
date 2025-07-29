@@ -38,6 +38,16 @@
   <section class="hero-section">
     <div class="g-space">
       <div class="container">
+        <div class="g-user mb-5" th:if="${cedula != null}">
+          <div class="g-user--name">
+            <span>JG</span>
+          </div>
+          <div class="g-user--info" >
+            <p class="g-user--info__name">Jose De Grau</p>
+            <p class="g-user--info__missions" id="misiones_iniciadas"></p>
+          </div>
+        </div>
+
         <ul class="g-tab" id="myTab" role="tablist">
           <li class="g-tab--item" role="presentation">
             <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane"
@@ -398,9 +408,8 @@
 
       if (tokenStatus === 'success') {
         try {
-          sesionIniciada(cedulaData);
           cargarPromocionesAjax();
-          procesarMisiones(misionesData,cedulaData);
+          procesarMisiones(misionesData, cedulaData);
         } catch (e) {
           console.log('📝 Los datos no son JSON válido, mostrando como texto');
           console.log('Datos misionesssssssss:', misionesData);
@@ -649,7 +658,7 @@
       }
     }
 
-    function procesarMisiones(misiones,cedulaData) {
+    function procesarMisiones(misiones, cedulaData) {
       console.log(cedulaData);
       // Intenta parsear si es string
       if (typeof misiones === 'string') {
@@ -660,12 +669,7 @@
           return;
         }
       }
-      // if (cedulaData == null) {
-      //   ruta_detalle_mision = 'detalle_mision';
-      // } else {
-      //   ruta_detalle_mision = 'detalle_mision_logeado';
-      // }
-      ruta_detalle_mision = 'detalle_mision';
+
       // Si la estructura es { data: [...] }
       var listaMisiones = Array.isArray(misiones) ? misiones : (misiones && Array.isArray(misiones.data) ? misiones.data : []);
 
@@ -681,47 +685,66 @@
         container.innerHTML = '<div class="alert alert-info text-center"><h6>📭 No hay misiones disponibles</h6></div>';
         return;
       }
-      console.log(cedulaData,"cedulaData");
+      console.log(cedulaData, "cedulaData");
       if (cedulaData) {
         detalle_link = '';
       }
 
+      var imagen = /*[[${@resources.web('recompensa/img/cash-back.svg')}]]*/ '';
+      var cantidad_misiones = 0;
+      var cantidad_misiones_iniciadas = 0;
       listaMisiones.forEach(function (mision) {
+
+
+        cantidad_misiones++;
+
+        if (mision.mu_progreso != undefined && mision.mu_progreso != null) {
+          cantidad_misiones_iniciadas++;
+        }
+
+        console.log("mision",mision.mu_progreso);
+
+        var estado_texto = "No iniciada";
+        var estado_clase = "g-tag g-tag--yellow";
+
+        if (Number(mision.mu_progreso) > 0 && Number(mision.mu_progreso) < 1) {
+          var estado_texto = "Iniciada";
+          var estado_clase = "g-tag g-tag--green";
+        }
+        if (Number(mision.mu_progreso) == 1) {
+          var estado_texto = "Completada";
+          var estado_clase = "g-tag";
+        }
+
+
         var misionElement = document.createElement('div');
         misionElement.className = 'g-box-mision--item';
 
         misionElement.innerHTML = `
           <div class="g-box-mision--item__img">
-            <img src="${mision.imagen}" alt="Misión">
+            <img src="${imagen}" alt="Misión">
           </div>
           <div class="g-box-mision--item__info">
             <p class="g-box-mision--item__info__title">${mision.mi_descripcion}</p>
             <div class="g-progress-bar">
-              <span style="width: ${mision.progreso || 0}%;"></span>
+              <span style="width: ${(Number(mision.mu_progreso) * 100) || 0}%;"></span>
             </div>
-            <span class="g-tag g-tag--yellow">${mision.estado || 'No iniciada'}</span>
+            <span class="${estado_clase}">${estado_texto}</span>
             <div class="text-end w-100">
-              <a class="g-link" href="./${ruta_detalle_mision}/${mision.mi_id_mision}">Ver más</a>
+              <a class="g-link" href="./detalle_mision/${mision.mi_id_mision}">Ver más</a>
             </div>
           </div>
         `;
+
         container.appendChild(misionElement);
       });
+
+      document.querySelector("#misiones_iniciadas").textContent = `Misiones iniciadas: ${cantidad_misiones}/${cantidad_misiones_iniciadas}`;
+
+  
     }
 
-    function sesionIniciada(cedula) {
-      var login = document.querySelector('#login');
-      var logout = document.querySelector('#logout');
-      if (!cedula || cedula === '') {
-        // No hay sesión: mostrar login, ocultar logout
-        if (login) login.style.display = '';
-        if (logout) logout.style.display = 'none';
-      } else {
-        // Hay sesión: ocultar login, mostrar logout
-        if (login) login.style.display = 'none';
-        if (logout) logout.style.display = '';
-      }
-    }
+
 
   </script>
 

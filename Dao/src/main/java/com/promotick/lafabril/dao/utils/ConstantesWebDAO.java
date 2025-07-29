@@ -192,4 +192,10 @@ public class ConstantesWebDAO {
     public static final String SP_PARTICIPANTE_META_AVANCE_OBTENER = "sp_participante_meta_avance_obtener";
     public static final String SP_META_TRIMESTRAL_OBTENER = "sp_meta_trimestral_obtener";
 
+
+    //LOG
+    public static final String LOG_SCHEMA_NAME = "public";
+    public static final String SP_LOG_GUARDAR = "fn_log_guardar";
+
+
 }

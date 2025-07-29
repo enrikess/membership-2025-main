@@ -20,3 +20,10 @@ promotick:
     username: admin
     password: bfa9T=8[#}AVF-<eYgqn&WRh~
 
+spring:
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+

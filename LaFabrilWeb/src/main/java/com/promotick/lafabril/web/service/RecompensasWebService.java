@@ -14,7 +14,7 @@ public interface RecompensasWebService {
     /**
      * Método genérico para hacer consultas con token JWT
      */
-    Object hacerConsultaPOST(String endpoint, Object payload);
+    Object hacerConsultaPOST(String endpoint, Object payload, String cedula);
     Object hacerConsultaGET(String endpoint);
         
     /**
@@ -26,7 +26,8 @@ public interface RecompensasWebService {
 
     Object obtenerMisiones();
     Object obtenerMisionesPorId(Number idMision);
-
+    
     Object logearCedulaJSON(String cedula);
     
+    Object registrarMisionRecompensa(Number idMision,Number idRecompensa);
 }

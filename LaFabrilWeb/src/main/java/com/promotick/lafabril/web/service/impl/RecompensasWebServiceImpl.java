@@ -2,8 +2,11 @@ package com.promotick.lafabril.web.service.impl;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.promotick.lafabril.common.ConstantesApi;
+import com.promotick.lafabril.web.service.LogService;
 import com.promotick.lafabril.web.service.RecompensasWebService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.*;
@@ -20,12 +23,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.servlet.http.HttpServletRequest;
+
+import com.promotick.lafabril.model.web.Log;
+
 @Service
 public class RecompensasWebServiceImpl implements RecompensasWebService {
 
     @Autowired
     @Qualifier("propertiesPromotickConfig")
     private Properties properties;
+
+    @Autowired
+    private HttpServletRequest request;
+
+
+    @Autowired
+    private LogService logService;
 
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -241,9 +255,19 @@ public class RecompensasWebServiceImpl implements RecompensasWebService {
      * Método GET para endpoints que no requieren payload
      */
     public Object hacerConsultaGET(String endpoint) {
+        HttpHeaders headers = null;
+        String url = null;
+        ResponseEntity<String> response = null;
+        String ip = request.getRemoteAddr();
         try {
             String token = obtenerToken();
             if (token == null) {
+                crearLog(
+                    identificadorCache, // usuario
+                    "GET " + endpoint,
+                    "No se pudo obtener token",
+                    "", "", ip, endpoint, "", ""
+                );
                 return crearRespuestaError("No se pudo obtener token de autenticación", 500);
             }
 
@@ -252,9 +276,9 @@ public class RecompensasWebServiceImpl implements RecompensasWebService {
                 baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
             }
 
-            String url = baseUrl + endpoint;
+            url = baseUrl + endpoint;
 
-            HttpHeaders headers = new HttpHeaders();
+            headers = new HttpHeaders();
             headers.setBearerAuth(token);
             headers.set("Accept", "application/json");
             headers.set("identificacion", identificadorCache);
@@ -263,11 +287,23 @@ public class RecompensasWebServiceImpl implements RecompensasWebService {
             System.out.println("🔗 GET: " + url);
             System.out.println("🔑 Token: " + token.substring(0, Math.min(50, token.length())) + "...");
 
-            ResponseEntity<String> response = restTemplate.exchange(
+            response = restTemplate.exchange(
                     url, HttpMethod.GET, request, String.class);
 
             System.out.println("✅ GET exitoso - Status: " + response.getStatusCode());
 
+            Log log = new Log();
+            log.setUsuario("sistema");
+            log.setAccion("GET " + endpoint);
+            log.setDetalle("No se pudo obtener token");
+            log.setFecha(LocalDateTime.now());
+            log.setHeaderJson("");
+            log.setBodyJson("");
+            log.setIp("");
+            log.setRuta(endpoint);
+            log.setRequest("");
+            log.setResponse("");
+            logService.guardarLog(log);
             // PARSEAR Y DEVOLVER JSON COMO OBJETO
             String jsonResponse = response.getBody();
             try {
@@ -279,6 +315,17 @@ public class RecompensasWebServiceImpl implements RecompensasWebService {
 
         } catch (HttpClientErrorException e) {
             String errorJsonResponse = e.getResponseBodyAsString();
+            crearLog(
+                identificadorCache, // usuario
+                "GET " + endpoint,
+                "Error HTTP " + e.getStatusCode(),
+                headers != null ? headers.toString() : "",
+                "",
+                ip,
+                endpoint,
+                url != null ? url : "",
+                errorJsonResponse
+            );
             try {
                 JsonNode errorNode = objectMapper.readTree(errorJsonResponse);
                 return errorNode;
@@ -286,57 +333,17 @@ public class RecompensasWebServiceImpl implements RecompensasWebService {
                 return crearRespuestaError(errorJsonResponse, e.getStatusCode().value());
             }
         } catch (Exception e) {
-            return crearRespuestaError("Error de conexión: " + e.getMessage(), 500);
-        }
-    }
-
-    /**
-     * Método POST para endpoints que requieren payload
-     */
-    public Object hacerConsultaPOST(String endpoint, Object payload) {
-        try {
-            String token = obtenerToken();
-            if (token == null) {
-                return crearRespuestaError("No se pudo obtener token de autenticación", 500);
-            }
-
-            String baseUrl = properties.getProperty(ConstantesApi.RECOMPENSAS_URL);
-            String url = baseUrl + endpoint;
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.setBearerAuth(token);
-            headers.set("Accept", "application/json");
-
-            HttpEntity<Object> request = new HttpEntity<>(payload, headers);
-
-            System.out.println("🔗 POST: " + url);
-            System.out.println("🔑 Token: " + token.substring(0, Math.min(50, token.length())) + "...");
-            System.out.println("📦 Payload: " + payload);
-
-            ResponseEntity<String> response = restTemplate.exchange(
-                    url, HttpMethod.POST, request, String.class);
-
-            System.out.println("✅ POST exitoso - Status: " + response.getStatusCode());
-
-            // PARSEAR Y DEVOLVER JSON COMO OBJETO
-            String jsonResponse = response.getBody();
-            try {
-                JsonNode jsonNode = objectMapper.readTree(jsonResponse);
-                return jsonNode;
-            } catch (Exception parseEx) {
-                return crearRespuestaTexto(jsonResponse, response.getStatusCode().value());
-            }
-
-        } catch (HttpClientErrorException e) {
-            String errorJsonResponse = e.getResponseBodyAsString();
-            try {
-                JsonNode errorNode = objectMapper.readTree(errorJsonResponse);
-                return errorNode;
-            } catch (Exception parseEx) {
-                return crearRespuestaError(errorJsonResponse, e.getStatusCode().value());
-            }
-        } catch (Exception e) {
+            crearLog(
+                identificadorCache, // usuario
+                "GET " + endpoint,
+                "Error de conexión: " + e.getMessage(),
+                headers != null ? headers.toString() : "",
+                "",
+                ip,
+                endpoint,
+                url != null ? url : "",
+                ""
+            );
             return crearRespuestaError("Error de conexión: " + e.getMessage(), 500);
         }
     }
@@ -344,7 +351,7 @@ public class RecompensasWebServiceImpl implements RecompensasWebService {
     @Override
     public Object logearCedulaJSON(String cedula) {
         System.out.println("🔐 Procesando login con cédula en header (JSON): " + cedula);
-        Object resultado = hacerConsultaPOSTConCedulaJSON("/recompensas/v1/login", new HashMap<>(), cedula);
+        Object resultado = hacerConsultaPOST("/recompensas/v1/login", new HashMap<>(), cedula);
 
         // Si el login es exitoso, guardar el identificador en cache
         if (resultado instanceof JsonNode) {
@@ -363,17 +370,27 @@ public class RecompensasWebServiceImpl implements RecompensasWebService {
     /**
      * Método POST para endpoints que requieren cédula en header - RETORNA JSON
      */
-    public Object hacerConsultaPOSTConCedulaJSON(String endpoint, Object payload, String cedula) {
+    public Object hacerConsultaPOST(String endpoint, Object payload, String cedula) {
+        String ip = request.getRemoteAddr();
+        HttpHeaders headers = null;
+        String url = null;
+        ResponseEntity<String> response = null;
         try {
             String token = obtenerToken();
             if (token == null) {
+                crearLog(
+                    identificadorCache, // usuario
+                    "POST " + endpoint,
+                    "No se pudo obtener token",
+                    "", payload != null ? payload.toString() : "", ip, endpoint, payload != null ? payload.toString() : "", ""
+                );
                 return crearRespuestaError("No se pudo obtener token de autenticación", 500);
             }
 
             String baseUrl = properties.getProperty(ConstantesApi.RECOMPENSAS_URL);
-            String url = baseUrl + endpoint;
+            url = baseUrl + endpoint;
 
-            HttpHeaders headers = new HttpHeaders();
+            headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             headers.setBearerAuth(token);
             headers.set("Accept", "application/json");
@@ -386,11 +403,23 @@ public class RecompensasWebServiceImpl implements RecompensasWebService {
             System.out.println("🆔 Header identificacion: " + cedula);
             System.out.println("📦 Payload: " + payload);
 
-            ResponseEntity<String> response = restTemplate.exchange(
+            response = restTemplate.exchange(
                     url, HttpMethod.POST, request, String.class);
 
             System.out.println("✅ POST exitoso - Status: " + response.getStatusCode());
 
+
+            crearLog(
+                identificadorCache, // usuario
+                "POST " + endpoint,
+                "POST exitoso - Status: " + response.getStatusCode(),
+                headers.toString(),
+                payload != null ? payload.toString() : "",
+                ip,
+                endpoint,
+                payload != null ? payload.toString() : "",
+                response.getBody()
+            );
             // PARSEAR Y DEVOLVER JSON COMO OBJETO
             String jsonResponse = response.getBody();
             System.out.println("📋 JSON recibido del servidor:");
@@ -410,6 +439,17 @@ public class RecompensasWebServiceImpl implements RecompensasWebService {
 
             // PARSEAR JSON DE ERROR Y DEVOLVERLO COMO OBJETO
             String errorJsonResponse = e.getResponseBodyAsString();
+            crearLog(
+                identificadorCache, // usuario
+                "POST " + endpoint,
+                "Error HTTP " + e.getStatusCode(),
+                headers != null ? headers.toString() : "",
+                payload != null ? payload.toString() : "",
+                ip,
+                endpoint,
+                payload != null ? payload.toString() : "",
+                errorJsonResponse
+            );
             System.err.println("📋 JSON de error del servidor:");
             System.err.println(errorJsonResponse);
 
@@ -423,6 +463,17 @@ public class RecompensasWebServiceImpl implements RecompensasWebService {
             }
 
         } catch (Exception e) {
+            crearLog(
+                identificadorCache, // usuario
+                "POST " + endpoint,
+                "Error de conexión: " + e.getMessage(),
+                headers != null ? headers.toString() : "",
+                payload != null ? payload.toString() : "",
+                ip,
+                endpoint,
+                payload != null ? payload.toString() : "",
+                ""
+            );
             System.err.println("❌ Error de conexión: " + e.getMessage());
             return crearRespuestaError("Error de conexión: " + e.getMessage(), 500);
         }
@@ -493,7 +544,40 @@ public class RecompensasWebServiceImpl implements RecompensasWebService {
         try {
             // Ejemplo de payload para consultar misiones
 
-            return hacerConsultaGET("/recompensas/v1/misiones");
+            Object misionesObj = hacerConsultaGET("/recompensas/v1/misiones");
+            Object registradasObj = hacerConsultaGET("/recompensas/v1/registradas");
+            if (misionesObj instanceof JsonNode) {
+                JsonNode misionesNode = (JsonNode) misionesObj;
+                JsonNode dataMisionesNode = misionesNode.get("data");
+                JsonNode registradasNode = (JsonNode) registradasObj;
+                if (registradasNode.has("code") && registradasNode.get("code").asInt() >= 400) {
+                    // Es un error, retorna o maneja según tu lógica
+                    //System.err.println("❌ Error en registradas: " + registradasNode.get("message").asText());
+                    // Puedes retornar la misión sin modificar o manejar el error como prefieras
+                    return misionesObj;
+                }
+                JsonNode dataRegistradasNode = registradasNode.get("data");
+                if (dataMisionesNode != null && dataMisionesNode.isArray()) {
+                    for (JsonNode mision : dataMisionesNode) {
+                        if (!(mision instanceof ObjectNode)) continue; // Solo si es modificable
+                        ObjectNode misionObj = (ObjectNode) mision;
+                        for (JsonNode registrada : dataRegistradasNode) {
+                            if (mision.has("mi_id_mision") && 
+                            registrada.has("mu_id_mision") &&
+                            mision.get("mi_id_mision").asInt() == registrada.get("mu_id_mision").asInt()) 
+                            {
+                                misionObj.set("mu_progreso", registrada.get("mu_progreso"));
+                            }
+                            
+
+                        }
+
+                    }
+                }
+            }
+
+
+            return misionesObj;
 
         } catch (Exception e) {
             System.err.println("❌ Error obteniendo misiones: " + e.getMessage());
@@ -505,13 +589,64 @@ public class RecompensasWebServiceImpl implements RecompensasWebService {
     public Object obtenerMisionesPorId(Number idMision) {
         try {
             // Ejemplo de payload para consultar misiones
+            Object registradasObj = hacerConsultaGET("/recompensas/v1/registradas");
+            Object misionObj = hacerConsultaGET("/recompensas/v1/misiones?misionId=" + idMision);
+            JsonNode registradasNode = (JsonNode) registradasObj;
+            JsonNode dataRegistradasNode = registradasNode.get("data");
+            if (dataRegistradasNode instanceof JsonNode) {
+                JsonNode misionesNode = (JsonNode) misionObj;
+                JsonNode dataMisionesNode = misionesNode.get("data");
+                if (dataMisionesNode != null && dataMisionesNode.isObject()) {
+                    ObjectNode misionUnica = (ObjectNode) dataMisionesNode;
+                    boolean encontrada = false;
+                    if (dataRegistradasNode != null && dataRegistradasNode.isArray()) {
+                        for (JsonNode registrada : dataRegistradasNode) {
+                            if (
+                                misionUnica.has("mi_id_mision") &&
+                                registrada.has("mu_id_mision") &&
+                                misionUnica.get("mi_id_mision").asInt() == registrada.get("mu_id_mision").asInt()
+                            ) {
+                                // Si coincide, agrega el campo que desees
+                                misionUnica.put("mu_progreso", registrada.get("mu_progreso"));
+                                misionUnica.put("registrada", true);
 
-            return hacerConsultaGET("/recompensas/v1/misiones?misionId=" + idMision);
+                                break;
+                            }
+                        }
+                    }
+                    return misionesNode;
+                }
+            }
+            return misionObj;
 
         } catch (Exception e) {
             System.err.println("❌ Error obteniendo misiones: " + e.getMessage());
             return "❌ Error: " + e.getMessage();
         }
+    }
+
+
+    @Override
+    public Object registrarMisionRecompensa(Number idMision,Number idRecompensa){
+
+        Object resultado = hacerConsultaPOST("/recompensas/v1/misiones/registrar?misionId="+idMision+"&recompensaId="+idRecompensa, new HashMap<>(), identificadorCache);
+        return resultado;
+    }
+
+    private Log crearLog(String usuario, String accion, String detalle, String headerJson, String bodyJson, String ip, String ruta, String request, String response) {
+        Log log = new Log();
+        log.setUsuario(usuario);
+        log.setAccion(accion);
+        log.setDetalle(detalle);
+        log.setFecha(LocalDateTime.now());
+        log.setHeaderJson(headerJson);
+        log.setBodyJson(bodyJson);
+        log.setIp(ip);
+        log.setRuta(ruta);
+        log.setRequest(request);
+        log.setResponse(response);
+        logService.guardarLog(log);
+        return log;
     }
 
 }

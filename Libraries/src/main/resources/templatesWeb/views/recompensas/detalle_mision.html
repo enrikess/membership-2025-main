@@ -25,14 +25,7 @@
   <section class="container">
     <div>
       <h3 class="g-subtitle mb-4">Haz un consumo digital y recibe recompensas</h3>
-      <div class="g-box mb-4">
-        <div class="mb-2">
-          <span class="g-tag g-tag--yellow">No iniciada</span>
-        </div>
-        <div class="g-progress-bar mb-2">
-          <span style="width: 10%;"></span>
-        </div>
-        <span>0%</span>
+      <div class="g-box mb-4" id="estado_mision">
       </div>
       <div class="g-box mb-4">
         <p class="g-box--title">Descripción / Requisitos:</p>
@@ -45,18 +38,28 @@
         <h3 class="g-texto--title">Elige tu recompensa:</h3>
         <p class="g-texto--description">Selecciona tu recompensa antes de comenzar la misión.</p>
       </div>
-
+      <div id="mensaje_respuesta" class="mt-3">asd</div>
       <div class="reward-options" id="recompensas_lista">
 
       </div>
 
-      <div class="d-flex justify-content-center mb-5">
+      <div class="d-flex justify-content-center mb-5"   th:if="${cedula == null}">
         <div class="g-button--fix">
           <a href="../login" class="g-button g-button--big">
             <span>Iniciar sesión</span>
           </a>
         </div>
       </div>
+
+
+      <div class="d-flex justify-content-center mb-5"   th:if="${cedula != null}">
+        <div class="g-button--fix">
+          <a  onclick="verPromociones()" class="g-button g-button--big">
+            <span>Ver promociones</span>
+          </a>
+        </div>
+      </div>
+
     </div>
   </section>
 
@@ -186,17 +189,21 @@
 
     console.log("id_mision:", id_mision);
 
-    // Ejemplo de uso: puedes llamar tu función AJAX aquí
-    if (tokenStatus === 'success') {
-      try {
-        sesionIniciada(cedulaData);
-        cargarMisionAjax(id_mision);
-      } catch (e) {
-        console.log('📝 Los datos no son JSON válido, mostrando como texto');
-        console.log('Datos misionesssssssss:', misionesData);
+    // Solo ejecuta si id_mision es válido
+    if (id_mision !== '' && id_mision !== null && id_mision !== undefined && id_mision !== 'undefined') {
+      if (tokenStatus === 'success') {
+        try {
+          sesionIniciada(cedulaData);
+          cargarMisionAjax(id_mision);
+        } catch (e) {
+          console.log('📝 Los datos no son JSON válido, mostrando como texto');
+          console.log('Datos misionesssssssss:', misionesData);
+        }
+      } else {
+        console.log('❌ No hay conexión con la API');
       }
     } else {
-      console.log('❌ No hay conexión con la API');
+      console.error('id_mision no está definido correctamente:', id_mision);
     }
     function cargarMisionAjax(id_mision) {
 
@@ -214,11 +221,11 @@
         document.querySelector("#fecha_mision").textContent = "Válido hasta: "+formatearFecha(data.data.mi_fecha_registro_fin);
         lista_recompensa = document.querySelector("#recompensas_lista");
 
-
         data.data.recompensas.forEach((recompensa, idx) => {
           var recompensaElement = document.createElement('div');
           recompensaElement.className = 'reward-option' + (idx === 0 ? ' selected' : '');
           recompensaElement.setAttribute('data-reward', 'suscripciones');
+          recompensaElement.setAttribute('data-reward-id', recompensa.re_id_recompensa); // <-- Guarda el id
 
           recompensaElement.innerHTML = `
             <div>
@@ -229,6 +236,40 @@
           `;
           lista_recompensa.appendChild(recompensaElement);
         });
+
+        console.log(data);
+        // Obtener progreso y calcular porcentaje
+        let progreso = Number(data.data.mu_progreso) || 0;
+        let porcentaje = Math.round(progreso * 100);
+        
+        // Determinar estado y clase
+        let estado_texto = "No iniciada";
+        let estado_clase = "g-tag g-tag--yellow";
+        if (progreso > 0 && progreso < 1) {
+          estado_texto = "En progreso";
+          estado_clase = "g-tag g-tag--blue";
+        }
+        if (progreso === 1) {
+          estado_texto = "Completada";
+          estado_clase = "g-tag";
+        }
+
+        // Actualizar el bloque de estado de la misión
+        let estadoHtml = `
+          <div class="mb-2">
+            <span class="${estado_clase}">${estado_texto}</span>
+          </div>
+          <div class="g-progress-bar mb-2">
+            <span style="width: ${porcentaje}%;"></span>
+          </div>
+          <span>${porcentaje}%</span>
+        `;
+
+        document.getElementById("estado_mision").innerHTML = estadoHtml;
+
+
+
+
           console.log(data);
         })
         .catch(error => {
@@ -273,6 +314,35 @@
         console.log('Error formateando fecha:', e);
         return 'Error en fecha';
       }
+    }
+
+    function verPromociones() {
+      var misionActual = id_mision;
+      var recompensaSeleccionada = document.querySelector('.reward-option.selected');
+      var recompensaId = recompensaSeleccionada ? recompensaSeleccionada.getAttribute('data-reward-id') : null;
+      var recompensaTitulo = recompensaSeleccionada ? recompensaSeleccionada.querySelector('.reward-title').textContent : null;
+
+      console.log('Misión actual:', misionActual);
+      console.log('ID recompensa seleccionada:', recompensaId);
+      console.log('Título recompensa seleccionada:', recompensaTitulo);
+      return fetch('../api/registrar_mision_recompensa/' + id_mision+'/'+recompensaId)
+        .then(response => response.json())
+       .then(data => {
+        debugger
+          var mensaje = document.getElementById('mensaje_respuesta');
+          mensaje.textContent = data.message;
+          if (data.code === 400) {
+            mensaje.style.color = 'red';
+          } else {
+            mensaje.style.color = 'green';
+          }
+          console.log(data);
+       })
+      .catch(error => {
+        var mensaje = document.getElementById('mensaje_respuesta');
+        mensaje.textContent = 'Error de conexión';
+        mensaje.style.color = 'red';
+      });
     }
 
   </script>
