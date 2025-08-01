@@ -263,7 +263,7 @@ public class RecompensasWebServiceImpl implements RecompensasWebService {
             String token = obtenerToken();
             if (token == null) {
                 crearLog(
-                    identificadorCache, // usuario
+                    identificadorCache != null ? identificadorCache : "anonimo",
                     "GET " + endpoint,
                     "No se pudo obtener token",
                     "", "", ip, endpoint, "", ""
@@ -293,18 +293,17 @@ public class RecompensasWebServiceImpl implements RecompensasWebService {
 
             System.out.println("✅ GET exitoso - Status: " + response.getStatusCode());
 
-            Log log = new Log();
-            log.setUsuario("sistema");
-            log.setAccion("GET " + endpoint);
-            log.setDetalle("No se pudo obtener token");
-            log.setFecha(LocalDateTime.now());
-            log.setHeaderJson("");
-            log.setBodyJson("");
-            log.setIp("");
-            log.setRuta(endpoint);
-            log.setRequest("");
-            log.setResponse("");
-            logService.guardarLog(log);
+        crearLog(
+            identificadorCache != null ? identificadorCache : "anonimo",
+            "GET " + endpoint,
+            "GET exitoso - Status: " + response.getStatusCode(),
+            headers.toString(),
+            "",
+            ip,
+            endpoint,
+            url,
+            response.getBody()
+        );
             // PARSEAR Y DEVOLVER JSON COMO OBJETO
             String jsonResponse = response.getBody();
             try {
@@ -317,7 +316,7 @@ public class RecompensasWebServiceImpl implements RecompensasWebService {
         } catch (HttpClientErrorException e) {
             String errorJsonResponse = e.getResponseBodyAsString();
             crearLog(
-                identificadorCache, // usuario
+                identificadorCache != null ? identificadorCache : "anonimo",
                 "GET " + endpoint,
                 "Error HTTP " + e.getStatusCode(),
                 headers != null ? headers.toString() : "",
@@ -335,7 +334,7 @@ public class RecompensasWebServiceImpl implements RecompensasWebService {
             }
         } catch (Exception e) {
             crearLog(
-                identificadorCache, // usuario
+                identificadorCache != null ? identificadorCache : "anonimo",
                 "GET " + endpoint,
                 "Error de conexión: " + e.getMessage(),
                 headers != null ? headers.toString() : "",
@@ -380,7 +379,7 @@ public class RecompensasWebServiceImpl implements RecompensasWebService {
             String token = obtenerToken();
             if (token == null) {
                 crearLog(
-                    identificadorCache, // usuario
+                    identificadorCache != null ? identificadorCache : "anonimo",
                     "POST " + endpoint,
                     "No se pudo obtener token",
                     "", payload != null ? payload.toString() : "", ip, endpoint, payload != null ? payload.toString() : "", ""
@@ -408,10 +407,8 @@ public class RecompensasWebServiceImpl implements RecompensasWebService {
                     url, HttpMethod.POST, request, String.class);
 
             System.out.println("✅ POST exitoso - Status: " + response.getStatusCode());
-
-
             crearLog(
-                identificadorCache, // usuario
+                identificadorCache != null ? identificadorCache : "anonimo",
                 "POST " + endpoint,
                 "POST exitoso - Status: " + response.getStatusCode(),
                 headers.toString(),
@@ -441,7 +438,7 @@ public class RecompensasWebServiceImpl implements RecompensasWebService {
             // PARSEAR JSON DE ERROR Y DEVOLVERLO COMO OBJETO
             String errorJsonResponse = e.getResponseBodyAsString();
             crearLog(
-                identificadorCache, // usuario
+                identificadorCache != null ? identificadorCache : "anonimo",
                 "POST " + endpoint,
                 "Error HTTP " + e.getStatusCode(),
                 headers != null ? headers.toString() : "",
@@ -465,7 +462,7 @@ public class RecompensasWebServiceImpl implements RecompensasWebService {
 
         } catch (Exception e) {
             crearLog(
-                identificadorCache, // usuario
+                identificadorCache != null ? identificadorCache : "anonimo",
                 "POST " + endpoint,
                 "Error de conexión: " + e.getMessage(),
                 headers != null ? headers.toString() : "",

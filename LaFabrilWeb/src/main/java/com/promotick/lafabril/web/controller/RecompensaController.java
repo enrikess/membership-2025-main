@@ -89,19 +89,6 @@ public class RecompensaController {
     @ResponseBody
     public Map<String, Object> loginPost(@RequestParam String cedula) {
 
-        Log log = new Log();
-        log.setUsuario("sistema");
-        log.setAccion("GET " );
-        log.setDetalle("No se pudo obtener token");
-        log.setFecha(LocalDateTime.now());
-        log.setHeaderJson("123");
-        log.setBodyJson("123");
-        log.setIp("123");
-        log.setRuta("123");
-        log.setRequest("123");
-        log.setResponse("123");
-        logService.guardarLog(log);
-
         System.out.println("📞 POST /recompensas/login llamado");
         System.out.println("🆔 Cédula recibida como identificador: " + cedula);
 
