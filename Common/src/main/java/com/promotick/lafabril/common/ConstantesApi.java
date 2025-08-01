@@ -26,6 +26,7 @@ public class ConstantesApi {
     
     //RECOMPENSAS
     public static final String RECOMPENSAS_URL = "recompensas.configuration.url";
+    public static final String RECOMPENSAS_HOST = "recompensas.configuration.host";
     public static final String RECOMPENSAS_URL_TOKEN = "recompensas.configuration.url_token";
     public static final String RECOMPENSAS_GRANT_TYPE = "recompensas.configuration.grant_type";
     public static final String RECOMPENSAS_CLIENT_ID = "recompensas.configuration.client_id";

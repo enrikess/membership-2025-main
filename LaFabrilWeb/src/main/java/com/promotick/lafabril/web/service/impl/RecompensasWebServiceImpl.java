@@ -282,6 +282,7 @@ public class RecompensasWebServiceImpl implements RecompensasWebService {
             headers.setBearerAuth(token);
             headers.set("Accept", "application/json");
             headers.set("identificacion", identificadorCache);
+            headers.set("Host", ConstantesApi.RECOMPENSAS_HOST);
             HttpEntity<Void> request = new HttpEntity<>(headers);
 
             System.out.println("🔗 GET: " + url);
@@ -395,7 +396,7 @@ public class RecompensasWebServiceImpl implements RecompensasWebService {
             headers.setBearerAuth(token);
             headers.set("Accept", "application/json");
             headers.set("identificacion", cedula);
-
+            headers.set("Host", ConstantesApi.RECOMPENSAS_HOST);
             HttpEntity<Object> request = new HttpEntity<>(payload, headers);
 
             System.out.println("🔗 POST: " + url);
