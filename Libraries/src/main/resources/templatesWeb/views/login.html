@@ -13,7 +13,7 @@
   <nav class="g-header">
     <div class="container">
       <div class="g-header--container">
-        <a class="g-header--container__logo" href="./index">
+        <a class="g-header--container__logo" href="./">
           <img th:src="${@resources.web('img/logo.png')}" alt="Logo" class="logo">
         </a>
       </div>
@@ -165,7 +165,7 @@
       .then(data => {
         if (data.success) {
           // Login exitoso
-          window.location.href = '/MemberShipWeb/index';
+          window.location.href = '/MemberShipWeb/';
         } else {
           // Error en login
           document.querySelector("#alerta-error").textContent = data.message;

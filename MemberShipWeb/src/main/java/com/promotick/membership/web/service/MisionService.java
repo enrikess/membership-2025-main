@@ -7,7 +7,7 @@ import com.promotick.membership.model.MisionDto;
 import java.util.List;
 
 public interface MisionService {
-    List<MisionDto> obtenerMisiones(String token);
+    List<MisionDto> obtenerMisiones();
     DetalleMisionDto obtenerMisionesPorId(long idMision);
     Object registrarMisionRecompensa(long idMision,long idRecompensa);
 }

@@ -10,7 +10,6 @@ promotick:
         recompensa: public/recompensa
         common: public/common
         template: public/web/plantillas
-        mail: G:\workspace-promotick\lafabril-ec\Resources\WebContent\public\web\mail
       context:
         root: http://localhost:8080
         web: MemberShipWeb

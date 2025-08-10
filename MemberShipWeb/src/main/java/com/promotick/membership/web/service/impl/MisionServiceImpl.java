@@ -33,7 +33,8 @@ public class MisionServiceImpl implements MisionService {
     private LogService logService;
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public List<MisionDto> obtenerMisiones(String token) {
+    public List<MisionDto> obtenerMisiones() {
+        String token = loginService.obtenerToken();
         String baseUrl = properties.getProperty(ConstantesApi.RECOMPENSAS_URL);
         String url = baseUrl + ConstantesApi.RECOMPENSAS_API_MISIONES;
         HttpEntity<Void> request = ApiUtil.crearRequestConHeaders(

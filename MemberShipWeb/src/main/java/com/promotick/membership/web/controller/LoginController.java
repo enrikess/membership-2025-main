@@ -30,7 +30,7 @@ public class LoginController extends BaseController {
     @GetMapping("/logout")
     public String logout() {
         loginService.logout();
-        return "redirect:/index";
+        return "redirect:/";
     }
 
     /**
