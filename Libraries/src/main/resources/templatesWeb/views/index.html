@@ -66,51 +66,6 @@
                 <p class="g-counter">Misiones nuevas en: <span class="nro">23:59:59</span></p>
               </div>
               <div class="g-box-mision">
-                <div class="g-box-mision--item">
-                  <div class="g-box-mision--item__img">
-                    <img th:src="${@resources.web('img/cash-back.svg')}" alt="Mision">
-                  </div>
-                  <div class="g-box-mision--item__info">
-                    <p class="g-box-mision--item__info__title">Realiza algún consumo con tu Tarjeta de Crédito</p>
-                    <div class="g-progress-bar">
-                      <span style="width: 10%;"></span>
-                    </div>
-                    <span class="g-tag g-tag--yellow">No iniciada</span>
-                    <div class="text-end w-100">
-                      <a class="g-link" href="./detail-mission.html">Ver más</a>
-                    </div>
-                  </div>
-                </div>
-                <div class="g-box-mision--item">
-                  <div class="g-box-mision--item__img">
-                    <img th:src="${@resources.web('img/cash-back.svg')}" alt="Mision">
-                  </div>
-                  <div class="g-box-mision--item__info">
-                    <p class="g-box-mision--item__info__title">Realiza algún consumo con tu Tarjeta de Crédito</p>
-                    <div class="g-progress-bar">
-                      <span style="width: 10%;"></span>
-                    </div>
-                    <span class="g-tag g-tag--yellow">No iniciada</span>
-                    <div class="text-end w-100">
-                      <a class="g-link" href="./detail-mission.html">Ver más</a>
-                    </div>
-                  </div>
-                </div>
-                <div class="g-box-mision--item">
-                  <div class="g-box-mision--item__img">
-                    <img th:src="${@resources.web('img/cash-back.svg')}" alt="Mision">
-                  </div>
-                  <div class="g-box-mision--item__info">
-                    <p class="g-box-mision--item__info__title">Realiza algún consumo con tu Tarjeta de Crédito</p>
-                    <div class="g-progress-bar">
-                      <span style="width: 10%;"></span>
-                    </div>
-                    <span class="g-tag g-tag--yellow">No iniciada</span>
-                    <div class="text-end w-100">
-                      <a class="g-link" href="./detail-mission.html">Ver más</a>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -462,7 +417,6 @@
       // Obtén todos los tags actuales
       var tags = document.querySelectorAll('#tag-filtrar-promociones .g-tag span');
       var palabras = Array.from(tags).map(tag => tag.textContent.trim());
-
       // Mostrar mensaje de cargando
       var container = document.getElementById('g-promotions');
       if (container) {
@@ -503,7 +457,7 @@
       var totalPaginas = 1;
 
       console.log(promociones,'🔄 Procesando promociones...');
-      if (Array.isArray(promociones.data)) { // <-- ahora validamos si es lista
+      if (Array.isArray(promociones)) { // <-- ahora validamos si es lista
         // Obtener el container
         var container = document.getElementById('g-promotions');
         if (!container) {
@@ -511,7 +465,7 @@
           return;
         }
 
-        promocionesGlobales = promociones.data;
+        promocionesGlobales = promociones;
         totalPaginas = Math.ceil(promocionesGlobales.length / elementosPorPagina);
         
         // Función interna para mostrar página actual
@@ -651,7 +605,7 @@
         detalle_link = '';
       }
 
-      var imagen = /*[[${@resources.web('recompensa/img/cash-back.svg')}]]*/ '';
+      var imagen = /*[[${@resources.web('/img/cash-back.svg')}]]*/ '';
       var cantidad_misiones = 0;
       var cantidad_misiones_iniciadas = 0;
       listaMisiones.forEach(function (mision) {
