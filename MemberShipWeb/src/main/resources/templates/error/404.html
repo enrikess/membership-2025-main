@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/header :: header (title='Pagina no encontrada')">
+    <title></title>
+</head>
+
+<body class="home fondo">
+<div class="container">
+    <div class="row">
+        <div class="col-md-offset-4 col-md-4 col-sm-12 text-center">
+            <div class="newsletter style2">
+                <img th:src="${@resources.web('img/logo.png')}" src="" alt="" style="max-height: 50px">
+                <br>
+                <h1>404</h1>
+                <h3>Pagina no encontrada</h3>
+                <br>
+
+                <div class="error-desc">
+                    La pagina que intentas acceder no existe.
+                </div>
+
+                <br><br>
+
+                <a class="g-button w-100" th:href="@{/}" href="./index" style="margin-top: 10px;">Ir al inicio</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+<th:block th:replace="~{fragments/resources :: scripts}"/>
+
+</html>

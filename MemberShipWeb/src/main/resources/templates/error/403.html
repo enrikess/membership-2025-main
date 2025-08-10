@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="fragments/header :: header (title='Acceso no autorizado')">
+    <title></title>
+</head>
+
+<body class="text-center">
+    <div class="login-box error-box">
+        <div class="login-form">
+            <div class="text-center">
+                <img th:src="${@resources.web('img/logo.png')}" src="" alt="" style="max-height: 50px">
+            </div>
+            <br>
+            <h1>403</h1>
+            <h3>Acceso no autorizado</h3>
+            <br>
+
+            <div class="error-desc">
+                No tienes acceso a esta pagina, tus privilegios son limitados, por favor comuniquese con el administrador.
+            </div>
+
+            <br><br>
+
+            <a class="g-button w-100" th:href="@{/}" href="./index" style="margin-top: 10px;">Ir al inicio</a>
+        </div>
+    </div>
+</body>
+
+<th:block th:replace="~{fragments/resources :: scripts}"/>
+
+</html>

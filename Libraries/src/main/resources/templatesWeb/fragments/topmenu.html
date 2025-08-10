@@ -5,136 +5,28 @@
 </head>
 <body>
 
-<th:block th:fragment="topmenu(menu)">
-    <div id="box-mobile-menu" class="box-mobile-menu full-height full-width">
-        <div class="box-inner">
-            <p class="color-whit nameUser" style="display: inline-block">Bienvenido (a) <span
-                    th:text="${session.participante.nombresParticipante.concat(' ').concat(session.participante.appaternoParticipante)}"></span>
-            </p>
-            <span class="close-menu"><span class="icon pe-7s-close"></span></span>
+<th:block th:fragment="topmenu">
+  <nav class="g-header">
+    <div class="container">
+      <div class="g-header--container" id="sesion-iniciada" >
+        <a class="g-header--container__logo" href="/MemberShipWeb/index">
+          <img th:src="${@resources.web('img/logo.png')}" alt="Logo" class="logo">
+        </a>
+        <a href="/MemberShipWeb/login" class="g-button" id="login"  th:if="${cedula == null}">
+          <span>Iniciar sesión</span>
+        </a>
+
+        <div class="dropdown " id="logout"  th:if="${cedula != null}">
+          <button class="g-button--profile" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <img th:src="${@resources.web('img/ico/ico-profile.svg')}" alt="">
+          </button>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="/MemberShipWeb/logout">Cerrar sesión</a></li>
+          </ul>
         </div>
+      </div>
     </div>
-    <div id="header-ontop" class="is-sticky"></div>
-
-    <header id="header" class="header style3">
-        <div class="container-fluid">
-            <div class="main-menu-wapper">
-                <div class="row">
-                    <div class="col-sm-12 col-md-2 logo-wapper">
-                        <div class="logo">
-                            <a th:href="@{/}" href=""><img th:src="${@resources.web('img/logos/logo.png')}" src=""
-                                                           alt="La Fabril" width="200"></a>
-                        </div>
-                    </div>
-                    <div class="col-sm-12 col-md-10 menu-wapper">
-                        <div class="top-header">
-                            <span class="mobile-navigation"><i class="fa fa-bars"></i></span>
-                            <p class="txt-desk user-name"> Bienvenido(a) <span
-                                    th:text="${session.participante.nombresParticipante.concat(' ').concat(session.participante.appaternoParticipante)}"></span>
-                            </p>
-                            <div class="box-control">
-                                <ul class="pnt-resp">
-                                    <li class="info-pts lst-sty">
-                                        <p class="mrg-0">TIENES <span class="color-nr fnt-600"
-                                                                      th:text="${session.participante.puntosDisponibles}"></span>
-                                            Puntos</p>
-                                    </li>
-                                </ul>
-                                <form class="box-search" onsubmit="return false">
-                                    <div class="inner">
-                                        <input type="text" list="resultadosAutoComplete" placeholder="Buscar aquí"
-                                               th:value="${buscar}" class="search txtBusqueda">
-                                        <datalist id="resultadosAutoComplete">
-                                        </datalist>
-                                        <a href="#" class="button-search buscarIcon"><span class="pe-7s-search"></span></a>
-                                    </div>
-                                </form>
-                                <div class="mini-cart" style="padding-right: 0;">
-                                    <a title="Mis favoritos" class="cart-link" th:href="@{/wishlist}" href=""><i
-                                            class="fa fa-heart"></i></a>
-                                </div>
-                                <div class="mini-cart" style="top: 3px;">
-                                    <a class="cart-link open-cart-popup"><span class="icon pe-7s-cart"></span><span
-                                            class="count count-pedido"
-                                            th:text="${session.pedido.totalItems}"></span></a>
-                                    <div class="show-shopping-cart">
-                                        <h3 class="title">Tienes <span class="text-primary cont_carrito"
-                                                                       th:text="|(${session.pedido.totalItems} productos)|"></span>
-                                            en tu carrito de compras</h3>
-                                        <ul class="list-product cartbox-dinamico">
-
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="box-settings">
-                                    <span class="icon pe-7s-user"></span>
-                                    <div class="settings-wrapper ">
-                                        <div class="setting-content">
-                                            <div class="setting-option">
-                                                <ul>
-                                                    <li><a th:href="@{/perfil}"><i class="icon-heart icons"></i><span>Mi perfil</span></a>
-                                                    </li>
-                                                    <li><a th:href="@{/logout}"><i class="icon-note icons"></i><span>Cerrar sesión</span></a>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <ul class="boutique-nav main-menu clone-main-menu">
-                            <li class="column-1" th:if="${session.participante.catalogo.viewInicio}">
-                                <a th:href="@{/}" href="" th:class="${menu == 'Inicio' ? 'active' : ''}">Inicio</a>
-                            </li>
-                            <li class="column-1" th:if="${session.participante.catalogo.viewCatalogoProductos}">
-                                <a th:href="@{/catalogo}" href="" th:class="${menu == 'Catalogo' ? 'active' : ''}">Catálogo Prestige</a>
-                            </li>
-                            <li class="column-1" th:if="${session.participante.catalogo.viewPuntos}">
-                                <a th:href="@{/mis-puntos}" href="" th:class="${menu == 'MisPuntos' ? 'active' : ''}">Mis Puntos</a>
-                            </li>
-                            <li class="column-1" th:if="${session.participante.catalogo.tieneCampania}">
-                                <a th:href="@{/aceleradores}" href="" th:class="${menu == 'Aceleradores' ? 'active' : ''}">Aceleradores</a>
-                            </li>
-                            <li class="column-1" th:if="${session.participante.catalogo.viewMiMeta}">
-                                <a th:href="@{/mi-resultado}" href="" th:class="${menu == 'Mi Meta' ? 'active' : ''}">Mi
-                                    meta</a>
-                            </li>
-                            <li class="column-1" th:if="${session.participante.catalogo.viewCotizacion}">
-                                <a th:href="@{/cotizacion}" href=""
-                                   th:class="${menu == 'Cotizar pasaje' ? 'active' : ''}">Boletos aéreo </a>
-                            </li>
-                            <li class="column-1">
-                                <a th:href="@{/contacto}" href=""
-                                   th:class="${menu == 'Contacto' ? 'active' : ''}">Canjes a la carta </a>
-                            </li>
-                            <li class="column-1" th:if="${session.participante.catalogo.viewTrivia}">
-                                <a th:href="@{/trivia}" href="" th:class="${menu == 'Trivia' ? 'active' : ''}">Trivia 29
-                                    AÑOS</a>
-                            </li>
-                            <li class="column-1" th:if="${session.participante.catalogo.tieneMundial}">
-                                <a th:href="@{/mundial}" href=""
-                                   th:class="${menu == 'Mundial' ? 'active' : ''}">Mundial</a>
-                            </li>
-                            <li class="column-1" th:if="${session.participante.catalogo.tieneReferidos}">
-                                <a th:href="@{/recomendado}" href=""
-                                   th:class="${menu == 'Gana mas puntos' ? 'active' : ''}">Referidos</a>
-                            </li>
-                            <li class="column-1" th:if="${session.participante.catalogo.viewCapacitaciones}">
-                                <a th:href="@{/capacitacion}" href=""
-                                   th:class="${menu == 'Capacitaciones' ? 'active' : ''}">Capacitaciones</a>
-                            </li>
-                            <li class="column-1" th:if="${session.participante.catalogo.moduloEncuesta != null}">
-                                <a th:href="@{/encuesta-empleados}" href=""
-                                   th:class="${menu == 'Encuesta por catálogo' ? 'active' : ''}" th:text="${session.participante.catalogo.moduloEncuesta}"></a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
-
+  </nav>
 </th:block>
 
 </body>

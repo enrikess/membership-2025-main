@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.promotick</groupId>
-    <artifactId>lafabril-ec</artifactId>
+    <artifactId>membership-ec</artifactId>
     <version>1.0</version>
     <packaging>pom</packaging>
 
@@ -15,8 +15,7 @@
         <module>Model</module>
         <module>Dao</module>
         <module>Resources</module>
-        <module>LaFabrilAdmin</module>
-        <module>LaFabrilWeb</module>
+        <module>MemberShipWeb</module>
     </modules>
 
 </project>
