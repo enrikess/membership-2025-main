@@ -15,7 +15,7 @@
 
   <section class="container">
     <div class="g-back">
-      <a class="g-button--secondary" href="./">
+      <a class="g-button--secondary" href="../">
         <img th:src="${@resources.web('img/ico/ico-left.svg')}" alt="">
         <span>Regresar</span>
       </a>
@@ -26,6 +26,14 @@
     <div>
       <h3 class="g-subtitle mb-4">Haz un consumo digital y recibe recompensas</h3>
       <div class="g-box mb-4" id="estado_mision">
+        <div class="mb-2">
+          <span th:class="${mision.progreso == null or mision.progreso == 0} ? 'g-tag g-tag--yellow' : (${mision.progreso == 1} ? 'g-tag' : 'g-tag g-tag--blue')"
+                th:text="${mision.progreso == null or mision.progreso == 0} ? 'No iniciada' : (${mision.progreso == 1} ? 'Completada' : 'En progreso')">No iniciada</span>
+        </div>
+        <div class="g-progress-bar mb-2">
+          <span th:style="'width: ' + ${mision.progreso != null ? #numbers.formatInteger(mision.progreso * 100, 0) : 0} + '%;'"></span>
+        </div>
+        <span th:text="${mision.progreso != null ? #numbers.formatInteger(mision.progreso * 100, 0) : 0} + '%'">0%</span>
       </div>
       <div class="g-box mb-4">
         <p class="g-box--title">Descripción / Requisitos:</p>
@@ -33,34 +41,41 @@
         <p class="g-box--description2 m-0" th:text="'Válido hasta: ' + ${mision.fechaFin}"></p>
       </div>
     </div>
-<!--    <div>-->
-<!--      <div class="g-texto">-->
-<!--        <h3 class="g-texto&#45;&#45;title">Elige tu recompensa:</h3>-->
-<!--        <p class="g-texto&#45;&#45;description">Selecciona tu recompensa antes de comenzar la misión.</p>-->
-<!--      </div>-->
-<!--      <div id="mensaje_respuesta" class="mt-3">asd</div>-->
-<!--      <div class="reward-options" id="recompensas_lista">-->
+    <div>
+      <div class="g-texto">
+        <h3 class="g-texto--title">Elige tu recompensa:</h3>
+        <p class="g-texto--description">Selecciona tu recompensa antes de comenzar la misión.</p>
+      </div>
+      <div id="mensaje_respuesta" class="mt-3"></div>
+      <div class="reward-options" id="recompensas_lista">
+        <!-- Las recompensas se cargan desde el modelo Thymeleaf -->
+        <div th:each="recompensa : ${mision.recompensas}" class="reward-option" th:classappend="${recompensaStat.first} ? 'selected' : ''" 
+             th:attr="data-reward-id=${recompensa.idRecompensa}">
+          <div>
+            <span class="reward-title" th:text="${recompensa.titulo}">Cashback</span>
+            <span class="reward-desc" th:text="${recompensa.descripcion}">Recibe $5 de Cashback</span>
+          </div>
+          <span class="reward-check"></span>
+        </div>
+      </div>
 
-<!--      </div>-->
+      <div class="d-flex justify-content-center mb-5" th:if="${cedula == null}">
+        <div class="g-button--fix">
+          <a href="../login" class="g-button g-button--big">
+            <span>Iniciar sesión</span>
+          </a>
+        </div>
+      </div>
 
-<!--      <div class="d-flex justify-content-center mb-5"   th:if="${cedula == null}">-->
-<!--        <div class="g-button&#45;&#45;fix">-->
-<!--          <a href="../login" class="g-button g-button&#45;&#45;big">-->
-<!--            <span>Iniciar sesión</span>-->
-<!--          </a>-->
-<!--        </div>-->
-<!--      </div>-->
+      <div class="d-flex justify-content-center mb-5" th:if="${cedula != null}">
+        <div class="g-button--fix">
+          <a onclick="verPromociones()" class="g-button g-button--big">
+            <span>Ver promociones</span>
+          </a>
+        </div>
+      </div>
 
-
-<!--      <div class="d-flex justify-content-center mb-5"   th:if="${cedula != null}">-->
-<!--        <div class="g-button&#45;&#45;fix">-->
-<!--          <a  onclick="verPromociones()" class="g-button g-button&#45;&#45;big">-->
-<!--            <span>Ver promociones</span>-->
-<!--          </a>-->
-<!--        </div>-->
-<!--      </div>-->
-
-<!--    </div>-->
+    </div>
   </section>
 
   <!-- Footer -->
@@ -191,106 +206,16 @@
 
     // Solo ejecuta si id_mision es válido
     if (id_mision !== '' && id_mision !== null && id_mision !== undefined && id_mision !== 'undefined') {
-      if (tokenStatus === 'success') {
-        try {
-          sesionIniciada(cedulaData);
-          cargarMisionAjax(id_mision);
-        } catch (e) {
-          console.log('📝 Los datos no son JSON válido, mostrando como texto');
-          console.log('Datos misionesssssssss:', misionesData);
-        }
-      } else {
-        console.log('❌ No hay conexión con la API');
+      try {
+        sesionIniciada(cedulaData);
+      } catch (e) {
+        console.log('Error en sesionIniciada:', e);
       }
     } else {
       console.error('id_mision no está definido correctamente:', id_mision);
     }
-    function cargarMisionAjax(id_mision) {
-
-      traerMision(id_mision)
-    }
-
-    function traerMision(id_mision) {
-    // Realiza una petición AJAX al backend para obtener el bloque HTML de la palabra
-
-      return fetch('../api/detalle_mision/' + id_mision)
-        .then(response => response.json())
-       .then(data => {
-
-        document.querySelector("#descripcion_mision").textContent = data.data.mi_descripcion;
-        document.querySelector("#fecha_mision").textContent = "Válido hasta: "+formatearFecha(data.data.mi_fecha_registro_fin);
-        lista_recompensa = document.querySelector("#recompensas_lista");
-
-        data.data.recompensas.forEach((recompensa, idx) => {
-          var recompensaElement = document.createElement('div');
-          recompensaElement.className = 'reward-option' + (idx === 0 ? ' selected' : '');
-          recompensaElement.setAttribute('data-reward', 'suscripciones');
-          recompensaElement.setAttribute('data-reward-id', recompensa.re_id_recompensa); // <-- Guarda el id
-
-          recompensaElement.innerHTML = `
-            <div>
-              <span class="reward-title">${recompensa.re_titulo}</span>
-              <span class="reward-desc">${recompensa.re_descripcion}</span>
-            </div>
-            <span class="reward-check"></span>
-          `;
-          lista_recompensa.appendChild(recompensaElement);
-        });
-
-        console.log(data);
-        // Obtener progreso y calcular porcentaje
-        let progreso = Number(data.data.mu_progreso) || 0;
-        let porcentaje = Math.round(progreso * 100);
-        
-        // Determinar estado y clase
-        let estado_texto = "No iniciada";
-        let estado_clase = "g-tag g-tag--yellow";
-        if (progreso > 0 && progreso < 1) {
-          estado_texto = "En progreso";
-          estado_clase = "g-tag g-tag--blue";
-        }
-        if (progreso === 1) {
-          estado_texto = "Completada";
-          estado_clase = "g-tag";
-        }
-
-        // Actualizar el bloque de estado de la misión
-        let estadoHtml = `
-          <div class="mb-2">
-            <span class="${estado_clase}">${estado_texto}</span>
-          </div>
-          <div class="g-progress-bar mb-2">
-            <span style="width: ${porcentaje}%;"></span>
-          </div>
-          <span>${porcentaje}%</span>
-        `;
-
-        document.getElementById("estado_mision").innerHTML = estadoHtml;
 
 
-
-
-          console.log(data);
-        })
-        .catch(error => {
-          console.log('❌ Error al agregar el tag de palabra clave:', error);
-        });
-    }
-
-
-    function sesionIniciada(cedula) {
-      var login = document.querySelector('#login');
-      var logout = document.querySelector('#logout');
-      if (!cedula || cedula === '') {
-        // No hay sesión: mostrar login, ocultar logout
-        if (login) login.style.display = '';
-        if (logout) logout.style.display = 'none';
-      } else {
-        // Hay sesión: ocultar login, mostrar logout
-        if (login) login.style.display = 'none';
-        if (logout) logout.style.display = '';
-      }
-    }
 
 
     function formatearFecha(fechaISO) {

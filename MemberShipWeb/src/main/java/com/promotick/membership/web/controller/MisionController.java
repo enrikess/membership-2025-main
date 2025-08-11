@@ -5,6 +5,7 @@ import com.promotick.membership.model.Promocion;
 import com.promotick.membership.web.service.LoginService;
 import com.promotick.membership.web.service.MisionService;
 import com.promotick.membership.web.service.PromocionService;
+import com.promotick.membership.web.service.RecompensasWebService;
 import com.promotick.membership.web.util.BaseController;
 import com.promotick.membership.web.util.ConstantesWebView;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +24,10 @@ public class MisionController extends BaseController {
     private LoginService loginService;
     @Autowired
     private MisionService misionService;
+    @Autowired
+    private RecompensasWebService recompensasService;
 
+    
     @GetMapping("/prueba/{id_mision}")
     @ResponseBody
     public DetalleMisionDto buscarMisionesId(@PathVariable("id_mision") long idMision) {
@@ -37,6 +41,8 @@ public class MisionController extends BaseController {
     @GetMapping("/{id_mision}")
     public String misionesPorId(@PathVariable("id_mision") long idMision, Model model) {
         DetalleMisionDto mision = misionService.obtenerMisionesPorId(idMision);
+        String cedula = recompensasService.obtenerIdentificadorCache();
+        model.addAttribute("cedula", cedula);
         model.addAttribute("mision", mision);
         return ConstantesWebView.VIEW_RECOMPENSAS_DETALLE_MISION;
     }

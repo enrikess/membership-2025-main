@@ -62,6 +62,8 @@ public class LoginServiceImpl implements LoginService {
             return nuevoToken;
         } catch (Exception e) {
             log.error("❌ Error obteniendo token: " + e.getMessage());
+            logService.generarLog("GET", "Error obteniendo token: " + e.getMessage(), 
+                                "obtenerToken()", new HttpHeaders(), "");
             return null;
         }
     }
@@ -70,17 +72,23 @@ public class LoginServiceImpl implements LoginService {
      * Limpiar cache del token
      */
     public void limpiarCache() {
-        log.info("🗑️ LLAMADA A limpiarCache() - Stack trace:");
-        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-        for (int i = 2; i < Math.min(6, stackTrace.length); i++) {
-            log.info("   " + stackTrace[i].toString());
+        try {
+            log.info("🗑️ LLAMADA A limpiarCache() - Stack trace:");
+            StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+            for (int i = 2; i < Math.min(6, stackTrace.length); i++) {
+                log.info("   " + stackTrace[i].toString());
+            }
+            
+            this.tokenCache = null;
+            this.tokenExpiracion = null;
+            this.tokenType = null;
+            this.tokenScope = null;
+            log.info("🗑️ Cache del token limpiado");
+        } catch (Exception e) {
+            log.error("❌ Error limpiando cache: " + e.getMessage());
+            logService.generarLog("POST", "Error limpiando cache: " + e.getMessage(), 
+                                "limpiarCache()", new HttpHeaders(), "");
         }
-        
-        this.tokenCache = null;
-        this.tokenExpiracion = null;
-        this.tokenType = null;
-        this.tokenScope = null;
-        log.info("🗑️ Cache del token limpiado");
     }
 
     private String procesarRespuestaToken(ResponseEntity<Token> response) {
@@ -88,39 +96,50 @@ public class LoginServiceImpl implements LoginService {
         log.info("📋 Status Code: " + response.getStatusCode());
         log.info("📋 Tiene Body: " + (response.getBody() != null));
         
-        if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-            Token token = response.getBody();
-            log.info("📋 Access Token existe: " + (token.getAccessToken() != null));
-            
-            if (token.getAccessToken() != null) {
-                log.info("✅ Token válido encontrado - Guardando en cache");
-                // Guardar token en cache
-                this.tokenCache = token.getAccessToken();
-                this.tokenType = token.getTokenType();
-                this.tokenScope = token.getScope();
+        try {
+            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
+                Token token = response.getBody();
+                log.info("📋 Access Token existe: " + (token.getAccessToken() != null));
                 
-                log.info("📋 Token guardado en cache: " + (this.tokenCache != null ? "SÍ" : "NO"));
-                log.info("📋 Token type: " + this.tokenType);
-                log.info("📋 Token scope: " + this.tokenScope);
+                if (token.getAccessToken() != null) {
+                    log.info("✅ Token válido encontrado - Guardando en cache");
+                    // Guardar token en cache
+                    this.tokenCache = token.getAccessToken();
+                    this.tokenType = token.getTokenType();
+                    this.tokenScope = token.getScope();
+                    
+                    log.info("📋 Token guardado en cache: " + (this.tokenCache != null ? "SÍ" : "NO"));
+                    log.info("📋 Token type: " + this.tokenType);
+                    log.info("📋 Token scope: " + this.tokenScope);
 
-                // Calcular expiración basada en expires_in
-                Integer expiresIn = token.getExpiresIn();
-                log.info("📋 Expires in (segundos): " + expiresIn);
-                
-                if (expiresIn != null) {
-                    this.tokenExpiracion = LocalDateTime.now().plusSeconds(expiresIn);
+                    // Calcular expiración basada en expires_in
+                    Integer expiresIn = token.getExpiresIn();
+                    log.info("📋 Expires in (segundos): " + expiresIn);
+                    
+                    if (expiresIn != null) {
+                        this.tokenExpiracion = LocalDateTime.now().plusSeconds(expiresIn);
+                    } else {
+                        // Valor por defecto: 1 hora
+                        this.tokenExpiracion = LocalDateTime.now().plusHours(1);
+                    }
+                    
+                    log.info("📋 Token expirará: " + this.tokenExpiracion);
+                    return this.tokenCache;
                 } else {
-                    // Valor por defecto: 1 hora
-                    this.tokenExpiracion = LocalDateTime.now().plusHours(1);
+                    log.error("❌ No se encontró access_token en la respuesta");
+                    logService.generarLog("POST", "No se encontró access_token en la respuesta", 
+                                        "procesarRespuestaToken", new HttpHeaders(), response.getBody().toString());
                 }
-                
-                log.info("📋 Token expirará: " + this.tokenExpiracion);
-                return this.tokenCache;
             } else {
-                log.error("❌ No se encontró access_token en la respuesta");
+                log.error("❌ Respuesta inválida: " + response.getStatusCode());
+                logService.generarLog("POST", "Respuesta inválida: " + response.getStatusCode(), 
+                                    "procesarRespuestaToken", new HttpHeaders(), 
+                                    response.getBody() != null ? response.getBody().toString() : "");
             }
-        } else {
-            log.error("❌ Respuesta inválida: " + response.getStatusCode());
+        } catch (Exception e) {
+            log.error("❌ Error procesando respuesta del token: " + e.getMessage());
+            logService.generarLog("POST", "Error procesando respuesta del token: " + e.getMessage(), 
+                                "procesarRespuestaToken", new HttpHeaders(), "");
         }
         return null;
     }
@@ -129,20 +148,33 @@ public class LoginServiceImpl implements LoginService {
      * Obtener identificador del cache si está válido
      */
     public String obtenerUsuario() {
-        if (usuario != null) {
-            return usuario;
+        try {
+            if (usuario != null) {
+                return usuario;
+            }
+            // No llamar a logout() aquí - solo devolver null si no hay usuario
+            // logout() limpia el cache del token que puede ser válido para otras operaciones
+            return null;
+        } catch (Exception e) {
+            log.error("❌ Error obteniendo usuario: " + e.getMessage());
+            logService.generarLog("GET", "Error obteniendo usuario: " + e.getMessage(), 
+                                "obtenerUsuario()", new HttpHeaders(), "");
+            return null;
         }
-        // No llamar a logout() aquí - solo devolver null si no hay usuario
-        // logout() limpia el cache del token que puede ser válido para otras operaciones
-        return null;
     }
 
     /**
      * Guardar identificador en cache
      */
     public void guardarUsuario(String identificador) {
-        this.usuario = identificador;
-        log.info("✅ Usuario guardado en cache: " + identificador);
+        try {
+            this.usuario = identificador;
+            log.info("✅ Usuario guardado en cache: " + identificador);
+        } catch (Exception e) {
+            log.error("❌ Error guardando usuario: " + e.getMessage());
+            logService.generarLog("POST", "Error guardando usuario: " + e.getMessage(), 
+                                "guardarUsuario()", new HttpHeaders(), "identificador: " + identificador);
+        }
     }
 
     /**
@@ -150,8 +182,14 @@ public class LoginServiceImpl implements LoginService {
      */
     @Override
     public void logout() {
-        this.usuario = null;
-        this.limpiarCache();
+        try {
+            this.usuario = null;
+            this.limpiarCache();
+        } catch (Exception e) {
+            log.error("❌ Error en logout: " + e.getMessage());
+            logService.generarLog("POST", "Error en logout: " + e.getMessage(), 
+                                "logout()", new HttpHeaders(), "");
+        }
     }
 
     @Override
@@ -159,22 +197,35 @@ public class LoginServiceImpl implements LoginService {
         log.info("🔐 Procesando login con cédula: " + cedula);
         Object resultado = null;
         
-        String token = this.obtenerToken();
+        try {
+            String token = this.obtenerToken();
+            if (token == null) {
+                log.error("❌ No se pudo obtener token para login");
+                logService.generarLog("POST", "No se pudo obtener token para login con cédula: " + cedula, 
+                                    "/recompensas/v1/login", new HttpHeaders(), "cedula: " + cedula);
+                return null;
+            }
 
-//                hacerConsultaPOST("/recompensas/v1/login", new HashMap<>(), cedula);
-//
-//        // Si el login es exitoso, guardar el identificador en cache
-//        if (resultado instanceof JsonNode) {
-//            JsonNode jsonNode = (JsonNode) resultado;
-//            // Verificar si NO es un error (no tiene code de error)
-//            if (!jsonNode.has("code") || jsonNode.get("code").asInt() < 400) {
-//                log.info("✅ Login exitoso - Guardando identificador en cache");
-//                guardarIdentificador(cedula);
-//            }
-//        }
+            // Aquí iría la lógica de login con la cédula
+            //resultado = hacerConsultaPOST("/recompensas/v1/login", new HashMap<>(), cedula);
 
-        return resultado;
+            // Si el login es exitoso, guardar el identificador en cache
+            // if (resultado instanceof JsonNode) {
+            //     JsonNode jsonNode = (JsonNode) resultado;
+            //     // Verificar si NO es un error (no tiene code de error)
+            //     if (!jsonNode.has("code") || jsonNode.get("code").asInt() < 400) {
+            //         log.info("✅ Login exitoso - Guardando identificador en cache");
+            //         guardarUsuario(cedula);
+            //     }
+            // }
 
+            return resultado;
+        } catch (Exception e) {
+            log.error("❌ Error en login con cédula: " + e.getMessage());
+            logService.generarLog("POST", "Error en login con cédula: " + e.getMessage(), 
+                                "/recompensas/v1/login", new HttpHeaders(), "cedula: " + cedula);
+            return null;
+        }
     }
 
 
@@ -184,9 +235,16 @@ public class LoginServiceImpl implements LoginService {
      * Verificar si el token en cache es válido
      */
     private boolean tokenEsValido() {
-        return tokenCache != null
-                && tokenExpiracion != null
-                && LocalDateTime.now().isBefore(tokenExpiracion.minusMinutes(5)); // Renovar 5 min antes de expirar
+        try {
+            return tokenCache != null
+                    && tokenExpiracion != null
+                    && LocalDateTime.now().isBefore(tokenExpiracion.minusMinutes(5)); // Renovar 5 min antes de expirar
+        } catch (Exception e) {
+            log.error("❌ Error verificando validez del token: " + e.getMessage());
+            logService.generarLog("GET", "Error verificando validez del token: " + e.getMessage(), 
+                                "tokenEsValido()", new HttpHeaders(), "");
+            return false;
+        }
     }
 
     private String generarToken() {

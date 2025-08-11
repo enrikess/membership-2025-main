@@ -65,7 +65,7 @@
                      tabindex="0">
                     <div class="g-tab--content">
                         <div class="text-lg-center">
-                            <p class="g-counter">Misiones nuevas en: <span class="nro">23:59:59</span></p>
+                            <p class="g-counter">Misiones nuevas en: <span class="nro" id="contador-proxima-mision">00:00:00</span></p>
                         </div>
                         <div class="g-box-mision">
                         </div>
@@ -371,13 +371,40 @@
 
 <th:block th:replace="~{fragments/resources :: script}"/>
 
+<!-- Script del contador de próxima misión -->
+<script th:src="${@resources.web('js/contador-proxima-mision.js')}"></script>
 
 <script th:inline="javascript">
     /*<![CDATA[*/
     var misionesData = /*[[${misiones}]]*/ '';
+    var proximaMisionFecha = /*[[${proximaMisionFecha}]]*/ null;
+    var tieneProximaMision = /*[[${tieneProximaMision}]]*/ false;
+    
     document.addEventListener("DOMContentLoaded", function () {
         cargarPromocionesAjax();
         procesarMisiones(misionesData);
+        
+        // Inicializar contador de próxima misión
+        if (tieneProximaMision && proximaMisionFecha) {
+            console.log('🕒 Inicializando contador con fecha:', proximaMisionFecha);
+            const elementoContador = document.getElementById('contador-proxima-mision');
+            if (elementoContador) {
+                const contador = new ContadorProximaMision(proximaMisionFecha, elementoContador);
+                
+                // Personalizar el callback de expiración
+                contador.onExpirado = function() {
+                    elementoContador.textContent = 'Nuevas misiones disponibles';
+                    elementoContador.style.color = '#28a745';
+                    console.log('✅ Nuevas misiones disponibles');
+                };
+            }
+        } else {
+            console.log('⚠️ No hay próxima misión configurada');
+            const elementoContador = document.getElementById('contador-proxima-mision');
+            if (elementoContador) {
+                elementoContador.textContent = 'Sin fecha programada';
+            }
+        }
     });
     /*]]>*/
 
