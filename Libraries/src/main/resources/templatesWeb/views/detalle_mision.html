@@ -67,7 +67,7 @@
         </div>
       </div>
 
-      <div class="d-flex justify-content-center mb-5" th:if="${cedula != null}">
+      <div class="d-flex justify-content-center mb-5" th:if="${cedula == null}">
         <div class="g-button--fix">
           <a onclick="verPromociones()" class="g-button g-button--big">
             <span>Ver promociones</span>
@@ -250,7 +250,7 @@
       console.log('Misión actual:', misionActual);
       console.log('ID recompensa seleccionada:', recompensaId);
       console.log('Título recompensa seleccionada:', recompensaTitulo);
-      return fetch('../api/registrar_mision_recompensa/' + id_mision+'/'+recompensaId)
+      return fetch('../mision/registrar_mision_recompensa/' + id_mision+'/'+recompensaId)
         .then(response => response.json())
        .then(data => {
         debugger

@@ -25,16 +25,20 @@ public class LogServiceImpl implements LogService {
     @Override
     @Transactional
     public void generarLog(String accion, String mensaje, String url, HttpHeaders headers, String body) {
-        Log log = Log.builder()
-                .ip(request.getRemoteAddr())
-                .fecha(LocalDateTime.now())
-                .usuario(loginService.obtenerUsuario())
-                .accion(accion)
-                .detalle(mensaje)
-                .ruta(url)
-                .headerJson(headers.toString())
-                .bodyJson(body)
-                .build();
-                logDao.guardarLog(log);
+        try {
+            Log log = Log.builder()
+                    .ip(request.getRemoteAddr())
+                    .fecha(LocalDateTime.now())
+                    .usuario(loginService.obtenerUsuario())
+                    .accion(accion)
+                    .detalle(mensaje)
+                    .ruta(url)
+                    .headerJson(headers != null ? headers.toString() : "")
+                    .bodyJson(body != null ? body : "")
+                    .build();
+            logDao.guardarLog(log);
+        } catch (Exception e) {
+            System.err.println("❌ Error guardando log: " + e.getMessage());
+        }
     }
 }

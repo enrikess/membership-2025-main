@@ -46,4 +46,19 @@ public class MisionController extends BaseController {
         model.addAttribute("mision", mision);
         return ConstantesWebView.VIEW_RECOMPENSAS_DETALLE_MISION;
     }
+
+
+    @GetMapping("/registrar_mision_recompensa/{id_mision}/{id_recompensa}")
+    @ResponseBody
+    public Object registrarMisionRecompensa(@PathVariable("id_mision") Number id_mision, @PathVariable("id_recompensa") Number id_recompensa) {
+
+        String token = recompensasService.obtenerToken();
+        String cedula = recompensasService.obtenerIdentificadorCache();
+
+        //List<String> palabras = (List<String>) payload.get("palabras");
+        // Usa el nombre "palabras" para identificar el array
+        Object respuesta = misionService.registrarMisionRecompensa(id_mision.longValue(), id_recompensa.longValue());
+
+        return respuesta;
+    }
 }

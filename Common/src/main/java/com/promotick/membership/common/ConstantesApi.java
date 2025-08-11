@@ -12,6 +12,7 @@ public class ConstantesApi {
     public static final String RECOMPENSAS_API_TOKEN = "/apiservice/protocol/openid-connect/token";
     public static final String RECOMPENSAS_API_PROMOCIONES= "/recompensas/v1/promociones";
     public static final String RECOMPENSAS_API_MISIONES= "/recompensas/v1/misiones";
+    public static final String RECOMPENSAS_API_MISIONES_REGISTRAR= "/recompensas/v1/misiones/registrar";
     public static final String RECOMPENSAS_API_MISIONES_REGISTRADAS= "/recompensas/v1/registradas";
 
 }
