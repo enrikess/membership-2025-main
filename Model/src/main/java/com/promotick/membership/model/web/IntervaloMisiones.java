@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProximaMision {
+public class IntervaloMisiones {
     private Long id;
-    private LocalDateTime fecha;
+    private Long timer; // Intervalo en milisegundos
 }

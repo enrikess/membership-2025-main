@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Service
 public class LogServiceImpl implements LogService {
@@ -28,7 +29,7 @@ public class LogServiceImpl implements LogService {
         try {
             Log log = Log.builder()
                     .ip(request.getRemoteAddr())
-                    .fecha(LocalDateTime.now())
+                    .fecha(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                     .usuario(loginService.obtenerUsuario())
                     .accion(accion)
                     .detalle(mensaje)

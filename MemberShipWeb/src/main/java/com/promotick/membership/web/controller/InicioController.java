@@ -1,10 +1,12 @@
 package com.promotick.membership.web.controller;
 
 import com.promotick.membership.model.MisionDto;
-import com.promotick.membership.model.web.ProximaMision;
+import com.promotick.membership.model.web.IntervaloMisiones;
+
+import com.promotick.membership.web.service.IntervaloMisionesService;
 import com.promotick.membership.web.service.LoginService;
 import com.promotick.membership.web.service.MisionService;
-import com.promotick.membership.web.service.ProximaMisionService;
+
 import com.promotick.membership.web.util.BaseController;
 import com.promotick.membership.web.util.ConstantesWebView;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +30,7 @@ public class InicioController extends BaseController {
     private MisionService misionService;
 
     @Autowired
-    private ProximaMisionService proximaMisionService;
+    private IntervaloMisionesService intervaloMisionesService;
     /**
      * Endpoint para mostrar la vista HTML
      */
@@ -39,21 +41,20 @@ public class InicioController extends BaseController {
             List<MisionDto> misiones = misionService.obtenerMisiones();
             model.addAttribute("misiones", misiones);
             
-            // Obtener la próxima misión (fecha mayor)
-            ProximaMision proximaMision = proximaMisionService.obtenerProximaMisionConFechaMayor();
+            // Obtener la próxima misión (intervalo de misiones)
+            IntervaloMisiones intervaloMisiones = intervaloMisionesService.obtenerIntervaloMisiones();
             
-            if (proximaMision != null && proximaMision.getFecha() != null) {
-                // Convertir la fecha a formato ISO para JavaScript
-                String fechaISO = proximaMision.getFecha().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-                model.addAttribute("proximaMisionFecha", fechaISO);
-                model.addAttribute("tieneProximaMision", true);
+            if (intervaloMisiones != null && intervaloMisiones.getTimer() != null && intervaloMisiones.getTimer() > 0) {
+                // Enviar el timer en milisegundos para JavaScript
+                model.addAttribute("intervaloMisionesTimer", intervaloMisiones.getTimer());
+                model.addAttribute("tieneIntervaloMisiones", true);
             } else {
-                model.addAttribute("tieneProximaMision", false);
+                model.addAttribute("tieneIntervaloMisiones", false);
             }
             
         } catch (Exception e) {
             model.addAttribute("misiones", "[]");
-            model.addAttribute("tieneProximaMision", false);
+            model.addAttribute("tieneIntervaloMisiones", false);
         }
         return ConstantesWebView.VIEW_RECOMPENSAS_INDEX;
     }
