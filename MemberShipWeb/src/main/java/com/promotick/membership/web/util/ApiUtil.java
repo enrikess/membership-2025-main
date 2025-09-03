@@ -8,8 +8,9 @@ public class ApiUtil {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
         headers.set("Accept", "application/json");
-        headers.set("identificacion", usuario);
         headers.set("Host", host);
+        headers.set("identificacion", usuario);
         return new HttpEntity<>(headers);
     }
 }
+

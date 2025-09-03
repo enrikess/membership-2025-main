@@ -1,6 +1,7 @@
 package com.promotick.membership.web.service;
 
 
+import com.promotick.membership.model.Login;
 
 public interface LoginService {
 
@@ -10,5 +11,5 @@ public interface LoginService {
 
     String obtenerUsuario();
 
-    Object loguearCedula(String cedula);
+    Login loguearCedula(String cedula);
 }
