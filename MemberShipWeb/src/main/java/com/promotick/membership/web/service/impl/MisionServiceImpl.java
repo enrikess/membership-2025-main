@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 import java.util.stream.Collectors;
@@ -138,40 +137,10 @@ public class MisionServiceImpl implements MisionService {
     }
 
     @Override
-    public Object registrarMisionRecompensa(long idMision, long idRecompensa) {
-        String token = loginService.obtenerToken();
-        String baseUrl = properties.getProperty(ConstantesApi.RECOMPENSAS_URL);
-        String url = baseUrl + ConstantesApi.RECOMPENSAS_API_MISIONES_REGISTRAR + "?misionId=" + idMision + "&recompensaId=" + idRecompensa;
-        
-        HttpEntity<Void> request = ApiUtil.crearRequestConHeaders(
-                token,
-                loginService.obtenerUsuario(),
-                ConstantesApi.RECOMPENSAS_HOST
-        );
-        log.info("🔗 POST: " + url);
-        
-        try {
-            ResponseEntity<MisionResponse> responseMisiones = restTemplate.exchange(
-                    url,
-                    HttpMethod.POST,
-                    request,
-                    MisionResponse.class
-            );
-            log.info("✅ POST exitoso - Status: " + responseMisiones.getStatusCode());
-            
-            // Log de éxito
-            logService.generarLog("POST", "Misión registrada exitosamente - Status: " + responseMisiones.getStatusCode(), 
-                                url, request.getHeaders(), "misionId=" + idMision + "&recompensaId=" + idRecompensa);
-            
-            Object message = responseMisiones.getBody();
-            return message;
-            
-        } catch (Exception e) {
-            log.error("❌ Error registrando misión-recompensa: " + e.getMessage());
-            logService.generarLog("POST", "Error registrando misión-recompensa: " + e.getMessage(), 
-                                url, request.getHeaders(), "misionId=" + idMision + "&recompensaId=" + idRecompensa);
-            return DetalleMisionDto.builder().build();
-        }
+    public Object registrarMisionRecompensa(long idMision,long idRecompensa){
+            return null;
+//        Object resultado = hacerConsultaPOST("/recompensas/v1/misiones/registrar?misionId="+idMision+"&recompensaId="+idRecompensa, new HashMap<>(), identificadorCache);
+//        return resultado;
     }
 
     private DetalleMisionDto buildDetalleMisionDto(Mision mision, double progreso, boolean registrada) {
@@ -183,5 +152,4 @@ public class MisionServiceImpl implements MisionService {
                 .registrada(registrada)
                 .build();
     }
-
 }
