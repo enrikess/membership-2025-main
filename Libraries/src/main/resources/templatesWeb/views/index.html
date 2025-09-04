@@ -65,7 +65,7 @@
                      tabindex="0">
                     <div class="g-tab--content">
                         <div class="text-lg-center">
-                            <p class="g-counter">Misiones nuevas en: <span class="nro">23:59:59</span></p>
+                            <p class="g-counter">Misiones nuevas en: <span class="nro" id="contador-proxima-mision">00:00:00</span></p>
                         </div>
                         <div class="g-box-mision">
                         </div>
@@ -371,14 +371,79 @@
 
 <th:block th:replace="~{fragments/resources :: script}"/>
 
+<!-- Script del contador de próxima misión -->
+<script th:src="${@resources.web('js/contador-proxima-mision.js')}"></script>
 
 <script th:inline="javascript">
     /*<![CDATA[*/
     var misionesData = /*[[${misiones}]]*/ '';
+    var intervaloMisionesTimer = /*[[${intervaloMisionesTimer}]]*/ null;
+    var tieneIntervaloMisiones = /*[[${tieneIntervaloMisiones}]]*/ false;
+    
     document.addEventListener("DOMContentLoaded", function () {
         cargarPromocionesAjax();
         procesarMisiones(misionesData);
+        
+        // Inicializar contador de próxima misión
+        if (tieneIntervaloMisiones && intervaloMisionesTimer) {
+            console.log('🕒 Inicializando contador con timer:', intervaloMisionesTimer, 'ms');
+            const elementoContador = document.getElementById('contador-proxima-mision');
+            if (elementoContador) {
+                iniciarContadorMisiones(intervaloMisionesTimer, elementoContador);
+            }
+        } else {
+            console.log('⚠️ No hay intervalo de misiones configurado');
+            const elementoContador = document.getElementById('contador-proxima-mision');
+            if (elementoContador) {
+                elementoContador.textContent = 'Sin cronómetro configurado';
+            }
+        }
     });
+
+
+      function iniciarContadorMisiones(timerMs, elemento) {
+        // Convertir milisegundos a segundos
+        let tiempoRestante = Math.floor(timerMs / 1000);
+        
+        function actualizarContador() {
+            if (tiempoRestante <= 0) {
+                elemento.textContent = '¡Nuevas misiones disponibles!';
+                elemento.style.color = '#28a745';
+                console.log('✅ Cronómetro finalizado - Nuevas misiones disponibles');
+                return;
+            }
+            
+            // Calcular horas, minutos y segundos
+            const horas = Math.floor(tiempoRestante / 3600);
+            const minutos = Math.floor((tiempoRestante % 3600) / 60);
+            const segundos = tiempoRestante % 60;
+            
+            // Formatear con ceros a la izquierda
+            const horasStr = horas.toString().padStart(2, '0');
+            const minutosStr = minutos.toString().padStart(2, '0');
+            const segundosStr = segundos.toString().padStart(2, '0');
+            
+            // Mostrar el tiempo formateado
+            elemento.textContent = `${horasStr}:${minutosStr}:${segundosStr}`;
+            
+            // Restar un segundo
+            tiempoRestante--;
+        }
+        
+        // Actualizar inmediatamente
+        actualizarContador();
+        
+        // Actualizar cada segundo
+        const intervalo = setInterval(actualizarContador, 1000);
+        
+        console.log(`⏰ Cronómetro iniciado: ${Math.floor(timerMs / 1000)} segundos`);
+        
+        // Opcional: Limpiar el intervalo cuando el tiempo llegue a 0
+        setTimeout(() => {
+            clearInterval(intervalo);
+            console.log('🛑 Intervalo de cronómetro limpiado');
+        }, timerMs);
+    }
     /*]]>*/
 
 

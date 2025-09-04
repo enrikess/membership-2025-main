@@ -15,7 +15,7 @@ promotick:
         web: MemberShipWeb
         recompensa: Recompensas
     thymeleaf:
-      webTemplates: C:\Users\hp\Desktop\Stephanie\Trabajos\Promotick\WrksJava\membership-misiones-ec\Libraries\src\main\resources\templatesWeb
+      webTemplates: C:\Users\ENRIQUE\Desktop\trabajo\membership-2025-main\Libraries\src\main\resources\templatesWeb
 
 spring:
   servlet:

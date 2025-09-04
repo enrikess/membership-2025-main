@@ -18,7 +18,7 @@ public class Log {
     private String usuario;
     private String accion;
     private String detalle;
-    private LocalDateTime fecha;
+    private String fecha;
     private String headerJson;
     private String bodyJson;
     private String ip;

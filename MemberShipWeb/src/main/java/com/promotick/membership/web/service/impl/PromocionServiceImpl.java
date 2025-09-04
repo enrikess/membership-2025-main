@@ -88,6 +88,7 @@ public class PromocionServiceImpl implements PromocionService {
                     .collect(Collectors.toList());
         } catch (Exception e) {
             log.error("❌ Error obteniendo promociones: " + e.getMessage());
+            logService.generarLog("GET", e.getMessage(), "", null, "");
             return new ArrayList<>();
         }
     }

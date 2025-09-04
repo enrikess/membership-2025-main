@@ -58,6 +58,7 @@ public class RecompensasWebServiceImpl implements RecompensasWebService {
             return token != null && !token.isEmpty();
         } catch (Exception e) {
             System.err.println("❌ Error en probarConexion: " + e.getMessage());
+            logService.generarLog("GET", e.getMessage(), "", null, "");
             return false;
         }
     }
@@ -79,6 +80,7 @@ public class RecompensasWebServiceImpl implements RecompensasWebService {
 
         } catch (Exception e) {
             System.err.println("❌ Error obteniendo token: " + e.getMessage());
+            logService.generarLog("GET", e.getMessage(), "", null, "");
             return null;
         }
     }
@@ -144,9 +146,11 @@ public class RecompensasWebServiceImpl implements RecompensasWebService {
 
         } catch (HttpClientErrorException e) {
             System.err.println("❌ Error HTTP " + e.getStatusCode() + ": " + e.getResponseBodyAsString());
+            logService.generarLog("POST", "Error HTTP " + e.getStatusCode() + ": " + e.getResponseBodyAsString(), "", null, "");
             return null;
         } catch (Exception e) {
             System.err.println("❌ Error obteniendo token dinámico: " + e.getMessage());
+            logService.generarLog("POST", e.getMessage(), "", null, "");
             return null;
         }
     }
@@ -206,6 +210,7 @@ public class RecompensasWebServiceImpl implements RecompensasWebService {
 
         } catch (Exception e) {
             System.err.println("❌ Error obteniendo misiones: " + e.getMessage());
+            logService.generarLog("GET", e.getMessage(), "/recompensas/v1/promociones", null, "");
             return "❌ Error: " + e.getMessage();
         }
     }
@@ -246,6 +251,7 @@ public class RecompensasWebServiceImpl implements RecompensasWebService {
             return resultado;
         } catch (Exception e) {
             System.err.println("❌ Error obteniendo misiones: " + e.getMessage());
+            logService.generarLog("GET", e.getMessage(), "/recompensas/v1/promociones", null, "");
             return "❌ Error: " + e.getMessage();
         }
     }
@@ -313,17 +319,7 @@ public class RecompensasWebServiceImpl implements RecompensasWebService {
 
         } catch (HttpClientErrorException e) {
             String errorJsonResponse = e.getResponseBodyAsString();
-//            crearLog(
-//                identificadorCache != null ? identificadorCache : "anonimo",
-//                "GET " + endpoint,
-//                "Error HTTP " + e.getStatusCode(),
-//                headers != null ? headers.toString() : "",
-//                "",
-//                ip,
-//                endpoint,
-//                url != null ? url : "",
-//                errorJsonResponse
-//            );
+            logService.generarLog("GET", "Error HTTP " + e.getStatusCode() + ": " + errorJsonResponse, url != null ? url : "", headers, "");
             try {
                 JsonNode errorNode = objectMapper.readTree(errorJsonResponse);
                 return errorNode;
@@ -331,17 +327,7 @@ public class RecompensasWebServiceImpl implements RecompensasWebService {
                 return crearRespuestaError(errorJsonResponse, e.getStatusCode().value());
             }
         } catch (Exception e) {
-//            crearLog(
-//                identificadorCache != null ? identificadorCache : "anonimo",
-//                "GET " + endpoint,
-//                "Error de conexión: " + e.getMessage(),
-//                headers != null ? headers.toString() : "",
-//                "",
-//                ip,
-//                endpoint,
-//                url != null ? url : "",
-//                ""
-//            );
+            logService.generarLog("GET", "Error de conexión: " + e.getMessage(), url != null ? url : "", headers, "");
             return crearRespuestaError("Error de conexión: " + e.getMessage(), 500);
         }
     }
@@ -435,17 +421,7 @@ public class RecompensasWebServiceImpl implements RecompensasWebService {
 
             // PARSEAR JSON DE ERROR Y DEVOLVERLO COMO OBJETO
             String errorJsonResponse = e.getResponseBodyAsString();
-//            crearLog(
-//                identificadorCache != null ? identificadorCache : "anonimo",
-//                "POST " + endpoint,
-//                "Error HTTP " + e.getStatusCode(),
-//                headers != null ? headers.toString() : "",
-//                payload != null ? payload.toString() : "",
-//                ip,
-//                endpoint,
-//                payload != null ? payload.toString() : "",
-//                errorJsonResponse
-//            );
+            logService.generarLog("POST", "Error HTTP " + e.getStatusCode() + ": " + errorJsonResponse, url != null ? url : "", headers, payload != null ? payload.toString() : "");
             System.err.println("📋 JSON de error del servidor:");
             System.err.println(errorJsonResponse);
 
@@ -459,17 +435,7 @@ public class RecompensasWebServiceImpl implements RecompensasWebService {
             }
 
         } catch (Exception e) {
-//            crearLog(
-//                identificadorCache != null ? identificadorCache : "anonimo",
-//                "POST " + endpoint,
-//                "Error de conexión: " + e.getMessage(),
-//                headers != null ? headers.toString() : "",
-//                payload != null ? payload.toString() : "",
-//                ip,
-//                endpoint,
-//                payload != null ? payload.toString() : "",
-//                ""
-//            );
+            logService.generarLog("POST", "Error de conexión: " + e.getMessage(), url != null ? url : "", headers, payload != null ? payload.toString() : "");
             System.err.println("❌ Error de conexión: " + e.getMessage());
             return crearRespuestaError("Error de conexión: " + e.getMessage(), 500);
         }
@@ -577,6 +543,7 @@ public class RecompensasWebServiceImpl implements RecompensasWebService {
 
         } catch (Exception e) {
             System.err.println("❌ Error obteniendo misiones: " + e.getMessage());
+            logService.generarLog("GET", e.getMessage(), "/recompensas/v1/misiones", null, "");
             return "❌ Error: " + e.getMessage();
         }
     }
@@ -617,6 +584,7 @@ public class RecompensasWebServiceImpl implements RecompensasWebService {
 
         } catch (Exception e) {
             System.err.println("❌ Error obteniendo misiones: " + e.getMessage());
+            logService.generarLog("GET", e.getMessage(), "/recompensas/v1/misiones?misionId=" + idMision, null, "");
             return "❌ Error: " + e.getMessage();
         }
     }

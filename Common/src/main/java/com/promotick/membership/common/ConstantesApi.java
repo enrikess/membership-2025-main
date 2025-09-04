@@ -13,6 +13,7 @@ public class ConstantesApi {
     public static final String RECOMPENSAS_API_LOGIN= "/recompensas/v1/login";
     public static final String RECOMPENSAS_API_PROMOCIONES= "/recompensas/v1/promociones";
     public static final String RECOMPENSAS_API_MISIONES= "/recompensas/v1/misiones";
+    public static final String RECOMPENSAS_API_MISIONES_REGISTRAR= "/recompensas/v1/misiones/registrar";
     public static final String RECOMPENSAS_API_MISIONES_REGISTRADAS= "/recompensas/v1/registradas";
 
 }

@@ -24,35 +24,20 @@ public class LogDaoImpl extends DaoGenerator implements LogDao {
     private JdbcTemplate jdbcTemplate;
 
     public Integer guardarLog(Log log) {
-        return DaoBuilder.getInstance(this)
-                .setLogger(ConstantesWebDAO.LOGGER)
-                .setSchema(ConstantesWebDAO.SCHEMA_NAME)
-                .setProcedureName(ConstantesWebDAO.SP_LOG_GUARDAR)
-                .addParameter("var_usuario", Types.VARCHAR, log.getUsuario())
-                .addParameter("var_accion", Types.VARCHAR, log.getAccion())
-                .addParameter("var_detalle", Types.VARCHAR, log.getDetalle())
-                .addParameter("var_fecha", Types.DATE, log.getFecha())
-                .addParameter("var_header_json", Types.VARCHAR, log.getHeaderJson())
-                .addParameter("var_body_json", Types.VARCHAR, log.getBodyJson())
-                .addParameter("var_ip", Types.VARCHAR, log.getIp())
-                .addParameter("var_ruta", Types.VARCHAR, log.getRuta())
+            return DaoBuilder.getInstance(this)
+                    .setLogger(ConstantesWebDAO.LOGGER)
+                    .setSchema(ConstantesWebDAO.SCHEMA_NAME)
+                    .setProcedureName(ConstantesWebDAO.SP_LOG_GUARDAR)
+                    .addParameter("var_usuario", Types.VARCHAR, log.getUsuario())
+                    .addParameter("var_accion", Types.VARCHAR, log.getAccion())
+                    .addParameter("var_detalle", Types.VARCHAR, log.getDetalle())
+                    .addParameter("var_fecha", Types.VARCHAR, log.getFecha())
+                    .addParameter("var_header_json", Types.VARCHAR, log.getHeaderJson())
+                    .addParameter("var_body_json", Types.VARCHAR, log.getBodyJson())
+                    .addParameter("var_ip", Types.VARCHAR, log.getIp())
+                    .addParameter("var_ruta", Types.VARCHAR, log.getRuta())
 
-                .setReturnDaoParameter("resultado", Types.INTEGER)
-                .build(Integer.class);
-
-
-//        String sql = "SELECT public.fn_log_guardar(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-//        return jdbcTemplate.queryForObject(sql, Integer.class,
-//                log.getUsuario(),
-//                log.getAccion(),
-//                log.getDetalle(),
-//                java.sql.Timestamp.valueOf(log.getFecha()),
-//                log.getHeaderJson(),
-//                log.getBodyJson(),
-//                log.getIp(),
-//                log.getRuta(),
-//                log.getRequest(),
-//                log.getResponse()
-//        );
+                    .setReturnDaoParameter("resultado", Types.INTEGER)
+                    .build(Integer.class);
     }
 }
