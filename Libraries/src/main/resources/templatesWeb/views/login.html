@@ -163,12 +163,13 @@
       })
       .then(response => response.json())
       .then(data => {
+        console.log(data)
         if (data.success) {
           // Login exitoso
           window.location.href = '/MemberShipWeb/';
         } else {
           // Error en login
-          document.querySelector("#alerta-error").textContent = data.message;
+          document.querySelector("#alerta-error").textContent = data.error;
           loginButton.disabled = false;
           loginButton.querySelector('span').textContent = 'Iniciar Sesión';
         }

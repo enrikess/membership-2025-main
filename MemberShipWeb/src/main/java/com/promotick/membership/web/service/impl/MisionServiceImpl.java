@@ -44,6 +44,7 @@ public class MisionServiceImpl implements MisionService {
         );
         log.info("🔗 GET: " + url);
         try {
+            // Obtener misiones normales
             ResponseEntity<MisionListResponse> responseMisiones = restTemplate.exchange(
                     url,
                     HttpMethod.GET,
@@ -52,28 +53,33 @@ public class MisionServiceImpl implements MisionService {
             );
             log.info("✅ GET exitoso - Status: " + responseMisiones.getStatusCode());
             List<Mision> misiones = responseMisiones.getBody().getMisiones();
-            this.obtenerMisionesRegistradas(request);
-//            ResponseEntity<MisionListResponse> responseRegistradas = restTemplate.exchange(
-//                    url,
-//                    HttpMethod.GET,
-//                    request,
-//                    MisionListResponse.class
-//            );
-//            log.info("✅ GET exitoso - Status: " + responseRegistradas.getStatusCode());
-              List<MisionRegistrada> misionesRegistradas = new ArrayList<>();
+            
+            // Obtener misiones registradas
+            List<MisionRegistrada> misionesRegistradas = this.obtenerMisionesRegistradas(request);
+            log.info("📋 Misiones obtenidas: " + misiones.size());
+            log.info("📋 Misiones registradas obtenidas: " + misionesRegistradas.size());
 
-              List<MisionDto> misionDtos = misiones.stream()
-                      .map(mision -> {
-                          MisionRegistrada registrada = misionesRegistradas.stream()
-                                  .filter(misionRegistrada -> misionRegistrada.getIdMision() == mision.getIdMision())
-                                  .findFirst().orElse(null);
-                          return MisionDto.builder()
-                                  .idMision(mision.getIdMision())
-                                  .descripcion(mision.getDescripcion())
-                                  .progreso(registrada != null ? registrada.getProgreso() : 0)
-                                  .build();
-                      })
-                      .collect(Collectors.toList());
+            // Hacer merge entre misiones y misiones registradas
+            List<MisionDto> misionDtos = misiones.stream()
+                    .map(mision -> {
+                        MisionRegistrada registrada = misionesRegistradas.stream()
+                                .filter(misionRegistrada -> misionRegistrada.getIdMision() == mision.getIdMision())
+                                .findFirst().orElse(null);
+                        
+                        double progreso = registrada != null ? registrada.getProgreso() : 0.0;
+                        log.debug("🔍 Misión ID: " + mision.getIdMision() + 
+                                 " - Progreso: " + progreso + 
+                                 " - Registrada: " + (registrada != null));
+                        
+                        return MisionDto.builder()
+                                .idMision(mision.getIdMision())
+                                .descripcion(mision.getDescripcion())
+                                .progreso(progreso)
+                                .build();
+                    })
+                    .collect(Collectors.toList());
+            
+            log.info("✅ Merge completado - Total DTOs: " + misionDtos.size());
             return misionDtos;
 
         } catch (Exception e) {
@@ -119,18 +125,28 @@ public class MisionServiceImpl implements MisionService {
     private List<MisionRegistrada> obtenerMisionesRegistradas(HttpEntity<Void> request) {
         String baseUrl = properties.getProperty(ConstantesApi.RECOMPENSAS_URL);
         String url = baseUrl + ConstantesApi.RECOMPENSAS_API_MISIONES_REGISTRADAS;
+        log.info("🔗 GET Misiones Registradas: " + url);
+        
         try {
-            //            ResponseEntity<MisionListResponse> responseRegistradas = restTemplate.exchange(
-//                    url,
-//                    HttpMethod.GET,
-//                    request,
-//                    MisionListResponse.class
-//            );
-//            log.info("✅ GET exitoso - Status: " + responseRegistradas.getStatusCode());
-            List<MisionRegistrada> misionesRegistradas = new ArrayList<>();
-            return misionesRegistradas;
+            ResponseEntity<MisionRegistradaListResponse> responseRegistradas = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    request,
+                    MisionRegistradaListResponse.class
+            );
+            log.info("✅ GET Misiones Registradas exitoso - Status: " + responseRegistradas.getStatusCode());
+            
+            if (responseRegistradas.getBody() != null && responseRegistradas.getBody().getMisionesRegistradas() != null) {
+                List<MisionRegistrada> misionesRegistradas = responseRegistradas.getBody().getMisionesRegistradas();
+                log.info("📋 Misiones registradas encontradas: " + misionesRegistradas.size());
+                return misionesRegistradas;
+            } else {
+                log.warn("⚠️ Respuesta de misiones registradas es null o vacía");
+                return new ArrayList<>();
+            }
+            
         } catch (Exception e) {
-            log.error("❌ Error obteniendo misiones: " + e.getMessage());
+            log.error("❌ Error obteniendo misiones registradas: " + e.getMessage());
             logService.generarLog("GET", e.getMessage(), url, request.getHeaders(), "");
             return new ArrayList<>();
         }

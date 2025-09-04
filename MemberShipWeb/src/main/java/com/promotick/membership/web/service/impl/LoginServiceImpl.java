@@ -1,5 +1,6 @@
 package com.promotick.membership.web.service.impl;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.promotick.membership.common.ConstantesApi;
 import com.promotick.membership.model.Login;
 import com.promotick.membership.model.Token;
@@ -37,6 +38,7 @@ public class LoginServiceImpl implements LoginService {
     private LogService logService;
 
     private final RestTemplate restTemplate = new RestTemplate();
+    private final ObjectMapper objectMapper = new ObjectMapper();
     private String tokenCache;
     private LocalDateTime tokenExpiracion;
     private String tokenType;

@@ -28,6 +28,7 @@ public class MisionController extends BaseController {
     @ResponseBody
     public DetalleMisionDto buscarMisionesId(@PathVariable("id_mision") long idMision) {
         DetalleMisionDto mision = misionService.obtenerMisionesPorId(idMision);
+        
         return mision;
     }
 
@@ -38,6 +39,16 @@ public class MisionController extends BaseController {
     public String misionesPorId(@PathVariable("id_mision") long idMision, Model model) {
         DetalleMisionDto mision = misionService.obtenerMisionesPorId(idMision);
         model.addAttribute("mision", mision);
+        // Obtener la cédula desde la variable global del LoginService
+        String cedula = loginService.obtenerUsuario();
+        log.info("🔍 DEBUG: Valor obtenido de loginService.obtenerUsuario(): " + cedula);
+        
+        if (cedula != null && !cedula.isEmpty()) {
+            model.addAttribute("cedula", cedula);
+        } else {
+            log.info("ℹ️ No hay usuario logueado en la variable global");
+            log.info("ℹ️ DEBUG: No se agregará cédula al modelo");
+        }
         return ConstantesWebView.VIEW_RECOMPENSAS_DETALLE_MISION;
     }
 }

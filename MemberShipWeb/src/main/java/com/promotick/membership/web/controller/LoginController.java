@@ -34,7 +34,8 @@ public class LoginController extends BaseController {
     /**
      * Endpoint para procesar login
      */
-    @PostMapping(value = "/loguear", consumes = "application/json", produces = "application/json")
+    @PostMapping(value = "/loguear")
+    @ResponseBody
     public LoginDto loguear(@RequestParam String cedula) {
         log.info("📞 POST /loguear llamado");
         Login login = loginService.loguearCedula(cedula);
