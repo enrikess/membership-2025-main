@@ -9,5 +9,5 @@ import java.util.List;
 public interface MisionService {
     List<MisionDto> obtenerMisiones();
     DetalleMisionDto obtenerMisionesPorId(long idMision);
-    Object registrarMisionRecompensa(long idMision,long idRecompensa);
+    String registrarMisionRecompensa(long idMision,long idRecompensa);
 }

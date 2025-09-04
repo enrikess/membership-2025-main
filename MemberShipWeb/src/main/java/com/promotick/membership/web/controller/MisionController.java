@@ -1,6 +1,8 @@
 package com.promotick.membership.web.controller;
 
 import com.promotick.membership.model.DetalleMisionDto;
+import com.promotick.membership.model.Login;
+import com.promotick.membership.model.LoginDto;
 import com.promotick.membership.model.Promocion;
 import com.promotick.membership.web.service.LoginService;
 import com.promotick.membership.web.service.MisionService;
@@ -50,5 +52,17 @@ public class MisionController extends BaseController {
             log.info("ℹ️ DEBUG: No se agregará cédula al modelo");
         }
         return ConstantesWebView.VIEW_RECOMPENSAS_DETALLE_MISION;
+    }
+
+
+    /**
+     * Endpoint para registrar
+     */
+    @PostMapping(value = "/registrar")
+    @ResponseBody
+    public String registarMision(@RequestParam("misionId") long misionId, @RequestParam("recompensaId") long recompensaId) {
+        log.info("📞 POST /registarMision llamado");
+        String response = misionService.registrarMisionRecompensa(misionId, recompensaId);
+        return response;
     }
 }

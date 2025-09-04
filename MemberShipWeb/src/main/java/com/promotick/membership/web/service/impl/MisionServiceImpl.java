@@ -153,10 +153,37 @@ public class MisionServiceImpl implements MisionService {
     }
 
     @Override
-    public Object registrarMisionRecompensa(long idMision,long idRecompensa){
-            return null;
-//        Object resultado = hacerConsultaPOST("/recompensas/v1/misiones/registrar?misionId="+idMision+"&recompensaId="+idRecompensa, new HashMap<>(), identificadorCache);
-//        return resultado;
+    public String registrarMisionRecompensa(long idMision,long idRecompensa){
+        String token = loginService.obtenerToken();
+        String baseUrl = properties.getProperty(ConstantesApi.RECOMPENSAS_URL);
+        String url = baseUrl + ConstantesApi.RECOMPENSAS_API_MISIONES_REGISTRAR+ "?misionId="+idMision+"&recompensaId="+idRecompensa;
+        log.info("🔗 GET Misiones Registradas: " + url);
+        HttpEntity<Void> request = ApiUtil.crearRequestConHeaders(
+                token,
+                loginService.obtenerUsuario(),
+                ConstantesApi.RECOMPENSAS_HOST
+        );
+        try {
+            ResponseEntity<MisionRegistradaResponse> responseRegistradas = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    request,
+                    MisionRegistradaResponse.class
+            );
+            log.info("✅ GET Misiones Registradas exitoso - Status: " + responseRegistradas.getStatusCode());
+
+            if (responseRegistradas.getBody() != null && responseRegistradas.getBody().getCode() == 200) {
+                return "OK";
+            } else {
+                log.warn("⚠️ Respuesta de misiones registradas es null o vacía");
+                return responseRegistradas.getBody().getErrors().get(0).getMessage();
+            }
+
+        } catch (Exception e) {
+            log.error("❌ Error al registrar mision: " + e.getMessage());
+            logService.generarLog("GET", e.getMessage(), url, request.getHeaders(), "");
+            return e.getMessage();
+        }
     }
 
     private DetalleMisionDto buildDetalleMisionDto(Mision mision, double progreso, boolean registrada) {
