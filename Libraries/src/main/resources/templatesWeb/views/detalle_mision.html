@@ -70,7 +70,7 @@
       <div class="d-flex justify-content-center mb-5" th:if="${cedula != null}">
         <div class="g-button--fix">
           <a onclick="verPromociones()" class="g-button g-button--big">
-            <span>Ver promociones</span>
+            <span>Activar Promocion</span>
           </a>
         </div>
       </div>
@@ -206,11 +206,16 @@
 
     // Solo ejecuta si id_mision es válido
     if (id_mision !== '' && id_mision !== null && id_mision !== undefined && id_mision !== 'undefined') {
+      // La función sesionIniciada no está definida, comentando para evitar errores
+      /*
       try {
         sesionIniciada(cedulaData);
       } catch (e) {
         console.log('Error en sesionIniciada:', e);
       }
+      */
+      console.log('ID misión válido:', id_mision);
+      console.log('Datos de cédula:', cedulaData);
     } else {
       console.error('id_mision no está definido correctamente:', id_mision);
     }
@@ -246,14 +251,31 @@
       var recompensaSeleccionada = document.querySelector('.reward-option.selected');
       var recompensaId = recompensaSeleccionada ? recompensaSeleccionada.getAttribute('data-reward-id') : null;
       var recompensaTitulo = recompensaSeleccionada ? recompensaSeleccionada.querySelector('.reward-title').textContent : null;
-
+      
+      // Desactivar el botón
+      var boton = document.querySelector('a[onclick="verPromociones()"]');
+      var spanBoton = boton.querySelector('span');
+      var textoOriginal = spanBoton.textContent;
+      
+      boton.style.pointerEvents = 'none';
+      boton.style.opacity = '0.6';
+      spanBoton.textContent = 'Cargando...';
+      
       console.log('Misión actual:', misionActual);
       console.log('ID recompensa seleccionada:', recompensaId);
       console.log('Título recompensa seleccionada:', recompensaTitulo);
-      return fetch('../mision/registrar_mision_recompensa/' + id_mision+'/'+recompensaId)
+      
+      // Crear FormData para enviar como POST
+      var formData = new FormData();
+      formData.append('misionId', String(misionActual));
+      formData.append('recompensaId', recompensaId);
+      
+      return fetch('../mision/registrar', {
+        method: 'POST',
+        body: formData
+      })
         .then(response => response.json())
        .then(data => {
-        debugger
           var mensaje = document.getElementById('mensaje_respuesta');
           mensaje.textContent = data.message;
           if (data.code === 400) {
@@ -267,6 +289,12 @@
         var mensaje = document.getElementById('mensaje_respuesta');
         mensaje.textContent = 'Error de conexión';
         mensaje.style.color = 'red';
+      })
+      .finally(function() {
+        // Reactivar el botón sin importar el resultado
+        boton.style.pointerEvents = 'auto';
+        boton.style.opacity = '1';
+        spanBoton.textContent = textoOriginal;
       });
     }
 

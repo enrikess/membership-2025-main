@@ -14,6 +14,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public class MisionServiceImpl implements MisionService {
     private LogService logService;
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public List<MisionDto> obtenerMisiones() {
+public List<MisionDto> obtenerMisiones() {
         String token = loginService.obtenerToken();
         String baseUrl = properties.getProperty(ConstantesApi.RECOMPENSAS_URL);
         String url = baseUrl + ConstantesApi.RECOMPENSAS_API_MISIONES;
@@ -53,13 +54,28 @@ public class MisionServiceImpl implements MisionService {
             );
             log.info("✅ GET exitoso - Status: " + responseMisiones.getStatusCode());
             List<Mision> misiones = responseMisiones.getBody().getMisiones();
-            
-            // Obtener misiones registradas
-            List<MisionRegistrada> misionesRegistradas = this.obtenerMisionesRegistradas(request);
             log.info("📋 Misiones obtenidas: " + misiones.size());
-            log.info("📋 Misiones registradas obtenidas: " + misionesRegistradas.size());
+            
+            // Verificar si hay usuario logueado
+            String cedula = loginService.obtenerUsuario();
+            
+            if (cedula == null || cedula.isEmpty()) {
+                // Sin usuario logueado - retornar misiones simples
+                log.info("ℹ️ No hay usuario logueado - Retornando misiones sin progreso");
+                List<MisionDto> misionDtos = misiones.stream()
+                        .map(mision -> MisionDto.builder()
+                                .idMision(mision.getIdMision())
+                                .descripcion(mision.getDescripcion())
+                                .progreso(0.0)
+                                .build())
+                        .collect(Collectors.toList());
+                return misionDtos;
+            }
+            
+            // Con usuario logueado - hacer merge con misiones registradas
+            List<MisionRegistrada> misionesRegistradas = this.obtenerMisionesRegistradas(request);
+            log.info("📋 Usuario logueado - Misiones registradas obtenidas: " + misionesRegistradas.size());
 
-            // Hacer merge entre misiones y misiones registradas
             List<MisionDto> misionDtos = misiones.stream()
                     .map(mision -> {
                         MisionRegistrada registrada = misionesRegistradas.stream()
@@ -84,7 +100,14 @@ public class MisionServiceImpl implements MisionService {
 
         } catch (Exception e) {
             log.error("❌ Error obteniendo misiones: " + e.getMessage());
-            logService.generarLog("GET", e.getMessage(), url, request.getHeaders(), "");
+            
+            // Logging con manejo de errores para evitar problemas de conexión en primera carga
+            try {
+                logService.generarLog("GET", e.getMessage(), url, request.getHeaders(), "");
+            } catch (Exception logEx) {
+                log.warn("⚠️ No se pudo guardar log en BD (posible problema de inicialización): " + logEx.getMessage());
+            }
+            
             return new ArrayList<>();
         }
     }
@@ -109,16 +132,47 @@ public class MisionServiceImpl implements MisionService {
             );
             log.info("✅ GET exitoso - Status: " + responseMisiones.getStatusCode());
             Mision mision = responseMisiones.getBody().getMision();
+            
+            if (mision == null) {
+                log.error("❌ La misión obtenida es null");
+                return DetalleMisionDto.builder().build();
+            }
+            
+            log.info("📋 Misión obtenida - ID: " + mision.getIdMision() + " - Descripción: " + mision.getDescripcion());
+            
+            // Verificar si hay usuario logueado
+            String cedula = loginService.obtenerUsuario();
+            
+            if (cedula == null || cedula.isEmpty()) {
+                // Sin usuario logueado - retornar misión sin progreso
+                log.info("ℹ️ No hay usuario logueado - Retornando misión sin progreso");
+                return this.buildDetalleMisionDto(mision, 0.0, false);
+            }
+            
+            // Con usuario logueado - consultar progreso
             List<MisionRegistrada> misionesRegistradas = obtenerMisionesRegistradas(request);
+            log.info("📋 Usuario logueado - Consultando progreso de misión ID: " + idMision);
+            
             DetalleMisionDto detalleMisionDto = misionesRegistradas.stream()
                     .filter(misionRegistrada -> misionRegistrada.getIdMision() == mision.getIdMision())
                     .map(misionRegistrada -> this.buildDetalleMisionDto(mision, misionRegistrada.getProgreso(), true))
                     .findFirst().orElse(this.buildDetalleMisionDto(mision, 0.0, false));
         return detalleMisionDto;
         } catch (Exception e) {
-            log.error("❌ Error obteniendo misiones: " + e.getMessage());
-            logService.generarLog("GET", e.getMessage(), url, request.getHeaders(), "");
-            return DetalleMisionDto.builder().build();
+            log.error("❌ Error obteniendo misión por ID " + idMision + ": " + e.getMessage());
+            
+            // Logging con manejo de errores para evitar problemas de conexión en primera carga
+            try {
+                logService.generarLog("GET", e.getMessage(), url, request.getHeaders(), "");
+            } catch (Exception logEx) {
+                log.warn("⚠️ No se pudo guardar log en BD (posible problema de inicialización): " + logEx.getMessage());
+            }
+            // Retornar un objeto vacío pero válido en lugar de null
+            return DetalleMisionDto.builder()
+                    .descripcion("Error al cargar la misión")
+                    .progreso(0.0)
+                    .registrada(false)
+                    .build();
         }
     }
 
@@ -147,7 +201,14 @@ public class MisionServiceImpl implements MisionService {
             
         } catch (Exception e) {
             log.error("❌ Error obteniendo misiones registradas: " + e.getMessage());
-            logService.generarLog("GET", e.getMessage(), url, request.getHeaders(), "");
+            
+            // Logging con manejo de errores para evitar problemas de conexión en primera carga
+            try {
+                logService.generarLog("GET", e.getMessage(), url, request.getHeaders(), "");
+            } catch (Exception logEx) {
+                log.warn("⚠️ No se pudo guardar log en BD (posible problema de inicialización): " + logEx.getMessage());
+            }
+            
             return new ArrayList<>();
         }
     }
@@ -157,7 +218,7 @@ public class MisionServiceImpl implements MisionService {
         String token = loginService.obtenerToken();
         String baseUrl = properties.getProperty(ConstantesApi.RECOMPENSAS_URL);
         String url = baseUrl + ConstantesApi.RECOMPENSAS_API_MISIONES_REGISTRAR+ "?misionId="+idMision+"&recompensaId="+idRecompensa;
-        log.info("🔗 GET Misiones Registradas: " + url);
+        log.info("🔗 POST Misiones Registradas: " + url);
         HttpEntity<Void> request = ApiUtil.crearRequestConHeaders(
                 token,
                 loginService.obtenerUsuario(),
@@ -166,23 +227,44 @@ public class MisionServiceImpl implements MisionService {
         try {
             ResponseEntity<MisionRegistradaResponse> responseRegistradas = restTemplate.exchange(
                     url,
-                    HttpMethod.GET,
+                    HttpMethod.POST,
                     request,
                     MisionRegistradaResponse.class
             );
             log.info("✅ GET Misiones Registradas exitoso - Status: " + responseRegistradas.getStatusCode());
 
             if (responseRegistradas.getBody() != null && responseRegistradas.getBody().getCode() == 200) {
-                return "OK";
+                return "{\"code\": 200, \"message\": \"Misión registrada exitosamente\"}";
             } else {
                 log.warn("⚠️ Respuesta de misiones registradas es null o vacía");
                 return responseRegistradas.getBody().getErrors().get(0).getMessage();
             }
 
+        } catch (HttpClientErrorException e) {
+            log.error("❌ Error HTTP al registrar misión - Status: " + e.getStatusCode() + " - Body: " + e.getResponseBodyAsString());
+            
+            // Logging con manejo de errores para evitar problemas de conexión en primera carga
+            try {
+                logService.generarLog("POST", e.getMessage(), url, request.getHeaders(), "");
+            } catch (Exception logEx) {
+                log.warn("⚠️ No se pudo guardar log en BD (posible problema de inicialización): " + logEx.getMessage());
+            }
+            
+            // Retornar directamente el JSON de error que viene del API
+            return e.getResponseBodyAsString();
+            
         } catch (Exception e) {
-            log.error("❌ Error al registrar mision: " + e.getMessage());
-            logService.generarLog("GET", e.getMessage(), url, request.getHeaders(), "");
-            return e.getMessage();
+            log.error("❌ Error general al registrar misión: " + e.getMessage());
+            
+            // Logging con manejo de errores para evitar problemas de conexión en primera carga
+            try {
+                logService.generarLog("POST", e.getMessage(), url, request.getHeaders(), "");
+            } catch (Exception logEx) {
+                log.warn("⚠️ No se pudo guardar log en BD (posible problema de inicialización): " + logEx.getMessage());
+            }
+            
+            // Error genérico - crear JSON de error
+            return "{\"code\": 500, \"message\": \"Error interno del servidor\"}";
         }
     }
 

@@ -679,7 +679,7 @@
             return;
         }
 
-        var imagen = /*[[${@resources.web('/img/cash-back.svg')}]]*/ '';
+        var imagen = /*[[${@resources.web('/img/icono-misiones.png')}]]*/ '';
         var cantidad_misiones = 0;
         var cantidad_misiones_iniciadas = 0;
         listaMisiones.forEach(function (mision) {
@@ -711,7 +711,7 @@
 
             misionElement.innerHTML = `
           <div class="g-box-mision--item__img">
-            <img src="${imagen}" alt="Misión">
+            <img src="${imagen}" alt="Misión" style='width: 70px;'>
           </div>
           <div class="g-box-mision--item__info">
             <p class="g-box-mision--item__info__title">${mision.descripcion}</p>
